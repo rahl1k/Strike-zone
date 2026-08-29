@@ -2,237 +2,52 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>rahl1k FPS TEST 2</title>
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>CANVAS TEST</title>
+
 <style>
 html,body{
     margin:0;
-    padding:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#111;
-    touch-action:none;
 }
-canvas{
+
+#game{
     position:fixed;
-    left:0;
-    top:0;
+    inset:0;
     width:100%;
     height:100%;
 }
-#text{
-    position:fixed;
-    top:20px;
-    left:50%;
-    transform:translateX(-50%);
-    color:white;
-    font:bold 24px Arial;
-    z-index:10;
-}
-#joystick{
-    position:fixed;
-    left:30px;
-    bottom:30px;
-    width:140px;
-    height:140px;
-    border-radius:50%;
-    background:#ffffff22;
-    border:3px solid white;
-    z-index:20;
-}
-#stick{
-    position:absolute;
-    left:40px;
-    top:40px;
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    background:#ffffff88;
-}
 </style>
 </head>
+
 <body>
-<div id="text">
-RAHL1K FPS TEST 2
-</div>
-<div id="joystick">
-    <div id="stick"></div>
-</div>
-<script>
-const canvas =
-document.getElementById("game");
-const ctx =
-canvas.getContext("2d");
-function resize(){
-    canvas.width=
-        window.innerWidth;
-    canvas.height=
-        window.innerHeight;
-}
-resize();
-window.addEventListener(
-    "resize",
-    resize
-);
-/* =========================
-   FPS КАРТИНКА
-========================= */
-function draw(){
-    const W=canvas.width;
-    const H=canvas.height;
-    /*
-       Небо
-    */
-    ctx.fillStyle="#6f8791";
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H/2
-    );
-    /*
-       Земля
-    */
-    ctx.fillStyle="#30383c";
-    ctx.fillRect(
-        0,
-        H/2,
-        W,
-        H/2
-    );
-    /*
-       Центральная стена
-    */
-    ctx.fillStyle="#555d60";
-    ctx.fillRect(
-        W*0.2,
-        H*0.25,
-        W*0.6,
-        H*0.35
-    );
-    /*
-       Дверь
-    */
-    ctx.fillStyle="#202427";
-    ctx.fillRect(
-        W*0.43,
-        H*0.35,
-        W*0.14,
-        H*0.25
-    );
-    /*
-       Полосы пола
-    */
-    ctx.strokeStyle="#596164";
-    for(
-        let i=1;
-        i<10;
-        i++
-    ){
-        const y=
-            H/2+
-            i*(H/2)/10;
-        ctx.beginPath();
-        ctx.moveTo(
-            0,
-            y
-        );
-        ctx.lineTo(
-            W,
-            y
-        );
-        ctx.stroke();
-    }
-}
-draw();
-/* =========================
-   ДЖОЙСТИК
-========================= */
-const joystick=
-document.getElementById(
-    "joystick"
-);
-const stick=
-document.getElementById(
-    "stick"
-);
-let active=false;
-function joystickMove(x,y){
-    const r=
-        joystick.getBoundingClientRect();
-    let dx=
-        x-
-        (r.left+r.width/2);
-    let dy=
-        y-
-        (r.top+r.height/2);
-    const max=40;
-    const d=
-        Math.hypot(dx,dy);
-    if(d>max){
-        dx=
-            dx/d*max;
-        dy=
-            dy/d*max;
-    }
-    stick.style.left=
-        (40+dx)+"px";
-    stick.style.top=
-        (40+dy)+"px";
-}
-joystick.addEventListener(
-    "touchstart",
-    function(e){
-        e.preventDefault();
-        active=true;
-        const t=
-            e.changedTouches[0];
-        joystickMove(
-            t.clientX,
-            t.clientY
-        );
-    },
-    {passive:false}
-);
-joystick.addEventListener(
-    "touchmove",
-    function(e){
-        e.preventDefault();
-        if(!active)
-            return;
-        const t=
-            e.changedTouches[0];
-        joystickMove(
-            t.clientX,
-            t.clientY
-        );
-    },
-    {passive:false}
-);
-joystick.addEventListener(
-    "touchend",
-    function(e){
-        e.preventDefault();
-        active=false;
-        stick.style.left="40px";
-        stick.style.top="40px";
-    },
-    {passive:false}
-);
-</script>
-</body>
 
 <canvas id="game"></canvas>
+
 <script>
 
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+const canvas =
+document.getElementById("game");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const ctx =
+canvas.getContext("2d");
+
+canvas.width =
+window.innerWidth;
+
+canvas.height =
+window.innerHeight;
+
+
+/* Синий фон */
 
 ctx.fillStyle = "blue";
+
 ctx.fillRect(
     0,
     0,
@@ -240,8 +55,13 @@ ctx.fillRect(
     canvas.height
 );
 
+
+/* Надпись */
+
 ctx.fillStyle = "white";
+
 ctx.font = "40px Arial";
+
 ctx.textAlign = "center";
 
 ctx.fillText(
@@ -251,4 +71,6 @@ ctx.fillText(
 );
 
 </script>
+
+</body>
 </html>
