@@ -1,17 +1,15 @@
-[29.08.2026 23:01] rahl1k: <!DOCTYPE html>
+[29.08.2026 23:31] rahl1k: <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Strike Zone</title>
-
 <style>
 *{
     box-sizing:border-box;
     user-select:none;
     -webkit-user-select:none;
+    -webkit-touch-callout:none;
 }
 
 html,body{
@@ -19,7 +17,7 @@ html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#111;
+    background:#202428;
     touch-action:none;
     font-family:Arial,sans-serif;
 }
@@ -29,6 +27,7 @@ html,body{
     inset:0;
     width:100%;
     height:100%;
+    touch-action:none;
 }
 
 #hud{
@@ -66,12 +65,16 @@ html,body{
     text-shadow:0 2px 4px #000;
 }
 
+/* =========================
+   ПРИЦЕЛ
+========================= */
+
 #crosshair{
     position:absolute;
     left:50%;
     top:50%;
-    width:24px;
-    height:24px;
+    width:28px;
+    height:28px;
     transform:translate(-50%,-50%);
 }
 
@@ -80,74 +83,79 @@ html,body{
     content:"";
     position:absolute;
     background:white;
-    box-shadow:0 0 3px #000;
+    box-shadow:0 0 4px #000;
 }
 
 #crosshair:before{
-    width:24px;
+    width:28px;
     height:2px;
-    top:11px;
+    top:13px;
 }
 
 #crosshair:after{
     width:2px;
-    height:24px;
-    left:11px;
+    height:28px;
+    left:13px;
 }
 
-/* Джойстик */
+/* =========================
+   ДЖОЙСТИК
+========================= */
 
 #joystick{
     position:absolute;
     left:25px;
     bottom:25px;
-    width:135px;
-    height:135px;
+    width:140px;
+    height:140px;
     border-radius:50%;
-    background:#ffffff18;
-    border:2px solid #ffffff55;
+    background:rgba(255,255,255,.10);
+    border:2px solid rgba(255,255,255,.35);
     pointer-events:auto;
+    touch-action:none;
 }
 
 #stick{
     position:absolute;
     width:58px;
     height:58px;
-    left:36px;
-    top:36px;
+    left:39px;
+    top:39px;
     border-radius:50%;
-    background:#ffffff55;
-    border:2px solid #ffffff88;
+    background:rgba(255,255,255,.40);
+    border:2px solid rgba(255,255,255,.70);
+    pointer-events:none;
 }
 
-/* Кнопки */
+/* =========================
+   КНОПКИ
+========================= */
 
 .button{
     pointer-events:auto;
     color:white;
-    border:1px solid #ffffff66;
+    border:1px solid rgba(255,255,255,.4);
     font-weight:bold;
-    background:#222b;
-    backdrop-filter:blur(5px);
-    -webkit-backdrop-filter:blur(5px);
+    background:rgba(20,20,20,.75);
+    touch-action:none;
 }
 
 #fire{
     position:absolute;
     right:28px;
-    bottom:90px;
-    width:85px;
-    height:85px;
+    bottom:85px;
+    width:90px;
+    height:90px;
     border-radius:50%;
-    background:#a52222cc;
+    background:rgba(170,35,35,.85);
     font-size:15px;
 }
 
 #reload{
     position:absolute;
-    right:130px;
+    right:135px;
     bottom:30px;
-    width:100px;
+    width:105px;
     height:45px;
     border-radius:12px;
 }
@@ -156,9 +164,9 @@ html,body{
     display:none;
     position:absolute;
     left:50%;
-    top:55%;
+    top:52%;
     transform:translate(-50%,-50%);
-    font-size:28px;
+    font-size:30px;
     font-weight:bold;
     text-align:center;
     text-shadow:0 3px 5px #000;
@@ -177,7 +185,7 @@ html,body{
 
 #rotate{
     display:none;
-    position:absolute;
+    position:fixed;
     inset:0;
     background:#111;
     color:white;
@@ -185,24 +193,18 @@ html,body{
     justify-content:center;
     text-align:center;
     font-size:22px;
-    z-index:20;
+    z-index:100;
 }
 </style>
 </head>
-
 <body>
-
-<canvas id="game"></canvas>
-
 <div id="rotate">
     ↔️<br><br>
     Поверни iPhone<br>
     горизонтально
 </div>
-
 <div id="hud">
-
-<div id="title">STRIKE ZONE • 0.2</div>
+<div id="title">STRIKE ZONE • 0.3</div>
 
 <div id="crosshair"></div>
 
@@ -221,52 +223,42 @@ html,body{
 <button id="restart" class="button">
     PLAY AGAIN
 </button>
-
 </div>
-
 <script>
 
-const canvas =
-document.getElementById("game");
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
 
-const ctx =
-canvas.getContext("2d");
-
-let W,H,DPR;
+let W=window.innerWidth;
+let H=window.innerHeight;
+let DPR=1;
 
 function resize(){
-
-    DPR =
-    Math.min(
-        window.devicePixelRatio || 1,
-        2
-    );
 
     W=window.innerWidth;
     H=window.innerHeight;
 
+    DPR=Math.min(window.devicePixelRatio||1,2);
+
     canvas.width=W*DPR;
-    canvas.height=H*DPR;
+[29.08.2026 23:31] rahl1k: canvas.height=H*DPR;
 
-    ctx.setTransform(
-        DPR,0,0,DPR,0,0
-    );
+    canvas.style.width=W+"px";
+    canvas.style.height=H+"px";
 
-    document.getElementById("rotate").style.display =
-        H > W ? "flex" : "none";
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+
+    document.getElementById("rotate").style.display=
+        H>W ? "flex" : "none";
 }
 
-window.addEventListener(
-    "resize",
-    resize
-);
-
+window.addEventListener("resize",resize);
 resize();
 
 
 /* =========================
    ИГРОК
-[29.08.2026 23:01] rahl1k: ========================= */
+========================= */
 
 const player={
     x:500,
@@ -278,7 +270,6 @@ const player={
 let ammo=30;
 let reserve=90;
 let reloading=false;
-
 let gameEnded=false;
 
 
@@ -291,34 +282,46 @@ const map={
     height:2200
 };
 
-/*
-    Стены / здания / контейнеры
-*/
+
+/* =========================
+   ОБЪЕКТЫ КАРТЫ
+========================= */
 
 const obstacles=[
 
-    {x:250,y:250,w:550,h:120},
-    {x:250,y:250,w:120,h:600},
+    // верхний левый дом
+    {x:200,y:180,w:650,h:130},
+    {x:200,y:180,w:130,h:650},
 
-    {x:1200,y:200,w:650,h:120},
-    {x:1750,y:200,w:120,h:550},
+    // верхний правый дом
+    {x:1900,y:180,w:650,h:130},
+    {x:2420,y:180,w:130,h:650},
 
-    {x:500,y:1050,w:700,h:130},
-    {x:500,y:1050,w:130,h:600},
+    // нижний левый
+    {x:200,y:1450,w:700,h:140},
+    {x:200,y:1450,w:140,h:550},
 
-    {x:1750,y:1150,w:700,h:130},
-    {x:2320,y:1150,w:130,h:600},
+    // нижний правый
+    {x:1950,y:1450,w:700,h:140},
+    {x:2510,y:1450,w:140,h:550},
 
-    {x:1250,y:750,w:500,h:110},
+    // центральные здания
+    {x:1150,y:650,w:700,h:130},
+    {x:1150,y:1420,w:700,h:130},
 
-    {x:1250,y:1350,w:500,h:110},
+    // контейнеры
+    {x:850,y:450,w:220,h:90},
+    {x:1930,y:520,w:220,h:90},
 
-    {x:850,y:600,w:180,h:80},
-    {x:1950,y:700,w:180,h:80},
+    {x:850,y:1150,w:220,h:90},
+    {x:1930,y:1150,w:220,h:90},
 
-    {x:850,y:1500,w:180,h:80},
-    {x:1950,y:1500,w:180,h:80}
+    // центральные укрытия
+    {x:1350,y:1000,w:300,h:100},
 
+    // маленькие объекты
+    {x:600,y:900,w:160,h:100},
+    {x:2200,y:900,w:160,h:100}
 ];
 
 
@@ -333,30 +336,22 @@ function spawnBots(){
     bots=[];
 
     const positions=[
-        [2400,400],
-        [2200,900],
-        [2400,1900],
-        [700,1850],
-        [1500,1800]
+        [2500,500],
+        [2300,1050],
+        [2500,1900],
+        [650,1900],
+        [1500,1850],
+        [1550,400]
     ];
 
-    for(
-        let i=0;
-        i<positions.length;
-        i++
-    ){
+    for(const p of positions){
 
         bots.push({
-
-            x:positions[i][0],
-            y:positions[i][1],
-
+            x:p[0],
+            y:p[1],
             hp:100,
-
             dead:false,
-
             cooldown:0
-
         });
     }
 }
@@ -365,16 +360,23 @@ spawnBots();
 
 
 /* =========================
-   ПОПАДАНИЯ В СТЕНЫ
+   СТОЛКНОВЕНИЯ
 ========================= */
 
 function collides(x,y){
 
     const radius=25;
 
-    for(
-        const o of obstacles
+    if(
+        x<radius ||
+        y<radius ||
+        x>map.width-radius ||
+        y>map.height-radius
     ){
+        return true;
+    }
+
+    for(const o of obstacles){
 
         if(
             x+radius>o.x &&
@@ -394,221 +396,194 @@ function collides(x,y){
    ДЖОЙСТИК
 ========================= */
 
-const joystick=
-document.getElementById(
-    "joystick"
-);
-
-const stick=
-document.getElementById(
-    "stick"
-);
+const joystick=document.getElementById("joystick");
+const stick=document.getElementById("stick");
 
 let joy={
     active:false,
+    pointerId:null,
     x:0,
     y:0
 };
 
-function updateJoystick(t){
+function updateJoystick(clientX,clientY){
 
-    const r=
-        joystick.getBoundingClientRect();
+    const r=joystick.getBoundingClientRect();
 
-    let x=
-        t.clientX -
-        (r.left+r.width/2);
+    let x=clientX-(r.left+r.width/2);
+    let y=clientY-(r.top+r.height/2);
 
-    let y=
-        t.clientY -
-        (r.top+r.height/2);
+    const max=42;
 
-    const max=38;
+    const distance=Math.hypot(x,y);
 
-    const d=
-        Math.hypot(x,y);
+    if(distance>max){
 
-    if(d>max){
-
-        x=x/d*max;
-        y=y/d*max;
-
+        x=x/distance*max;
+        y=y/distance*max;
     }
 
     joy.x=x/max;
     joy.y=y/max;
 
-    stick.style.left=
-        (38+x)+"px";
-
-    stick.style.top=
-        (38+y)+"px";
+    stick.style.left=(41+x)+"px";
+    stick.style.top=(41+y)+"px";
 }
 
-joystick.addEventListener(
-    "touchstart",
-    e=>{
+function resetJoystick(){
 
-        e.preventDefault();
+    joy.active=false;
+    joy.pointerId=null;
+    joy.x=0;
+    joy.y=0;
 
-        joy.active=true;
+    stick.style.left="41px";
+    stick.style.top="41px";
+}
 
-        updateJoystick(
-            e.changedTouches[0]
-        );
+joystick.addEventListener("pointerdown",e=>{
 
-    },
-    {passive:false}
-);
+    e.preventDefault();
 
-joystick.addEventListener(
-    "touchmove",
-    e=>{
+    joy.active=true;
+    joy.pointerId=e.pointerId;
 
-        e.preventDefault();
+    joystick.setPointerCapture(e.pointerId);
 
-        if(joy.active)
-            updateJoystick(
-                e.changedTouches[0]
-            );
+    updateJoystick(e.clientX,e.clientY);
 
-    },
-    {passive:false}
-);
+});
 
-joystick.addEventListener(
-    "touchend",
-    e=>{
+joystick.addEventListener("pointermove",e=>{
 
-        e.preventDefault();
+    if(!joy.active) return;
 
-        joy.active=false;
+    if(e.pointerId!==joy.pointerId) return;
 
-        joy.x=0;
-        joy.y=0;
+    e.preventDefault();
 
-        stick.style.left="38px";
-        stick.style.top="38px";
+    updateJoystick(e.clientX,e.clientY);
 
-    },
-    {passive:false}
-);
+});
+
+joystick.addEventListener("pointerup",e=>{
+
+    if(e.pointerId===joy.pointerId)
+        resetJoystick();
+
+});
+
+joystick.addEventListener("pointercancel",e=>{
+
+    if(e.pointerId===joy.pointerId)
+        resetJoystick();
+
+});
 
 
 /* =========================
-   ОБЗОР
+   ОБЗОР КАМЕРЫ
 ========================= */
 
-let lookFinger=null;
+let lookPointer=null;
 
-canvas.addEventListener(
-    "touchstart",
-    e=>{
+canvas.addEventListener("pointerdown",e=>{
 
-        for(
-            const t of e.changedTouches
-        ){
+    if(e.clientX<W*.42)
+        return;
 
-            if(
-                t.clientX >
-                W*0.45
-            ){
+    lookPointer={
+        id:e.pointerId,
+        x:e.clientX,
+[29.08.2026 23:31] rahl1k: y:e.clientY
+    };
 
-                lookFinger={
-                    id:t.identifier,
-                    x:t.clientX,
-                    y:t.clientY
-                };
-            }
-        }
+    canvas.setPointerCapture(e.pointerId);
 
-    },
-    {passive:false}
-);
+});
 
-canvas.addEventListener(
-    "touchmove",
-    e=>{
+canvas.addEventListener("pointermove",e=>{
 
-        e.preventDefault();
+    if(!lookPointer)
+        return;
 
-        if(!lookFinger)
-            return;
+    if(e.pointerId!==lookPointer.id)
+        return;
 
-        for(
-            const t of e.changedTouches
-        ){
+    const dx=e.clientX-lookPointer.x;
 
-            if(
-                t.identifier ===
-                lookFinger.id
-            ){
+    player.angle+=dx*0.008;
 
-                const dx=
-                    t.clientX -
-                    lookFinger.x;
+    lookPointer.x=e.clientX;
+    lookPointer.y=e.clientY;
 
-                player.angle +=
-                    dx*0.008;
+});
 
-                lookFinger.x=
-                    t.clientX;
+canvas.addEventListener("pointerup",e=>{
 
-                lookFinger.y=
-                    t.
-[29.08.2026 23:01] rahl1k: clientY;
-            }
-        }
-
-    },
-    {passive:false}
-);
-
-canvas.addEventListener(
-    "touchend",
-    e=>{
-
-        for(
-            const t of e.changedTouches
-        ){
-
-            if(
-                lookFinger &&
-                t.identifier ===
-                lookFinger.id
-            ){
-                lookFinger=null;
-            }
-        }
-
+    if(
+        lookPointer &&
+        e.pointerId===lookPointer.id
+    ){
+        lookPointer=null;
     }
-);
+
+});
+
+canvas.addEventListener("pointercancel",e=>{
+
+    if(
+        lookPointer &&
+        e.pointerId===lookPointer.id
+    ){
+        lookPointer=null;
+    }
+
+});
 
 
 /* =========================
    СТРЕЛЬБА
 ========================= */
 
-document
-.getElementById("fire")
-.addEventListener(
-    "touchstart",
-    e=>{
+let firing=false;
 
-        e.preventDefault();
+const fireButton=document.getElementById("fire");
 
-        shoot();
+fireButton.addEventListener("pointerdown",e=>{
 
-    },
-    {passive:false}
-);
+    e.preventDefault();
+
+    firing=true;
+
+    shoot();
+
+});
+
+fireButton.addEventListener("pointerup",e=>{
+
+    firing=false;
+
+});
+
+fireButton.addEventListener("pointercancel",e=>{
+
+    firing=false;
+
+});
+
+fireButton.addEventListener("pointerleave",e=>{
+
+    firing=false;
+
+});
+
+
+let shootTimer=0;
 
 function shoot(){
 
-    if(
-        gameEnded ||
-        reloading
-    )
+    if(gameEnded || reloading)
         return;
 
     if(ammo<=0){
@@ -621,40 +596,29 @@ function shoot(){
     ammo--;
 
     let target=null;
-
     let closest=Infinity;
 
-    for(
-        const bot of bots
-    ){
+    for(const bot of bots){
 
         if(bot.dead)
             continue;
 
-        const dx=
-            bot.x-player.x;
+        const dx=bot.x-player.x;
+        const dy=bot.y-player.y;
 
-        const dy=
-            bot.y-player.y;
+        const distance=Math.hypot(dx,dy);
 
-        const distance=
-            Math.hypot(dx,dy);
+        let angle=
+            Math.atan2(dy,dx)-player.angle;
 
-        let a=
-            Math.atan2(
-                dy,dx
-            ) -
-            player.angle;
-
-        a=
-            Math.atan2(
-                Math.sin(a),
-                Math.cos(a)
-            );
+        angle=Math.atan2(
+            Math.sin(angle),
+            Math.cos(angle)
+        );
 
         if(
-            Math.abs(a)<0.12 &&
-            distance<900 &&
+            Math.abs(angle)<0.10 &&
+            distance<1000 &&
             distance<closest
         ){
 
@@ -667,18 +631,34 @@ function shoot(){
 
         target.hp-=50;
 
-        if(
-            target.hp<=0
-        ){
+        if(target.hp<=0){
+
+            target.hp=0;
             target.dead=true;
         }
     }
 
-    /*
-       вспышка выстрела
-    */
+    flash=0.12;
+}
 
-    flash=0.08;
+
+/* =========================
+   АВТОМАТИЧЕСКАЯ СТРЕЛЬБА
+========================= */
+
+function updateFire(dt){
+
+    if(!firing)
+        return;
+
+    shootTimer-=dt;
+
+    if(shootTimer<=0){
+
+        shoot();
+
+        shootTimer=0.12;
+    }
 }
 
 
@@ -686,51 +666,41 @@ function shoot(){
    ПЕРЕЗАРЯДКА
 ========================= */
 
-document
-.getElementById("reload")
-.addEventListener(
-    "touchstart",
-    e=>{
+document.getElementById("reload")
+.addEventListener("pointerdown",e=>{
 
-        e.preventDefault();
+    e.preventDefault();
 
-        reload();
+    reload();
 
-    },
-    {passive:false}
-);
+});
 
 function reload(){
 
     if(
         reloading ||
-        ammo===30 ||
+        ammo>=30 ||
         reserve<=0
     )
         return;
 
     reloading=true;
 
-    setTimeout(
-        ()=>{
+    setTimeout(()=>{
 
-            const need=
-                30-ammo;
+        const need=30-ammo;
 
-            const amount=
-                Math.min(
-                    need,
-                    reserve
-                );
+        const amount=Math.min(
+            need,
+            reserve
+        );
 
-            ammo+=amount;
-            reserve-=amount;
+        ammo+=amount;
+        reserve-=amount;
 
-            reloading=false;
+        reloading=false;
 
-        },
-        900
-    );
+    },900);
 }
 
 
@@ -743,58 +713,29 @@ function movePlayer(dt){
     if(gameEnded)
         return;
 
-    const speed=240;
+    const speed=260;
 
-    /*
-       joystick Y:
-       вверх = -1
-    */
+    const forward=-joy.y;
+    const side=joy.x;
 
-    const forward=
-        -joy.y;
+    const dx=(
+        Math.cos(player.angle)*forward-
+        Math.sin(player.angle)*side
+    )*speed*dt;
 
-    const side=
-        joy.x;
+    const dy=(
+        Math.sin(player.angle)*forward+
+        Math.cos(player.angle)*side
+    )*speed*dt;
 
-    const dx=
-        (
-            Math.cos(player.angle)*
-            forward -
-            Math.sin(player.angle)*
-            side
-        )*
-        speed*dt;
+    const nx=player.x+dx;
+    const ny=player.y+dy;
 
-    const dy=
-        (
-            Math.sin(player.angle)*
-            forward +
-            Math.cos(player.angle)*
-            side
-        )*
-        speed*dt;
-
-    const nx=
-        player.x+dx;
-
-    const ny=
-        player.y+dy;
-
-    if(
-        nx>30 &&
-        nx<map.width-30 &&
-        !collides(nx,player.y)
-    ){
+    if(!collides(nx,player.y))
         player.x=nx;
-    }
 
-    if(
-        ny>30 &&
-        ny<map.height-30 &&
-        !collides(player.x,ny)
-    ){
+    if(!collides(player.x,ny))
         player.y=ny;
-    }
 }
 
 
@@ -807,27 +748,19 @@ function updateBots(dt){
     if(gameEnded)
         return;
 
-    for(
-        const bot of bots
-    ){
+    for(const bot of bots){
 
         if(bot.dead)
             continue;
 
-        const dx=
-            player.x-bot.x;
+        const dx=player.x-bot.x;
+        const dy=player.y-bot.y;
 
-        const dy=
-            player.y-bot.y;
+        const distance=Math.hypot(dx,dy);
 
-        const distance=
-            Math.hypot(dx,dy);
+        if(distance>120){
 
-        if(
-            distance>100
-        ){
-
-            const speed=45;
+            const speed=55;
 
             const nx=
                 bot.x+
@@ -839,24 +772,18 @@ function updateBots(dt){
                 dy/distance*
                 speed*dt;
 
-            if(
-                !collides(nx,bot.y)
-            )
+            if(!collides(nx,bot.y))
                 bot.x=nx;
 
-            if(
-                !collides(bot.x,ny)
-            )
+            if(!collides(bot.x,ny))
                 bot.y=ny;
-[29.08.2026 23:01] rahl1k: }else{
+[29.08.2026 23:31] rahl1k: }else{
 
             bot.cooldown-=dt;
 
-            if(
-                bot.cooldown<=0
-            ){
+            if(bot.cooldown<=0){
 
-                player.hp-=7;
+                player.hp-=6;
 
                 bot.cooldown=1;
             }
@@ -874,201 +801,263 @@ function worldToScreen(x,y){
     const dx=x-player.x;
     const dy=y-player.y;
 
-    const cos=
-        Math.cos(-player.angle);
+    const cos=Math.cos(-player.angle);
+    const sin=Math.sin(-player.angle);
 
-    const sin=
-        Math.sin(-player.angle);
+    return{
 
-    return {
+        x:dx*cos-dy*sin+W/2,
 
-        x:
-            dx*cos-dy*sin+
-            W/2,
-
-        y:
-            dx*sin+dy*cos+
-            H/2
+        y:dx*sin+dy*cos+H/2
     };
 }
 
 
 /* =========================
-   РИСОВАНИЕ
+   РИСОВАНИЕ КАРТЫ
 ========================= */
 
-let flash=0;
+function drawMap(){
 
-function draw(){
+    // небо
+    ctx.fillStyle="#718894";
+    ctx.fillRect(0,0,W,H/2);
 
-    ctx.clearRect(
-        0,0,W,H
-    );
+    // земля
+    ctx.fillStyle="#303638";
+    ctx.fillRect(0,H/2,W,H/2);
 
     /*
-       Небо
+       Дальняя линия горизонта
     */
 
-    ctx.fillStyle="#6d8492";
+    ctx.fillStyle="#56666b";
 
     ctx.fillRect(
-        0,0,W,H/2
+        0,
+        H/2-20,
+        W,
+        20
     );
 
     /*
-       земля
+       сетка / плитка земли
     */
 
-    ctx.fillStyle="#30383c";
-
-    ctx.fillRect(
-        0,H/2,W,H/2
-    );
-
-
-    /*
-       сетка карты
-    */
-
-    ctx.strokeStyle="#454d51";
-
-    ctx.lineWidth=2;
+    ctx.strokeStyle="rgba(255,255,255,.07)";
+    ctx.lineWidth=1;
 
     const grid=100;
 
-    const startX=
-        Math.floor(
-            (player.x-1500)/
-            grid
-        )*grid;
+    const range=1800;
 
-    const startY=
-        Math.floor(
-            (player.y-1000)/
-            grid
-        )*grid;
+    const minX=Math.floor(
+        (player.x-range)/grid
+    )*grid;
+
+    const maxX=player.x+range;
 
     for(
-        let x=startX;
-        x<player.x+1500;
+        let x=minX;
+        x<=maxX;
         x+=grid
     ){
 
-        const a=
-            worldToScreen(
-                x,
-                player.y
-            );
+        const p1=worldToScreen(x,0);
+        const p2=worldToScreen(x,map.height);
 
         ctx.beginPath();
+        ctx.moveTo(p1.x,p1.y);
+        ctx.lineTo(p2.x,p2.y);
+        ctx.stroke();
+    }
 
-        ctx.moveTo(
-            a.x,
-            H/2
-        );
+    const minY=Math.floor(
+        (player.y-range)/grid
+    )*grid;
 
-        ctx.lineTo(
-            a.x,
-            H
-        );
+    const maxY=player.y+range;
 
+    for(
+        let y=minY;
+        y<=maxY;
+        y+=grid
+    ){
+
+        const p1=worldToScreen(0,y);
+        const p2=worldToScreen(map.width,y);
+
+        ctx.beginPath();
+        ctx.moveTo(p1.x,p1.y);
+        ctx.lineTo(p2.x,p2.y);
         ctx.stroke();
     }
 
     /*
-       препятствия
+       Дороги
     */
 
-    for(
-        const o of obstacles
-    ){
+    drawRoad(
+        0,
+        1000,
+        map.width,
+        180
+    );
 
-        const p=
-            worldToScreen(
-                o.x,
-                o.y
-            );
+    drawRoad(
+        1400,
+        0,
+        180,
+        map.height
+    );
 
-        const p2=
-            worldToScreen(
-                o.x+o.w,
-                o.y+o.h
-            );
+    /*
+       здания
+    */
 
-        ctx.fillStyle="#171a1c";
+    for(const o of obstacles){
+
+        const p=worldToScreen(
+            o.x,
+            o.y
+        );
+
+        const p2=worldToScreen(
+            o.x+o.w,
+            o.y+o.h
+        );
+
+        const w=p2.x-p.x;
+        const h=p2.y-p.y;
+
+        ctx.fillStyle="#15191b";
 
         ctx.fillRect(
             p.x,
             p.y,
-            p2.x-p.x,
-            p2.y-p.y
+            w,
+            h
         );
 
-        ctx.strokeStyle="#697177";
+        ctx.strokeStyle="#8b9498";
+        ctx.lineWidth=3;
 
         ctx.strokeRect(
             p.x,
             p.y,
-            p2.x-p.x,
-            p2.y-p.y
+            w,
+            h
+        );
+
+        /*
+           крыша / деталь
+        */
+
+        ctx.fillStyle="#252a2d";
+
+        ctx.fillRect(
+            p.x+5,
+            p.y+5,
+            w-10,
+            10
         );
     }
 
-
     /*
-       БОТЫ
+       Границы карты
     */
 
-    for(
-        const bot of bots
-    ){
+    const a=worldToScreen(
+        0,
+        0
+    );
+
+    const b=worldToScreen(
+        map.width,
+        map.height
+    );
+
+    ctx.strokeStyle="#b7c0c4";
+    ctx.lineWidth=8;
+
+    ctx.strokeRect(
+        a.x,
+        a.y,
+        b.x-a.x,
+        b.y-a.y
+    );
+}
+
+
+function drawRoad(x,y,w,h){
+
+    const p=worldToScreen(x,y);
+    const p2=worldToScreen(x+w,y+h);
+
+    ctx.fillStyle="#222729";
+
+    ctx.fillRect(
+        p.x,
+        p.y,
+        p2.x-p.x,
+        p2.y-p.y
+    );
+
+    ctx.strokeStyle="rgba(255,255,255,.15)";
+    ctx.lineWidth=4;
+
+    ctx.strokeRect(
+        p.x,
+        p.y,
+        p2.x-p.x,
+        p2.y-p.y
+    );
+}
+
+
+/* =========================
+   БОТЫ
+========================= */
+
+function drawBots(){
+
+    for(const bot of bots){
 
         if(bot.dead)
             continue;
 
-        const p=
-            worldToScreen(
-                bot.x,
-                bot.y
-            );
+        const p=worldToScreen(
+            bot.x,
+            bot.y
+        );
 
-        const dx=
-            bot.x-player.x;
+        const dx=bot.x-player.x;
+        const dy=bot.y-player.y;
 
-        const dy=
-            bot.y-player.y;
-
-        const distance=
-            Math.hypot(dx,dy);
+        const distance=Math.hypot(dx,dy);
 
         let relative=
-            Math.atan2(
-                dy,dx
-            )-
+            Math.atan2(dy,dx)-
             player.angle;
 
-        relative=
-            Math.atan2(
-                Math.sin(relative),
-                Math.cos(relative)
-            );
+        relative=Math.atan2(
+            Math.sin(relative),
+            Math.cos(relative)
+        );
 
-        if(
-            Math.abs(relative)>1.35
-        )
+        if(Math.abs(relative)>1.45)
             continue;
 
-        const size=
-            Math.max(
-                25,
-                700/(distance+100)
-            );
+        const size=Math.max(
+            30,
+            Math.min(
+                85,
+[29.08.2026 23:31] rahl1k: 700/(distance+100)
+            )
+        );
 
-        /*
-           тело
-        */
-
-        ctx.fillStyle="#c93239";
+        // тело
+        ctx.fillStyle="#c8343b";
 
         ctx.fillRect(
             p.x-size*.35,
@@ -1077,11 +1066,8 @@ function draw(){
             size
         );
 
-        /*
-           голова
-        */
-
-        ctx.fillStyle="#e1b18e";
+        // голова
+        ctx.fillStyle="#d9a37e";
 
         ctx.beginPath();
 
@@ -1095,77 +1081,100 @@ function draw(){
 
         ctx.fill();
 
-        /*
-           HP
-        */
-
+        // оружие
         ctx.fillStyle="#111";
 
         ctx.fillRect(
-            p.x-size*.45,
-            p.y-size*1.6,
-            size*.9,
-            5
+            p.x+size*.25,
+            p.y-size*.65,
+            size*.55,
+            size*.12
         );
 
-        ctx.fillStyle="#32d06b";
+        // HP фон
+        ctx.fillStyle="#111";
 
         ctx.fillRect(
-            p.x-size*.45,
-            p.y-size*1.6,
-            size*.9*
-            (bot.hp/100),
-            5
+            p.x-size*.5,
+            p.y-size*1.65,
+            size,
+            6
+        );
+
+        // HP
+        ctx.fillStyle="#38d46a";
+
+        ctx.fillRect(
+            p.x-size*.5,
+            p.y-size*1.65,
+            size*(bot.hp/100),
+            6
         );
     }
+}
 
 
-    /*
-       Оружие
-    */
+/* =========================
+   ОРУЖИЕ
+========================= */
 
-    ctx.fillStyle="#111";
+function drawWeapon(){
+
+    ctx.fillStyle="#101214";
 
     ctx.fillRect(
-        W/2-55,
-        H-95,
-        110,
-        75
+        W/2-60,
+        H-90,
+        120,
+        70
     );
 
-    ctx.fillStyle="#555";
+    ctx.fillStyle="#4e5659";
 
     ctx.fillRect(
-        W/2-11,
+        W/2-12,
         H-135,
-        22,
-        50
+        24,
+        55
     );
 
+    ctx.fillStyle="#1a1d1e";
 
-    /*
-[29.08.2026 23:01] rahl1k: вспышка
-    */
+    ctx.fillRect(
+        W/2-40,
+        H-45,
+        80,
+        35
+    );
+}
 
-    if(flash>0){
 
-        ctx.fillStyle=
-            "rgba(255,220,70,.9)";
+/* =========================
+   ВСПЫШКА
+========================= */
 
-        ctx.beginPath();
+let flash=0;
 
-        ctx.arc(
-            W/2,
-            H-140,
-            22,
-            0,
-            Math.PI*2
-        );
+function drawFlash(){
 
-        ctx.fill();
+    if(flash<=0)
+        return;
 
-        flash-=0.016;
-    }
+    ctx.fillStyle="rgba(255,220,70,.9)";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        W/2,
+        H-140,
+        25,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    flash-=0.016;
 }
 
 
@@ -1175,17 +1184,15 @@ function draw(){
 
 function updateHUD(){
 
-    document.getElementById(
-        "hp"
-    ).textContent=
+    document.getElementById("hp")
+    .textContent=
         "HP "+Math.max(
             0,
             Math.floor(player.hp)
         );
 
-    document.getElementById(
-        "ammo"
-    ).textContent=
+    document.getElementById("ammo")
+    .textContent=
         reloading
         ? "RELOADING..."
         : ammo+" / "+reserve;
@@ -1193,7 +1200,7 @@ function updateHUD(){
 
 
 /* =========================
-   СОСТОЯНИЕ ИГРЫ
+   ПРОВЕРКА ИГРЫ
 ========================= */
 
 function checkGame(){
@@ -1204,29 +1211,23 @@ function checkGame(){
     ){
 
         player.hp=0;
-
         gameEnded=true;
 
-        document.getElementById(
-            "message"
-        ).textContent=
-            "YOU DIED";
+        document.getElementById("message")
+        .textContent="YOU DIED";
 
-        document.getElementById(
-            "message"
-        ).style.display="block";
+        document.getElementById("message")
+        .style.display="block";
 
-        document.getElementById(
-            "restart"
-        ).style.display="block";
+        document.getElementById("restart")
+        .style.display="block";
 
         return;
     }
 
-    const alive=
-        bots.filter(
-            b=>!b.dead
-        ).length;
+    const alive=bots.filter(
+        b=>!b.dead
+    ).length;
 
     if(
         alive===0 &&
@@ -1235,18 +1236,14 @@ function checkGame(){
 
         gameEnded=true;
 
-        document.getElementById(
-            "message"
-        ).textContent=
-            "ROUND WON!";
+        document.getElementById("message")
+        .textContent="ROUND WON!";
 
-        document.getElementById(
-            "message"
-        ).style.display="block";
+        document.getElementById("message")
+        .style.display="block";
 
-        document.getElementById(
-            "restart"
-        ).style.display="block";
+        document.getElementById("restart")
+        .style.display="block";
     }
 }
 
@@ -1268,46 +1265,42 @@ function resetGame(){
     reloading=false;
     gameEnded=false;
 
-    document.getElementById(
-        "message"
-    ).style.display="none";
+    firing=false;
 
-    document.getElementById(
-        "restart"
-    ).style.display="none";
+    resetJoystick();
+
+    document.getElementById("message")
+    .style.display="none";
+
+    document.getElementById("restart")
+    .style.display="none";
 
     spawnBots();
 }
 
-document
-.getElementById("restart")
-.addEventListener(
-    "touchstart",
-    e=>{
 
-        e.preventDefault();
+document.getElementById("restart")
+.addEventListener("pointerdown",e=>{
 
-        resetGame();
+    e.preventDefault();
 
-    },
-    {passive:false}
-);
+    resetGame();
+
+});
 
 
 /* =========================
    GAME LOOP
 ========================= */
 
-let last=
-    performance.now();
+let last=performance.now();
 
 function loop(now){
 
-    const dt=
-        Math.min(
-            0.05,
-            (now-last)/1000
-        );
+    const dt=Math.min(
+        0.05,
+        (now-last)/1000
+    );
 
     last=now;
 
@@ -1315,24 +1308,34 @@ function loop(now){
 
     updateBots(dt);
 
+    updateFire(dt);
+
     checkGame();
 
     updateHUD();
 
-    draw();
-
-    requestAnimationFrame(
-        loop
+    ctx.clearRect(
+        0,
+        0,
+        W,
+        H
     );
+
+    drawMap();
+
+    drawBots();
+
+    drawWeapon();
+
+    drawFlash();
+
+    requestAnimationFrame(loop);
 }
 
 resetGame();
 
-requestAnimationFrame(
-    loop
-);
+requestAnimationFrame(loop);
 
 </script>
-
 </body>
 </html>
