@@ -2,522 +2,89 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>rahl1k FPS TEST</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>rahl1k FPS TEST 2</title>
 <style>
-*{
-    box-sizing:border-box;
-    user-select:none;
-    -webkit-user-select:none;
-}
 html,body{
     margin:0;
+    padding:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#222;
+    background:#111;
     touch-action:none;
-    font-family:Arial,sans-serif;
 }
-#game{
+canvas{
     position:fixed;
-    inset:0;
+    left:0;
+    top:0;
     width:100%;
     height:100%;
-    display:block;
-    touch-action:none;
 }
-#hud{
+#text{
     position:fixed;
-    inset:0;
-    pointer-events:none;
-    color:white;
-    z-index:10;
-}
-#title{
-    position:absolute;
-    top:12px;
+    top:20px;
     left:50%;
     transform:translateX(-50%);
-    font-size:22px;
-    font-weight:bold;
-    text-shadow:0 2px 5px #000;
+    color:white;
+    font:bold 24px Arial;
+    z-index:10;
 }
-#crosshair{
-    position:absolute;
-    left:50%;
-    top:50%;
-    width:24px;
-    height:24px;
-    transform:translate(-50%,-50%);
-}
-#crosshair:before{
-    content:"";
-    position:absolute;
-    left:0;
-    top:11px;
-    width:24px;
-    height:2px;
-    background:white;
-}
-#crosshair:after{
-    content:"";
-    position:absolute;
-    left:11px;
-    top:0;
-    width:2px;
-    height:24px;
-    background:white;
-}
-/* =====================
-   ДЖОЙСТИК
-===================== */
 #joystick{
     position:fixed;
-    left:25px;
-    bottom:25px;
+    left:30px;
+    bottom:30px;
     width:140px;
     height:140px;
     border-radius:50%;
-    background:#ffffff18;
-    border:3px solid #ffffff66;
-    z-index:100;
-    touch-action:none;
+    background:#ffffff22;
+    border:3px solid white;
+    z-index:20;
 }
 #stick{
     position:absolute;
-    left:41px;
-    top:41px;
-    width:58px;
-    height:58px;
+    left:40px;
+    top:40px;
+    width:60px;
+    height:60px;
     border-radius:50%;
-    background:#ffffff66;
-    border:2px solid #ffffffaa;
-    pointer-events:none;
-}
-/* =====================
-   ПОДСКАЗКА
-===================== */
-#info{
-    position:absolute;
-    top:48px;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:14px;
-    white-space:nowrap;
-    text-shadow:0 2px 4px #000;
+    background:#ffffff88;
 }
 </style>
 </head>
 <body>
-<div id="hud">
-<div id="title">
-    rahl1k FPS TEST
-</div>
-<div id="info">
-    JOYSTICK + SWIPE
-</div>
-<div id="crosshair"></div>
+<div id="text">
+RAHL1K FPS TEST 2
 </div>
 <div id="joystick">
-<div id="stick"></div>
+    <div id="stick"></div>
 </div>
 <script>
-/* ==================================================
-   CANVAS
-================================================== */
 const canvas =
-    document.getElementById("game");
+document.getElementById("game");
 const ctx =
-    canvas.getContext("2d");
-let W=0;
-let H=0;
-let DPR=1;
+canvas.getContext("2d");
 function resize(){
-    W=window.innerWidth;
-    H=window.innerHeight;
-    DPR=
-        Math.min(
-            window.devicePixelRatio || 1,
-            2
-        );
     canvas.width=
-        W*DPR;
+        window.innerWidth;
     canvas.height=
-        H*DPR;
-    ctx.setTransform(
-        DPR,
-        0,
-        0,
-        DPR,
-        0,
-        0
-    );
+        window.innerHeight;
 }
+resize();
 window.addEventListener(
     "resize",
     resize
 );
-resize();
-/* ==================================================
-   ИГРОК
-================================================== */
-const player={
-    x:500,
-    y:500,
-    angle:0
-};
-/* ==================================================
-   ПРОСТАЯ КАРТА
-================================================== */
-const walls=[
-    {
-        x:200,
-        y:200,
-        w:1000,
-        h:100
-    },
-    {
-        x:200,
-        y:200,
-        w:100,
-        h:800
-    },
-    {
-        x:1100,
-        y:200,
-        w:100,
-        h:800
-    },
-    {
-        x:200,
-        y:900,
-        w:1000,
-        h:100
-    },
-    {
-        x:600,
-        y:500,
-        w:100,
-        h:400
-    }
-];
-/* ==================================================
-   СТОЛКНОВЕНИЕ
-================================================== */
-function collides(x,y){
-    const r=20;
-    for(
-        const w of walls
-    ){
-        if(
-            x+r>w.x &&
-            x-r<w.x+w.w &&
-            y+r>w.y &&
-            y-r<w.y+w.h
-        ){
-            return true;
-        }
-    }
-    return false;
-}
-/* ==================================================
-   ДЖОЙСТИК
-================================================== */
-const joystick =
-    document.getElementById(
-        "joystick"
-    );
-const stick =
-    document.getElementById(
-        "stick"
-    );
-let joyX=0;
-let joyY=0;
-let joyActive=false;
-let joyId=null;
-function setJoystick(
-    x,
-    y
-){
-    const r=
-        joystick.getBoundingClientRect();
-    const centerX=
-        r.left+
-        r.width/2;
-    const centerY=
-        r.top+
-        r.height/2;
-    let dx=
-        x-centerX;
-    let dy=
-        y-centerY;
-    const max=45;
-    const distance=
-        Math.hypot(dx,dy);
-    if(
-        distance>max
-    ){
-        dx=
-            dx/distance*
-            max;
-        dy=
-            dy/distance*
-            max;
-    }
-    joyX=
-        dx/max;
-    joyY=
-        dy/max;
-    stick.style.left=
-        (41+dx)+"px";
-    stick.style.top=
-        (41+dy)+"px";
-}
-function resetJoystick(){
-    joyActive=false;
-    joyId=null;
-    joyX=0;
-    joyY=0;
-    stick.style.left="41px";
-    stick.style.top="41px";
-}
-/* TOUCH START */
-joystick.addEventListener(
-    "touchstart",
-    function(e){
-        e.preventDefault();
-        const t=
-            e.changedTouches[0];
-        joyActive=true;
-        joyId=
-            t.identifier;
-        setJoystick(
-            t.clientX,
-            t.clientY
-        );
-    },
-    {passive:false}
-);
-/* TOUCH MOVE */
-joystick.addEventListener(
-    "touchmove",
-    function(e){
-        e.preventDefault();
-        if(!joyActive)
-            return;
-        for(
-            const t of e.changedTouches
-        ){
-            if(
-                t.identifier===
-                joyId
-            ){
-                setJoystick(
-                    t.clientX,
-                    t.clientY
-                );
-                break;
-            }
-        }
-    },
-    {passive:false}
-);
-/* TOUCH END */
-joystick.addEventListener(
-    "touchend",
-    function(e){
-        e.preventDefault();
-        for(
-            const t of e.changedTouches
-        ){
-            if(
-                t.identifier===
-                joyId
-            ){
-                resetJoystick();
-                break;
-            }
-        }
-    },
-    {passive:false}
-);
-/* ==================================================
-   СВАЙП КАМЕРЫ
-================================================== */
-let lookId=null;
-let lastLookX=0;
-canvas.addEventListener(
-    "touchstart",
-    function(e){
-        for(
-            const t of e.changedTouches
-        ){
-            /*
-              Правая часть экрана
-            */
-            if(
-                t.clientX>
-                W*0.45
-            ){
-                lookId=
-                    t.identifier;
-                lastLookX=
-                    t.clientX;
-                break;
-            }
-        }
-    },
-    {passive:false}
-);
-canvas.addEventListener(
-    "touchmove",
-    function(e){
-        e.preventDefault();
-        if(
-            lookId===null
-        )
-            return;
-        for(
-            const t of e.changedTouches
-        ){
-            if(
-                t.identifier===
-                lookId
-            ){
-                const dx=
-                    t.clientX-
-                    lastLookX;
-                player.angle +=
-                    dx*0.008;
-                lastLookX=
-                    t.clientX;
-                break;
-            }
-        }
-    },
-    {passive:false}
-);
-canvas.addEventListener(
-    "touchend",
-    function(e){
-        for(
-            const t of e.changedTouches
-        ){
-            if(
-                t.identifier===
-                lookId
-            ){
-                lookId=null;
-                break;
-            }
-        }
-    }
-);
-/* ==================================================
-   ДВИЖЕНИЕ
-================================================== */
-function updatePlayer(dt){
-    const speed=220;
-    /*
-       Вверх джойстика =
-       движение вперёд
-    */
-    const forward=
-        -joyY;
-    const side=
-        joyX;
-    const dx=
-        (
-            Math.cos(player.angle)*
-            forward
-            -
-            Math.sin(player.angle)*
-            side
-        )*
-        speed*
-        dt;
-    const dy=
-        (
-            Math.sin(player.angle)*
-            forward
-            +
-            Math.cos(player.angle)*
-            side
-        )*
-        speed*
-        dt;
-    const nx=
-        player.x+dx;
-    const ny=
-        player.y+dy;
-    if(
-        !collides(
-            nx,
-            player.y
-        )
-    ){
-        player.x=nx;
-    }
-    if(
-        !collides(
-            player.x,
-            ny
-        )
-    ){
-        player.y=ny;
-    }
-}
-/* ==================================================
-   RAYCAST
-================================================== */
-function raycast(angle){
-    const max=1200;
-    const step=5;
-    for(
-        let d=1;
-        d<max;
-        d+=step
-    ){
-        const x=
-            player.x+
-            Math.cos(angle)*
-            d;
-        const y=
-            player.y+
-            Math.sin(angle)*
-            d;
-        if(
-            x<0 ||
-            y<0 ||
-            x>1400 ||
-            y>1200
-        ){
-            return d;
-        }
-        for(
-            const wall of walls
-        ){
-            if(
-                x>=wall.x &&
-                x<=wall.x+wall.w &&
-                y>=wall.y &&
-                y<=wall.y+wall.h
-            ){
-                return d;
-            }
-        }
-    }
-    return max;
-}
-/* ==================================================
-   FPS РЕНДЕР
-================================================== */
+/* =========================
+   FPS КАРТИНКА
+========================= */
 function draw(){
+    const W=canvas.width;
+    const H=canvas.height;
     /*
-       НЕБО
+       Небо
     */
-    ctx.fillStyle=
-        "#6e858f";
+    ctx.fillStyle="#6f8791";
     ctx.fillRect(
         0,
         0,
@@ -525,10 +92,9 @@ function draw(){
         H/2
     );
     /*
-       ПОЛ
+       Земля
     */
-    ctx.fillStyle=
-        "#30383b";
+    ctx.fillStyle="#30383c";
     ctx.fillRect(
         0,
         H/2,
@@ -536,20 +102,37 @@ function draw(){
         H/2
     );
     /*
-       Линии пола
+       Центральная стена
     */
-    ctx.strokeStyle=
-        "#465054";
-    ctx.lineWidth=2;
+    ctx.fillStyle="#555d60";
+    ctx.fillRect(
+        W*0.2,
+        H*0.25,
+        W*0.6,
+        H*0.35
+    );
+    /*
+       Дверь
+    */
+    ctx.fillStyle="#202427";
+    ctx.fillRect(
+        W*0.43,
+        H*0.35,
+        W*0.14,
+        H*0.25
+    );
+    /*
+       Полосы пола
+    */
+    ctx.strokeStyle="#596164";
     for(
         let i=1;
-        i<12;
+        i<10;
         i++
     ){
         const y=
             H/2+
-            (H/2)*
-            i/12;
+            i*(H/2)/10;
         ctx.beginPath();
         ctx.moveTo(
             0,
@@ -561,109 +144,81 @@ function draw(){
         );
         ctx.stroke();
     }
-    /*
-       СТЕНЫ
-    */
-    const fov=
-        Math.PI/3;
-    const rays=
-        Math.min(
-            240,
-            Math.floor(W/3)
-        );
-    const projection=
-        (W/2)/
-        Math.tan(fov/2);
-    for(
-        let i=0;
-        i<rays;
-        i++
-    ){
-        const screenX=
-            i*
-            W/rays;
-        const angle=
-            player.angle-
-            fov/2+
-            (i/rays)*
-            fov;
-        let distance=
-            raycast(angle);
-        distance *=
-            Math.cos(
-                angle-
-                player.angle
-            );
-        distance=
-            Math.max(
-                1,
-                distance
-            );
-        const wallHeight=
-            projection/
-            distance*
-            100;
-        const top=
-            H/2-
-            wallHeight/2;
-        const brightness=
-            Math.max(
-                35,
-                180-distance/7
-            );
-        ctx.fillStyle=
-            "rgb("+
-            brightness*0.65+
-            ","+
-            brightness*0.72+
-            ","+
-            brightness*0.75+
-            ")";
-        ctx.fillRect(
-            screenX,
-            top,
-            W/rays+1,
-            wallHeight
-        );
+}
+draw();
+/* =========================
+   ДЖОЙСТИК
+========================= */
+const joystick=
+document.getElementById(
+    "joystick"
+);
+const stick=
+document.getElementById(
+    "stick"
+);
+let active=false;
+function joystickMove(x,y){
+    const r=
+        joystick.getBoundingClientRect();
+    let dx=
+        x-
+        (r.left+r.width/2);
+    let dy=
+        y-
+        (r.top+r.height/2);
+    const max=40;
+    const d=
+        Math.hypot(dx,dy);
+    if(d>max){
+        dx=
+            dx/d*max;
+        dy=
+            dy/d*max;
     }
-    /*
-       ОРУЖИЕ-ЗАГЛУШКА
-    */
-    ctx.fillStyle="#111";
-    ctx.fillRect(
-        W/2-55,
-        H-85,
-        110,
-        70
-    );
-    ctx.fillStyle="#555";
-    ctx.fillRect(
-        W/2-10,
-        H-125,
-        20,
-        55
-    );
+    stick.style.left=
+        (40+dx)+"px";
+    stick.style.top=
+        (40+dy)+"px";
 }
-/* ==================================================
-   GAME LOOP
-================================================== */
-let last=
-    performance.now();
-function loop(now){
-    const dt=
-        Math.min(
-            0.05,
-            (now-last)/1000
+joystick.addEventListener(
+    "touchstart",
+    function(e){
+        e.preventDefault();
+        active=true;
+        const t=
+            e.changedTouches[0];
+        joystickMove(
+            t.clientX,
+            t.clientY
         );
-    last=now;
-    updatePlayer(dt);
-    draw();
-    requestAnimationFrame(
-        loop
-    );
-}
-requestAnimationFrame(
-    loop
+    },
+    {passive:false}
+);
+joystick.addEventListener(
+    "touchmove",
+    function(e){
+        e.preventDefault();
+        if(!active)
+            return;
+        const t=
+            e.changedTouches[0];
+        joystickMove(
+            t.clientX,
+            t.clientY
+        );
+    },
+    {passive:false}
+);
+joystick.addEventListener(
+    "touchend",
+    function(e){
+        e.preventDefault();
+        active=false;
+        stick.style.left="40px";
+        stick.style.top="40px";
+    },
+    {passive:false}
 );
 </script>
 </body>
