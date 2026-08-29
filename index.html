@@ -1350,7 +1350,61 @@ updateHUD();
 requestAnimationFrame(
     updatePlayer
 );
+<script>
+const j = document.getElementById("joystick");
+const s = document.getElementById("stick");
 
+j.ontouchstart = function(e) {
+    e.preventDefault();
+
+    const t = e.touches[0];
+
+    s.style.background = "lime";
+
+    document.getElementById("debug").textContent =
+        "TOUCH START: " +
+        Math.round(t.clientX) + "," +
+        Math.round(t.clientY);
+};
+
+j.ontouchmove = function(e) {
+    e.preventDefault();
+
+    const t = e.touches[0];
+
+    const r = j.getBoundingClientRect();
+
+    let x = t.clientX - r.left - r.width / 2;
+    let y = t.clientY - r.top - r.height / 2;
+
+    const max = 40;
+
+    const d = Math.hypot(x,y);
+
+    if(d > max){
+        x = x / d * max;
+        y = y / d * max;
+    }
+
+    s.style.left = (38 + x) + "px";
+    s.style.top  = (38 + y) + "px";
+
+    document.getElementById("debug").textContent =
+        "MOVING: " +
+        Math.round(x) + "," +
+        Math.round(y);
+};
+
+j.ontouchend = function(e) {
+    e.preventDefault();
+
+    s.style.left = "38px";
+    s.style.top = "38px";
+    s.style.background = "rgba(255,255,255,.6)";
+
+    document.getElementById("debug").textContent =
+        "RELEASED";
+};
 </script>
 </body>
 </html>
