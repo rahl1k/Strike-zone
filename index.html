@@ -397,172 +397,170 @@ function collision(x,y){
    ДЖОЙСТИК
 ===================================================== */
 
-const joystick=
-    document.getElementById("joystick");
+/* =====================================================
+ДЖОЙСТИК — iPHONE FIX
+===================================================== */
+const joystick =
+document.getElementById(“joystick”);
+const stick =
+document.getElementById(“stick”);
+let joyX = 0;
+let joyY = 0;
+let joystickActive = false;
+let joystickId = null;
+function moveJoystick(x, y){
+const rect =
+    joystick.getBoundingClientRect();
 
-const stick=
-    document.getElementById("stick");
+const centerX =
+    rect.left + rect.width / 2;
 
-let joyX=0;
-let joyY=0;
+const centerY =
+    rect.top + rect.height / 2;
 
-let joystickActive=false;
-let joystickId=null;
+let dx = x - centerX;
+let dy = y - centerY;
 
-let touchCounter=0;
+const max = 40;
 
-function joystickMove(x,y){
+const distance =
+    Math.sqrt(dx * dx + dy * dy);
 
-    const rect=
-        joystick.getBoundingClientRect();
+if(distance > max){
 
-    const centerX=
-        rect.left+
-        rect.width/2;
+    dx = dx / distance * max;
+    dy = dy / distance * max;
+}
 
-    const centerY=
-        rect.top+
-        rect.height/2;
+joyX = dx / max;
+joyY = dy / max;
 
-    let dx=x-centerX;
-    let dy=y-centerY;
+stick.style.transform =
+    "translate(" + dx + "px," + dy + "px)";
 
-    const max=40;
+touchCounter++;
 
-    const distance=
-        Math.sqrt(dx*dx+dy*dy);
+updateDebug();
+}
+function resetJoystick(){
+joystickActive = false;
+joystickId = null;
 
-    if(distance>max){
+joyX = 0;
+joyY = 0;
 
-        dx=
-            dx/distance*max;
+stick.style.transform =
+    "translate(0px,0px)";
 
-        dy=
-            dy/distance*max;
+updateDebug();
+}
+/*
+НАЧАЛО КАСАНИЯ
+*/
+document.addEventListener(
+“touchstart”,
+function(e){
+    for(const t of e.changedTouches){
+
+        const rect =
+            joystick.getBoundingClientRect();
+
+        const inside =
+            t.clientX >= rect.left &&
+            t.clientX <= rect.right &&
+            t.clientY >= rect.top &&
+            t.clientY <= rect.bottom;
+
+        if(inside){
+
+            e.preventDefault();
+
+            joystickActive = true;
+            joystickId = t.identifier;
+
+            moveJoystick(
+                t.clientX,
+                t.clientY
+            );
+
+            return;
+        }
     }
 
-    joyX=dx/max;
-    joyY=dy/max;
-
-    stick.style.left=
-        (41+dx)+"px";
-
-    stick.style.top=
-        (41+dy)+"px";
-
-    touchCounter++;
-
-    updateDebug();
-}
-
-
-function joystickReset(){
-
-    joystickActive=false;
-    joystickId=null;
-
-    joyX=0;
-    joyY=0;
-
-    stick.style.left="41px";
-    stick.style.top="41px";
-
-    updateDebug();
-}
-
-
+},
+{passive:false}
+);
 /*
-   TOUCH
+ДВИЖЕНИЕ ПАЛЬЦА
 */
+document.addEventListener(
+“touchmove”,
+function(e){
+    if(!joystickActive)
+        return;
 
-joystick.addEventListener(
-    "touchstart",
-    function(e){
+    for(const t of e.changedTouches){
 
-        e.preventDefault();
+        if(
+            t.identifier === joystickId
+        ){
 
-        const t=e.changedTouches[0];
+            e.preventDefault();
 
-        joystickActive=true;
-        joystickId=t.identifier;
+            moveJoystick(
+                t.clientX,
+                t.clientY
+            );
 
-        joystickMove(
-            t.clientX,
-            t.clientY
-        );
-
-    },
-    {passive:false}
-);
-
-
-joystick.addEventListener(
-    "touchmove",
-    function(e){
-
-        e.preventDefault();
-[29.08.2026 23:43] rahl1k: if(!joystickActive)
             return;
+        }
+    }
 
-        for(
-            const t of e.changedTouches
+},
+{passive:false}
+);
+/*
+ОТПУСКАНИЕ
+*/
+document.addEventListener(
+“touchend”,
+function(e){
+    for(const t of e.changedTouches){
+
+        if(
+            t.identifier === joystickId
         ){
 
-            if(
-                t.identifier===
-                joystickId
-            ){
+            resetJoystick();
 
-                joystickMove(
-                    t.clientX,
-                    t.clientY
-                );
-
-                break;
-            }
+            return;
         }
+    }
 
-    },
-    {passive:false}
+},
+{passive:false}
 );
+/*
+ОТМЕНА КАСАНИЯ
+*/
+document.addEventListener(
+“touchcancel”,
+function(e){
+    for(const t of e.changedTouches){
 
-
-joystick.addEventListener(
-    "touchend",
-    function(e){
-
-        e.preventDefault();
-
-        for(
-            const t of e.changedTouches
+        if(
+            t.identifier === joystickId
         ){
 
-            if(
-                t.identifier===
-                joystickId
-            ){
+            resetJoystick();
 
-                joystickReset();
-
-                break;
-            }
+            return;
         }
+    }
 
-    },
-    {passive:false}
+},
+{passive:false}
 );
-
-
-joystick.addEventListener(
-    "touchcancel",
-    function(){
-
-        joystickReset();
-
-    },
-    {passive:false}
-);
-
 
 /* =====================================================
    ДВИЖЕНИЕ
