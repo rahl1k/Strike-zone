@@ -698,15 +698,12 @@ document.addEventListener(
 /* =========================
    КАМЕРА
 ========================= */
-let cameraX = 0;
-let cameraY = 0;
-
 function updateCamera(){
 
-    const targetX =
+    let cx =
         window.innerWidth / 2 - playerX;
 
-    const targetY =
+    let cy =
         window.innerHeight / 2 - playerY;
 
     const minX =
@@ -715,27 +712,20 @@ function updateCamera(){
     const minY =
         window.innerHeight - 2200;
 
-    const targetCameraX =
+    cx =
         Math.min(
             0,
-            Math.max(minX, targetX)
+            Math.max(minX, cx)
         );
 
-    const targetCameraY =
+    cy =
         Math.min(
             0,
-            Math.max(minY, targetY)
+            Math.max(minY, cy)
         );
-
-    cameraX +=
-        (targetCameraX - cameraX) * 0.18;
-
-    cameraY +=
-        (targetCameraY - cameraY) * 0.18;
 
     map.style.transform =
-        `translate3d(${cameraX}px,${cameraY}px,0)`;
-}
+        "translate(" + cx + "px," + cy + "px)";
 }
 /* =========================
    БОТЫ
