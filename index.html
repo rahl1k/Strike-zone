@@ -1,228 +1,1233 @@
-<!DOCTYPE html>
+[30.08.2026 1:38] rahl1k: <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>rahl1k TOUCH TEST</title>
+<title>rahl1k • Strike Zone 0.8</title>
 <style>
-html,body{
+
+*{
+    box-sizing:border-box;
     margin:0;
+    padding:0;
+
+    user-select:none;
+    -webkit-user-select:none;
+    -webkit-touch-callout:none;
+}
+
+html,
+body{
+
     width:100%;
     height:100%;
+
     overflow:hidden;
-    background:#20252a;
-    color:white;
+
+    background:#30383b;
+
+    touch-action:none;
+
     font-family:Arial,sans-serif;
+}
+
+
+/* =========================
+   ИГРОВОЙ ЭКРАН
+========================= */
+
+#game{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    background:#30383b;
+
     touch-action:none;
 }
 
-#screen{
-    width:100%;
-    height:100%;
-    position:fixed;
-    inset:0;
-    touch-action:none;
+
+/* =========================
+   МИР
+========================= */
+
+#world{
+
+    position:absolute;
+
+    width:3000px;
+    height:2200px;
+
+    left:0;
+    top:0;
+
+    background-color:#465356;
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,.08) 2px,
+            transparent 2px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.08) 2px,
+            transparent 2px
+        );
+
+    background-size:100px 100px;
+
+    will-change:transform;
 }
+
+
+/* =========================
+   ДОРОГИ
+========================= */
+
+.road{
+
+    position:absolute;
+
+    background:#252b2e;
+
+    border:4px solid #697477;
+}
+
+
+.road1{
+
+    left:0;
+    top:900px;
+
+    width:3000px;
+    height:300px;
+}
+
+
+.road2{
+
+    left:1350px;
+    top:0;
+
+    width:300px;
+    height:2200px;
+}
+
+
+/* =========================
+   ЗДАНИЯ
+========================= */
+
+.building{
+
+    position:absolute;
+
+    background:#15191b;
+
+    border:5px solid #899397;
+
+    box-shadow:
+        inset 0 0 0 8px #252b2d;
+}
+
+
+.b1{
+    left:180px;
+    top:180px;
+    width:650px;
+    height:150px;
+}
+
+.b2{
+    left:180px;
+    top:180px;
+    width:150px;
+    height:650px;
+}
+
+.b3{
+    left:1900px;
+    top:180px;
+    width:650px;
+    height:150px;
+}
+
+.b4{
+    left:2400px;
+    top:180px;
+    width:150px;
+    height:650px;
+}
+
+.b5{
+    left:180px;
+    top:1450px;
+    width:700px;
+    height:150px;
+}
+
+.b6{
+    left:180px;
+    top:1450px;
+    width:150px;
+    height:550px;
+}
+
+.b7{
+    left:1900px;
+    top:1450px;
+    width:650px;
+    height:150px;
+}
+
+.b8{
+    left:2400px;
+    top:1450px;
+    width:150px;
+    height:550px;
+}
+
+.b9{
+    left:1100px;
+    top:650px;
+    width:750px;
+    height:130px;
+}
+
+.b10{
+    left:1100px;
+    top:1420px;
+    width:750px;
+    height:130px;
+}
+
+.b11{
+    left:1300px;
+    top:950px;
+    width:400px;
+    height:130px;
+}
+
+
+/* =========================
+   КОНТЕЙНЕРЫ
+========================= */
+
+.container{
+
+    position:absolute;
+
+    width:180px;
+    height:80px;
+
+    background:#596c70;
+
+    border:4px solid #a2abad;
+}
+
+
+.c1{
+    left:700px;
+    top:500px;
+}
+
+.c2{
+    left:2150px;
+    top:500px;
+}
+
+.c3{
+    left:700px;
+    top:1150px;
+}
+
+.c4{
+    left:2150px;
+    top:1150px;
+}
+
+
+/* =========================
+   ИГРОК
+========================= */
+
+#player{
+
+    position:absolute;
+
+    width:56px;
+    height:56px;
+
+    left:500px;
+    top:500px;
+
+    transform:
+        translate(-50%,-50%);
+
+    border-radius:50%;
+
+    background:#1688ff;
+
+    border:5px solid white;
+
+    box-shadow:
+        0 0 20px #000;
+
+    z-index:50;
+}
+
+
+/* =========================
+   БОТЫ
+========================= */
+
+.bot{
+
+    position:absolute;
+
+    width:56px;
+    height:56px;
+
+    border-radius:50%;
+
+    background:#d93640;
+
+    border:4px solid white;
+
+    z-index:40;
+}
+
+
+/* =========================
+   HUD
+========================= */
+
+#hud{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:100;
+
+    color:white;
+
+    text-shadow:
+        0 2px 5px black;
+
+    pointer-events:none;
+}
+
 
 #title{
-    position:absolute;
-    top:20px;
-    width:100%;
-    text-align:center;
-    font-size:28px;
-}
 
-#info{
     position:absolute;
-    top:70px;
-    width:100%;
-    text-align:center;
-    font-size:20px;
-}
 
-#button{
-    position:absolute;
+    top:10px;
     left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    width:220px;
-    height:100px;
-    border-radius:25px;
-    border:4px solid white;
-    background:#333;
-    color:white;
-    font-size:24px;
+
+    transform:
+        translateX(-50%);
+
+    font-size:28px;
+
+    font-weight:bold;
+}
+
+
+#status{
+
+    position:absolute;
+
+    top:50px;
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    font-size:15px;
+
+    color:#00ff55;
+
+    white-space:nowrap;
+}
+
+
+/* =========================
+   JOYSTICK
+========================= */
+
+#joystick{
+
+    position:fixed;
+
+    left:25px;
+[30.08.2026 1:38] rahl1k: bottom:25px;
+
+    width:150px;
+    height:150px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.18);
+
+    border:
+        4px solid rgba(255,255,255,.65);
+
+    z-index:500;
+
+    pointer-events:auto;
+
     touch-action:none;
 }
 
-#dot{
+
+#stick{
+
     position:absolute;
-    left:50%;
-    top:70%;
-    width:50px;
-    height:50px;
-    transform:translate(-50%,-50%);
+
+    left:42px;
+    top:42px;
+
+    width:58px;
+    height:58px;
+
     border-radius:50%;
-    background:#1688ff;
+
+    background:
+        rgba(255,255,255,.75);
+
+    border:3px solid white;
+
+    pointer-events:none;
 }
+
+
+/* =========================
+   ПРИЦЕЛ
+========================= */
+
+#crosshair{
+
+    position:fixed;
+
+    left:50%;
+    top:50%;
+
+    width:30px;
+    height:30px;
+
+    transform:
+        translate(-50%,-50%);
+
+    z-index:150;
+
+    pointer-events:none;
+}
+
+
+#crosshair:before{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    top:14px;
+
+    width:30px;
+    height:2px;
+
+    background:white;
+}
+
+
+#crosshair:after{
+
+    content:"";
+
+    position:absolute;
+
+    left:14px;
+    top:0;
+
+    width:2px;
+    height:30px;
+
+    background:white;
+}
+
+
+/* =========================
+   HP / AMMO
+========================= */
+
+#hp{
+
+    position:fixed;
+
+    left:20px;
+    bottom:20px;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    z-index:200;
+}
+
+
+#ammo{
+
+    position:fixed;
+
+    right:20px;
+    bottom:20px;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    z-index:200;
+}
+
+
+/* =========================
+   FIRE
+========================= */
+
+#fire{
+
+    position:fixed;
+
+    right:25px;
+    bottom:90px;
+
+    width:90px;
+    height:90px;
+
+    border-radius:50%;
+
+    border:3px solid white;
+
+    background:#a52129;
+
+    color:white;
+
+    font-weight:bold;
+
+    z-index:500;
+
+    pointer-events:auto;
+
+    touch-action:none;
+}
+
+
+/* =========================
+   RELOAD
+========================= */
+
+#reload{
+
+    position:fixed;
+
+    right:130px;
+    bottom:30px;
+
+    width:105px;
+    height:45px;
+
+    border-radius:12px;
+
+    border:2px solid white;
+
+    background:#222;
+
+    color:white;
+
+    font-weight:bold;
+
+    z-index:500;
+
+    pointer-events:auto;
+
+    touch-action:none;
+}
+
+
+/* =========================
+   ПОВОРОТ
+========================= */
+
+#rotate{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:1000;
+
+    background:#111;
+
+    color:white;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    font-size:22px;
+}
+
 </style>
 </head>
 <body>
-<div id="screen">
+<div id="game">
+<div id="world">
+
+
+    <div class="road road1"></div>
+
+    <div class="road road2"></div>
+
+
+    <div class="building b1"></div>
+    <div class="building b2"></div>
+
+    <div class="building b3"></div>
+    <div class="building b4"></div>
+
+    <div class="building b5"></div>
+    <div class="building b6"></div>
+
+    <div class="building b7"></div>
+    <div class="building b8"></div>
+
+    <div class="building b9"></div>
+    <div class="building b10"></div>
+    <div class="building b11"></div>
+
+
+    <div class="container c1"></div>
+    <div class="container c2"></div>
+    <div class="container c3"></div>
+    <div class="container c4"></div>
+
+
+    <div id="player"></div>
+
+
+    <div class="bot"
+         style="left:2450px;top:500px">
+    </div>
+
+    <div class="bot"
+         style="left:2300px;top:1050px">
+    </div>
+
+    <div class="bot"
+         style="left:2450px;top:1900px">
+    </div>
+
+    <div class="bot"
+         style="left:700px;top:1900px">
+    </div>
+
+    <div class="bot"
+         style="left:1500px;top:1850px">
+    </div>
+
+
+</div>
+</div>
+<div id="rotate">
+↔️<br><br>
+
+Поверни iPhone<br>
+горизонтально
+</div>
+<div id="hud">
 <div id="title">
-    rahl1k TOUCH TEST
+    rahl1k • STRIKE ZONE 0.8
 </div>
 
-<div id="info">
-    TOUCH: NO
+
+<div id="status">
+    JOYSTICK: OFF • POS: 500,500
 </div>
 
-<button id="button">
-    НАЖМИ
+
+<div id="crosshair"></div>
+
+
+<div id="hp">
+    HP 100
+</div>
+
+
+<div id="ammo">
+    30 / 90
+</div>
+
+
+<div id="joystick">
+
+    <div id="stick"></div>
+
+</div>
+
+
+<button id="fire">
+    FIRE
 </button>
 
-<div id="dot"></div>
+
+<button id="reload">
+    RELOAD
+</button>
 </div>
 <script>
 
-const screen =
-document.getElementById("screen");
 
-const info =
-document.getElementById("info");
+/* =========================
+   ELEMENTЫ
+========================= */
 
-const button =
-document.getElementById("button");
+const joystick =
+    document.getElementById(
+        "joystick"
+    );
 
-const dot =
-document.getElementById("dot");
+const stick =
+    document.
+[30.08.2026 1:38] rahl1k: getElementById(
+        "stick"
+    );
+
+const player =
+    document.getElementById(
+        "player"
+    );
+
+const world =
+    document.getElementById(
+        "world"
+    );
+
+const status =
+    document.getElementById(
+        "status"
+    );
 
 
-let touches=0;
+/* =========================
+   PLAYER
+========================= */
+
+let playerX=500;
+
+let playerY=500;
 
 
-function showTouch(x,y){
+/* =========================
+   JOYSTICK
+========================= */
 
-    touches++;
+let joyX=0;
 
-    info.textContent =
-        "TOUCH: YES | "+
-        Math.round(x)+
+let joyY=0;
+
+let active=false;
+
+let pointerId=null;
+
+
+/* =========================
+   УПРАВЛЕНИЕ ДЖОЙСТИКОМ
+========================= */
+
+function moveStick(
+    x,
+    y
+){
+
+    const rect =
+        joystick.getBoundingClientRect();
+
+
+    const centerX =
+        rect.left +
+        rect.width/2;
+
+
+    const centerY =
+        rect.top +
+        rect.height/2;
+
+
+    let dx =
+        x-centerX;
+
+
+    let dy =
+        y-centerY;
+
+
+    const max=45;
+
+
+    const distance =
+        Math.hypot(
+            dx,
+            dy
+        );
+
+
+    if(distance>max){
+
+        dx =
+            dx/distance*max;
+
+        dy =
+            dy/distance*max;
+    }
+
+
+    joyX =
+        dx/max;
+
+    joyY =
+        dy/max;
+
+
+    stick.style.left =
+        (42+dx)+"px";
+
+
+    stick.style.top =
+        (42+dy)+"px";
+
+
+    status.textContent =
+        "JOYSTICK: ON • POS: "+
+        Math.round(playerX)+
         ","+
-        Math.round(y)+
-        " | "+touches;
-
-    dot.style.left =
-        x+"px";
-
-    dot.style.top =
-        y+"px";
+        Math.round(playerY);
 }
 
 
-/*
-   Проверяем POINTER
-*/
+/* =========================
+   POINTER DOWN
+========================= */
 
-screen.addEventListener(
+joystick.addEventListener(
     "pointerdown",
     function(e){
 
         e.preventDefault();
 
-        showTouch(
+        active=true;
+
+        pointerId=
+            e.pointerId;
+
+
+        joystick.setPointerCapture(
+            e.pointerId
+        );
+
+
+        moveStick(
             e.clientX,
             e.clientY
         );
 
     },
-    {passive:false}
+    {
+        passive:false
+    }
 );
 
 
-/*
-   Проверяем движение пальца
-*/
+/* =========================
+   POINTER MOVE
+========================= */
 
-screen.addEventListener(
+joystick.addEventListener(
     "pointermove",
     function(e){
 
         if(
-            e.buttons ||
-            e.pointerType==="touch"
+            !active ||
+            e.pointerId !== pointerId
+        )
+            return;
+
+
+        e.preventDefault();
+
+
+        moveStick(
+            e.clientX,
+            e.clientY
+        );
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+/* =========================
+   POINTER UP
+========================= */
+
+function releaseStick(){
+
+    active=false;
+
+    pointerId=null;
+
+    joyX=0;
+
+    joyY=0;
+
+
+    stick.style.left="42px";
+
+    stick.style.top="42px";
+
+
+    status.textContent =
+        "JOYSTICK: OFF • POS: "+
+        Math.round(playerX)+
+        ","+
+        Math.round(playerY);
+}
+
+
+joystick.addEventListener(
+    "pointerup",
+    releaseStick
+);
+
+
+joystick.addEventListener(
+    "pointercancel",
+    releaseStick
+);
+
+
+/* =========================
+   КАМЕРА
+========================= */
+
+function updateCamera(){
+
+    let cameraX =
+        window.innerWidth/2 -
+        playerX;
+
+
+    let cameraY =
+        window.innerHeight/2 -
+        playerY;
+
+
+    const minX =
+        window.innerWidth -
+        3000;
+
+
+    const minY =
+        window.innerHeight -
+        2200;
+
+
+    cameraX =
+        Math.min(
+            0,
+            Math.max(
+                minX,
+                cameraX
+            )
+        );
+
+
+    cameraY =
+        Math.min(
+            0,
+            Math.max(
+                minY,
+                cameraY
+            )
+        );
+
+
+    world.style.transform =
+        "translate("+
+        cameraX+
+        "px,"+
+        cameraY+
+        "px)";
+}
+
+
+/* =========================
+   ИГРОВОЙ ЦИКЛ
+========================= */
+
+let last =
+    performance.now();
+
+
+function loop(){
+
+    const now =
+        performance.now();
+
+
+    const dt =
+        Math.min(
+            0.05,
+            (now-last)/1000
+        );
+
+
+    last=now;
+
+
+    const speed=350;
+
+
+    if(active){
+
+        playerX +=
+            joyX*
+            speed*
+            dt;
+
+
+        playerY +=
+            joyY*
+            speed*
+            dt;
+
+
+        playerX =
+            Math.max(
+                30,
+                Math.min(
+                    2970,
+                    playerX
+                )
+            );
+[30.08.2026 1:38] rahl1k: playerY =
+            Math.max(
+                30,
+                Math.min(
+                    2170,
+                    playerY
+                )
+            );
+
+
+        status.textContent =
+            "JOYSTICK: ON • POS: "+
+            Math.round(playerX)+
+            ","+
+            Math.round(playerY);
+    }
+
+
+    player.style.left =
+        playerX+"px";
+
+
+    player.style.top =
+        playerY+"px";
+
+
+    updateCamera();
+
+
+    requestAnimationFrame(
+        loop
+    );
+}
+
+
+/* =========================
+   FIRE
+========================= */
+
+let ammo=30;
+
+let reserve=90;
+
+let reloading=false;
+
+
+const ammoText =
+    document.getElementById(
+        "ammo"
+    );
+
+
+function updateAmmo(){
+
+    ammoText.textContent =
+        reloading
+        ? "RELOADING..."
+        : ammo+
+          " / "+
+          reserve;
+}
+
+
+document.getElementById(
+    "fire"
+).addEventListener(
+    "pointerdown",
+    function(e){
+
+        e.preventDefault();
+
+        if(
+            reloading
+        )
+            return;
+
+
+        if(
+            ammo<=0
         ){
 
-            e.preventDefault();
+            reload();
 
-            showTouch(
-                e.clientX,
-                e.clientY
-            );
+            return;
         }
 
-    },
-    {passive:false}
-);
 
+        ammo--;
 
-/*
-   Обычный TOUCH API
-*/
-
-screen.addEventListener(
-    "touchstart",
-    function(e){
-
-        e.preventDefault();
-
-        const t =
-            e.changedTouches[0];
-
-        showTouch(
-            t.clientX,
-            t.clientY
-        );
+        updateAmmo();
 
     },
-    {passive:false}
-);
-
-
-screen.addEventListener(
-    "touchmove",
-    function(e){
-
-        e.preventDefault();
-
-        const t =
-            e.changedTouches[0];
-
-        showTouch(
-            t.clientX,
-            t.clientY
-        );
-
-    },
-    {passive:false}
-);
-
-
-/*
-   Отдельно проверяем кнопку
-*/
-
-button.addEventListener(
-    "click",
-    function(){
-
-        button.textContent =
-            "РАБОТАЕТ!";
-
-        button.style.background =
-            "#1688ff";
-
+    {
+        passive:false
     }
+);
+
+
+/* =========================
+   RELOAD
+========================= */
+
+function reload(){
+
+    if(
+        reloading ||
+        ammo>=30 ||
+        reserve<=0
+    )
+        return;
+
+
+    reloading=true;
+
+    updateAmmo();
+
+
+    setTimeout(
+        function(){
+
+            const need =
+                30-ammo;
+
+
+            const amount =
+                Math.min(
+                    need,
+                    reserve
+                );
+
+
+            ammo+=amount;
+
+            reserve-=amount;
+
+            reloading=false;
+
+            updateAmmo();
+
+        },
+        900
+    );
+}
+
+
+document.getElementById(
+    "reload"
+).addEventListener(
+    "pointerdown",
+    function(e){
+
+        e.preventDefault();
+
+        reload();
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+/* =========================
+   ORIENTATION
+========================= */
+
+function orientation(){
+
+    document.getElementById(
+        "rotate"
+    ).style.display =
+        window.innerHeight >
+        window.innerWidth
+        ? "flex"
+        : "none";
+}
+
+
+window.addEventListener(
+    "resize",
+    orientation
+);
+
+orientation();
+
+
+/* =========================
+   START
+========================= */
+
+updateCamera();
+
+updateAmmo();
+
+requestAnimationFrame(
+    loop
 );
 
 </script>
