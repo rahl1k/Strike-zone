@@ -698,41 +698,44 @@ document.addEventListener(
 /* =========================
    КАМЕРА
 ========================= */
+let cameraX = 0;
+let cameraY = 0;
+
 function updateCamera(){
-    let cx =
-        window.innerWidth/2-
-        playerX;
-    let cy =
-        window.innerHeight/2-
-        playerY;
+
+    const targetX =
+        window.innerWidth / 2 - playerX;
+
+    const targetY =
+        window.innerHeight / 2 - playerY;
+
     const minX =
-        window.innerWidth-
-        3000;
+        window.innerWidth - 3000;
+
     const minY =
-        window.innerHeight-
-        2200;
-    cx =
+        window.innerHeight - 2200;
+
+    const targetCameraX =
         Math.min(
             0,
-            Math.max(
-                minX,
-                cx
-            )
+            Math.max(minX, targetX)
         );
-    cy =
+
+    const targetCameraY =
         Math.min(
             0,
-            Math.max(
-                minY,
-                cy
-            )
+            Math.max(minY, targetY)
         );
+
+    cameraX +=
+        (targetCameraX - cameraX) * 0.18;
+
+    cameraY +=
+        (targetCameraY - cameraY) * 0.18;
+
     map.style.transform =
-        "translate("+
-        cx+
-        "px,"+
-        cy+
-        "px)";
+        `translate3d(${cameraX}px,${cameraY}px,0)`;
+}
 }
 /* =========================
    БОТЫ
