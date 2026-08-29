@@ -1,15 +1,14 @@
-[29.08.2026 23:56] rahl1k: <!DOCTYPE html>
+[30.08.2026 0:33] rahl1k: <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>TEST 123</title>
+<title>rahl1k</title>
 <style>
 
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
-
     user-select:none;
     -webkit-user-select:none;
     -webkit-touch-callout:none;
@@ -23,7 +22,7 @@ body{
 
     overflow:hidden;
 
-    background:#263238;
+    background:#202629;
 
     touch-action:none;
 
@@ -31,74 +30,69 @@ body{
 }
 
 
-/* =====================================================
-   ИГРОВАЯ ОБЛАСТЬ
-===================================================== */
+/* ==============================
+   ИГРА
+============================== */
 
 #game{
 
     position:fixed;
 
-    left:0;
-    top:0;
-
-    width:100vw;
-    height:100vh;
+    inset:0;
 
     overflow:hidden;
 
-    background:#39474a;
+    background:#30393c;
 
     touch-action:none;
 }
 
 
-/* =====================================================
+/* ==============================
    МИР
-===================================================== */
+============================== */
 
 #world{
 
     position:absolute;
 
-    width:3000px;
-    height:2200px;
-
     left:0;
     top:0;
 
-    background-color:#3d494b;
+    width:3000px;
+    height:2200px;
+
+    background-color:#424d50;
 
     background-image:
         linear-gradient(
-            rgba(255,255,255,.05) 1px,
-            transparent 1px
+            rgba(255,255,255,.06) 2px,
+            transparent 2px
         ),
         linear-gradient(
             90deg,
-            rgba(255,255,255,.05) 1px,
-            transparent 1px
+            rgba(255,255,255,.06) 2px,
+            transparent 2px
         );
 
     background-size:100px 100px;
-
-    transform-origin:0 0;
 }
 
 
-/* =====================================================
+/* ==============================
    ДОРОГИ
-===================================================== */
+============================== */
 
 .road{
 
     position:absolute;
 
-    background:#242a2c;
+    background:#252b2d;
 
-    border:3px solid #515a5d;
+    border:
+        4px solid
+        #596366;
 }
-
 
 #road1{
 
@@ -108,7 +102,6 @@ body{
     width:3000px;
     height:300px;
 }
-
 
 #road2{
 
@@ -120,20 +113,22 @@ body{
 }
 
 
-/* =====================================================
+/* ==============================
    ЗДАНИЯ
-===================================================== */
+============================== */
 
 .building{
 
     position:absolute;
 
-    background:#15191b;
+    background:#141719;
 
-    border:5px solid #8b9599;
+    border:
+        5px solid
+        #899397;
 
     box-shadow:
-        inset 0 0 0 8px #242a2d;
+        inset 0 0 0 8px #252b2e;
 }
 
 
@@ -215,9 +210,9 @@ body{
 }
 
 
-/* =====================================================
+/* ==============================
    КОНТЕЙНЕРЫ
-===================================================== */
+============================== */
 
 .container{
 
@@ -226,13 +221,13 @@ body{
     width:180px;
     height:80px;
 
-    background:#566b70;
+    background:#52676b;
 
-    border:4px solid #9aa7aa;
-
-    box-shadow:
-        inset 0 0 0 8px #46575b;
+    border:
+        4px solid
+        #a0abad;
 }
+
 
 .c1{
     left:700px;
@@ -255,92 +250,75 @@ body{
 }
 
 
-/* =====================================================
+/* ==============================
    ИГРОК
-===================================================== */
+============================== */
 
 #player{
 
     position:absolute;
 
-    width:55px;
-    height:55px;
+    width:56px;
+    height:56px;
 
     left:472px;
     top:472px;
 
     border-radius:50%;
 
-    background:#247eea;
+    background:#2584ed;
 
-    border:5px solid white;
+    border:
+        5px solid white;
+
+    z-index:20;
 
     box-shadow:
-        0 0 15px rgba(0,0,0,.7);
-
-    z-index:10;
+        0 0 18px #000;
 }
 
 
-/* направление игрока */
-
-#playerDirection{
+#direction{
 
     position:absolute;
-
-    width:45px;
-    height:7px;
 
     right:-38px;
     top:20px;
 
-    background:white;
+    width:40px;
+    height:7px;
 
     border-radius:5px;
+
+    background:white;
 }
 
 
-/* =====================================================
-   БОТ
-===================================================== */
+/* ==============================
+   БОТЫ
+============================== */
 
 .bot{
 
     position:absolute;
 
-    width:50px;
-    height:50px;
+    width:52px;
+    height:52px;
 
     border-radius:50%;
 
-    background:#d6323c;
+    background:#d93640;
 
-    border:4px solid white;
+    border:
+        4px solid white;
 
-    z-index:8;
+    z-index:10;
 }
 
 
-.bot:after{
-
-    content:"";
-
-    position:absolute;
-[29.08.2026 23:56] rahl1k: left:10px;
-    top:-12px;
-
-    width:22px;
-    height:22px;
-
-    border-radius:50%;
-
-    background:#dda681;
-}
-
-
-/* =====================================================
+/* ==============================
    HUD
-===================================================== */
+============================== */
 
 #hud{
 
@@ -350,7 +328,7 @@ body{
 
     pointer-events:none;
 
-    z-index:50;
+    z-index:100;
 
     color:white;
 
@@ -363,16 +341,30 @@ body{
 
     position:absolute;
 
-    top:12px;
-
+    top:10px;
     left:50%;
 
     transform:
         translateX(-50%);
 
-    font-size:18px;
+    font-size:26px;
 
     font-weight:bold;
+}
+
+
+#debug{
+
+    position:absolute;
+
+    top:45px;
+    left:50%;
+
+    transform:
+        translateX(-50%);
+[30.08.2026 0:33] rahl1k: font-size:13px;
+
+    color:#00ff66;
 }
 
 
@@ -381,8 +373,7 @@ body{
     position:absolute;
 
     left:20px;
-
-    bottom:18px;
+    bottom:20px;
 
     font-size:22px;
 
@@ -395,8 +386,7 @@ body{
     position:absolute;
 
     right:20px;
-
-    bottom:18px;
+    bottom:20px;
 
     font-size:22px;
 
@@ -404,30 +394,9 @@ body{
 }
 
 
-/* =====================================================
-   DEBUG
-===================================================== */
-
-#debug{
-
-    position:absolute;
-
-    top:42px;
-
-    left:50%;
-
-    transform:
-        translateX(-50%);
-
-    font-size:13px;
-
-    color:#00ff66;
-}
-
-
-/* =====================================================
+/* ==============================
    ПРИЦЕЛ
-===================================================== */
+============================== */
 
 #crosshair{
 
@@ -436,11 +405,11 @@ body{
     left:50%;
     top:50%;
 
-    transform:
-        translate(-50%,-50%);
-
     width:28px;
     height:28px;
+
+    transform:
+        translate(-50%,-50%);
 }
 
 
@@ -476,9 +445,9 @@ body{
 }
 
 
-/* =====================================================
+/* ==============================
    ДЖОЙСТИК
-===================================================== */
+============================== */
 
 #joystick{
 
@@ -493,13 +462,13 @@ body{
     border-radius:50%;
 
     background:
-        rgba(255,255,255,.15);
+        rgba(255,255,255,.18);
 
     border:
         3px solid
-        rgba(255,255,255,.5);
+        rgba(255,255,255,.55);
 
-    z-index:100;
+    z-index:200;
 
     pointer-events:auto;
 
@@ -511,16 +480,16 @@ body{
 
     position:absolute;
 
-    width:58px;
-    height:58px;
-
     left:38px;
     top:38px;
+
+    width:58px;
+    height:58px;
 
     border-radius:50%;
 
     background:
-        rgba(255,255,255,.6);
+        rgba(255,255,255,.65);
 
     border:
         2px solid white;
@@ -529,13 +498,30 @@ body{
 }
 
 
-/* =====================================================
-   FIRE
-===================================================== */
+/* ==============================
+   КНОПКИ
+============================== */
 
-#fire{
+.button{
 
     position:fixed;
+
+    color:white;
+
+    font-weight:bold;
+
+    border:
+        2px solid white;
+
+    z-index:200;
+
+    pointer-events:auto;
+
+    touch-action:none;
+}
+
+
+#fire{
 
     right:25px;
     bottom:85px;
@@ -545,30 +531,12 @@ body{
 
     border-radius:50%;
 
-    border:3px solid white;
-
     background:
         rgba(180,30,30,.85);
-
-    color:white;
-
-    font-weight:bold;
-
-    z-index:100;
-
-    pointer-events:auto;
-
-    touch-action:none;
 }
 
 
-/* =====================================================
-   RELOAD
-===================================================== */
-
 #reload{
-
-    position:fixed;
 
     right:130px;
     bottom:30px;
@@ -578,78 +546,13 @@ body{
 
     border-radius:12px;
 
-    border:2px solid white;
-
     background:#222;
-
-    color:white;
-
-    font-weight:bold;
-
-    z-index:100;
-
-    pointer-events:auto;
-
-    touch-action:none;
 }
 
 
-/* =====================================================
-   MESSAGE
-===================================================== */
-
-#message{
-
-    display:none;
-
-    position:fixed;
-
-    left:50%;
-    top:50%;
-
-    transform:
-        translate(-50%,-50%);
-
-    font-size:32px;
-
-    font-weight:bold;
-
-    z-index:200;
-}
-
-
-#restart{
-
-    display:none;
-
-    position:fixed;
-
-    left:50%;
-    top:65%;
-
-    transform:
-        translate(-50%,-50%);
-
-    width:180px;
-    height:55px;
-
-    border-radius:14px;
-
-    border:2px solid white;
-
-    background:#222;
-
-    color:white;
-
-    font-weight:bold;
-
-    z-index:200;
-}
-
-
-/* =====================================================
+/* ==============================
    ПОВОРОТ
-===================================================== */
+============================== */
 
 #rotate{
 
@@ -675,13 +578,12 @@ body{
 }
 
 </style>
-[29.08.2026 23:56] rahl1k: </head>
+</head>
 <body>
 <div id="game">
 <div id="world">
 
     <div id="road1" class="road"></div>
-
     <div id="road2" class="road"></div>
 
 
@@ -709,7 +611,9 @@ body{
 
 
     <div id="player">
-        <div id="playerDirection"></div>
+
+        <div id="direction"></div>
+
     </div>
 
 
@@ -743,11 +647,11 @@ body{
 </div>
 <div id="hud">
 <div id="title">
-    STRIKE ZONE • 0.5
+    rahl1k
 </div>
 
 <div id="debug">
-    TOUCH: 0 | POS: 500,500
+    JOYSTICK: OFF | POS: 500,500
 </div>
 
 <div id="crosshair"></div>
@@ -768,57 +672,70 @@ body{
 </div>
 
 
-<button id="fire">
+<button
+    id="fire"
+    class="button">
+
     FIRE
+
 </button>
 
 
-<button id="reload">
+<button
+    id="reload"
+    class="button">
+
     RELOAD
-</button>
 
-
-<div id="message"></div>
-
-
-<button id="restart">
-    PLAY AGAIN
 </button>
 </div>
 <script>
 
 
-/* =====================================================
-   РАЗМЕР ЭКРАНА
-===================================================== */
+/* ==============================
+   ПОВОРОТ ЭКРАНА
+============================== */
 
-function resize(){
+function checkOrientation(){
 
-    document.getElementById("rotate")
-        .style.display =
-        window.innerHeight >
+    document.getElementById(
+        "rotate"
+    ).style.display =
+        window.
+[30.08.2026 0:33] rahl1k: innerHeight >
         window.innerWidth
         ? "flex"
         : "none";
 }
 
+
 window.addEventListener(
     "resize",
-    resize
+    checkOrientation
 );
 
-resize();
+checkOrientation();
 
 
-/* =====================================================
+/* ==============================
    ИГРОК
-===================================================== */
+============================== */
 
 const player =
-    document.getElementById("player");
+    document.getElementById(
+        "player"
+    );
 
 const world =
-    document.getElementById("world");
+    document.getElementById(
+        "world"
+    );
+
+const debug =
+    document.getElementById(
+        "debug"
+    );
+
 
 let playerX=500;
 let playerY=500;
@@ -827,40 +744,31 @@ let joyX=0;
 let joyY=0;
 
 
-/* =====================================================
+/* ==============================
    КАМЕРА
-===================================================== */
+============================== */
 
 function updateCamera(){
 
-    const screenX=
-        window.innerWidth/2;
+    let cameraX =
+        window.innerWidth/2 -
+        playerX;
 
-    const screenY=
-        window.innerHeight/2;
-
-
-    let cameraX=
-        screenX-playerX;
-
-    let cameraY=
-        screenY-playerY;
+    let cameraY =
+        window.innerHeight/2 -
+        playerY;
 
 
-    /*
-       Ограничиваем камеру
-    */
-
-    const minX=
-        window.innerWidth-
+    const minX =
+        window.innerWidth -
         3000;
 
-    const minY=
-        window.innerHeight-
+    const minY =
+        window.innerHeight -
         2200;
 
 
-    cameraX=
+    cameraX =
         Math.min(
             0,
             Math.max(
@@ -870,7 +778,7 @@ function updateCamera(){
         );
 
 
-    cameraY=
+    cameraY =
         Math.min(
             0,
             Math.max(
@@ -880,7 +788,7 @@ function updateCamera(){
         );
 
 
-    world.style.transform=
+    world.style.transform =
         "translate("+
         cameraX+
         "px,"+
@@ -889,357 +797,318 @@ function updateCamera(){
 }
 
 
-/* =====================================================
-ДЖОЙСТИК — FINAL iPHONE VERSION
-===================================================== */
+/* ==============================
+   ДЖОЙСТИК
+============================== */
+
 const joystick =
-document.getElementById(“joystick”);
+    document.getElementById(
+        "joystick"
+    );
+
 const stick =
-document.getElementById(“stick”);
-let joyX = 0;
-let joyY = 0;
-let joystickActive = false;
-let joystickTouchId = null;
-let touchCount = 0;
-/*
-Расчёт положения стика
-*/
-function setJoystick(x,y){
-const rect =
-    joystick.getBoundingClientRect();
-
-const centerX =
-    rect.left +
-    rect.width / 2;
-
-const centerY =
-    rect.top +
-    rect.height / 2;
-
-
-let dx =
-    x - centerX;
-
-let dy =
-    y - centerY;
-
-
-const maxDistance = 42;
-
-
-const distance =
-    Math.sqrt(
-        dx * dx +
-        dy * dy
+    document.getElementById(
+        "stick"
     );
 
 
-if(distance > maxDistance){
+let joystickActive=false;
 
-    dx =
-        dx /
-        distance *
-        maxDistance;
+let joystickPointer=null;
 
-    dy =
-        dy /
-        distance *
-        maxDistance;
+
+function setJoystick(
+    clientX,
+    clientY
+){
+
+    const rect =
+        joystick.getBoundingClientRect();
+
+
+    const centerX =
+        rect.left +
+        rect.width/2;
+
+    const centerY =
+        rect.top +
+        rect.height/2;
+
+
+    let dx =
+        clientX-centerX;
+
+    let dy =
+        clientY-centerY;
+
+
+    const max=40;
+
+
+    const distance =
+        Math.hypot(dx,dy);
+
+
+    if(distance>max){
+
+        dx =
+            dx/distance*max;
+
+        dy =
+            dy/distance*max;
+    }
+
+
+    joyX =
+        dx/max;
+
+    joyY =
+        dy/max;
+
+
+    stick.style.left =
+        (38+dx)+"px";
+
+    stick.style.top =
+        (38+dy)+"px";
+
+
+    debug.textContent =
+        "JOYSTICK: ON | POS: "+
+        Math.round(playerX)+
+        ","+
+        Math.round(playerY);
 }
 
 
-joyX =
-    dx /
-    maxDistance;
-
-joyY =
-    dy /
-    maxDistance;
-
-
 /*
-   Двигаем сам кружок
+   НАЖАЛИ
 */
 
-stick.style.left =
-    (38 + dx) +
-    "px";
-
-stick.style.top =
-    (38 + dy) +
-    "px";
-
-
-touchCount++;
-
-updateDebug();
-}
-/*
-Сброс
-*/
-function releaseJoystick(){
-joystickActive=false;
-
-joystickTouchId=null;
-
-joyX=0;
-joyY=0;
-
-
-stick.style.left="38px";
-
-stick.style.top="38px";
-
-
-updateDebug();
-}
-/*
-Нажатие именно на джойстик
-*/
 joystick.addEventListener(
-“touchstart”,
-function(e){
-    e.preventDefault();
+    "pointerdown",
+    function(e){
 
-    const touch =
-        e.changedTouches[0];
+        e.preventDefault();
 
-    joystickActive=true;
+        joystickActive=true;
 
-    joystickTouchId =
-        touch.identifier;
+        joystickPointer=
+            e.pointerId;
 
 
-    setJoystick(
-        touch.clientX,
-        touch.clientY
-    );
+        joystick.setPointerCapture(
+            e.pointerId
+        );
 
-},
-{
-    passive:false
-}
+
+        setJoystick(
+            e.clientX,
+            e.clientY
+        );
+
+    }
 );
+
+
 /*
-Движение пальца.
-ВАЖНО:
-слушаем на document,
-потому что палец может уйти
-за пределы круга.
+   ДВИГАЕМ
 */
-document.addEventListener(
-“touchmove”,
-function(e){
-    if(!joystickActive)
+
+joystick.addEventListener(
+    "pointermove",
+    function(e){
+
+        if(
+            !joystickActive ||
+            e.pointerId !==
+            joystickPointer
+        )
+            return;
+
+
+        e.preventDefault();
+
+
+        setJoystick(
+            e.clientX,
+            e.clientY
+        );
+
+    }
+);
+
+
+/*
+   ОТПУСТИЛИ
+*/
+
+function releaseJoystick(e){
+
+    if(
+        e &&
+        e.pointerId !==
+        joystickPointer
+    )
         return;
 
 
-    for(
-        let i=0;
-        i<e.changedTouches.length;
-        i++
-    ){
+    joystickActive=false;
 
-        const touch =
-            e.changedTouches[i];
+    joystickPointer=null;
+
+    joyX=0;
+    joyY=0;
 
 
-        if(
-            touch.identifier ===
-            joystickTouchId
-        ){
-
-            e.preventDefault();
+    stick.style.left="38px";
+    stick.style.top="38px";
 
 
-            setJoystick(
-                touch.clientX,
-                touch.clientY
-            );
-
-
-            break;
-        }
-    }
-
-},
-{
-    passive:false
+    debug.textContent =
+        "JOYSTICK: OFF | POS: "+
+        Math.round(playerX)+
+        ","+
+        Math.round(playerY);
 }
-);
-/*
-Отпускание
-*/
-document.addEventListener(
-“touchend”,
-function(e){
-    for(
-        let i=0;
-        i<e.changedTouches.length;
-        i++
-    ){
-
-        const touch =
-            e.changedTouches[i];
 
 
-        if(
-            touch.identifier ===
-            joystickTouchId
-        ){
-
-            releaseJoystick();
-
-            break;
-        }
-    }
-
-},
-{
-    passive:false
-}
-);
-/*
-Отмена
-*/
-document.addEventListener(
-“touchcancel”,
-function(){
-    releaseJoystick();
-
-},
-{
-    passive:false
-}
+joystick.addEventListener(
+    "pointerup",
+    releaseJoystick
 );
 
-/* =====================================================
-   ДВИЖЕНИЕ ИГРОКА
-===================================================== */
 
-let lastTime=
+joystick.addEventListener(
+    "pointercancel",
+    releaseJoystick
+);
+
+
+/* ==============================
+   ДВИЖЕНИЕ
+============================== */
+
+let lastTime =
     performance.now();
 
 
 function updatePlayer(){
 
-   const now =
-    performance.now();
+    const now =
+        performance.now();
 
-const dt =
-    Math.min(
-        0.05,
-        (now-lastTime)/1000
+
+    const dt =
+        Math.min(
+            0.05,
+            (now-lastTime)/1000
+        );
+
+
+    lastTime=now;
+
+
+    const speed=300;
+
+
+    playerX +=
+        joyX*
+        speed*
+        dt;
+
+
+    playerY +=
+        joyY*
+        speed*
+        dt;
+
+
+    playerX =
+        Math.max(
+            30,
+            Math.min(
+[30.08.2026 0:33] rahl1k: 2970,
+                playerX
+            )
+        );
+
+
+    playerY =
+        Math.max(
+            30,
+            Math.min(
+                2170,
+                playerY
+            )
+        );
+
+
+    player.style.left =
+        (playerX-28)+"px";
+
+
+    player.style.top =
+        (playerY-28)+"px";
+
+
+    updateCamera();
+
+
+    if(
+        joystickActive
+    ){
+
+        debug.textContent =
+            "JOYSTICK: ON | POS: "+
+            Math.round(playerX)+
+            ","+
+            Math.round(playerY);
+    }
+
+
+    requestAnimationFrame(
+        updatePlayer
     );
-
-lastTime=now;
-
-
-const speed=300;
-
-
-/*
-   Движение по X
-*/
-
-playerX +=
-    joyX *
-    speed *
-    dt;
-
-
-/*
-   Движение по Y
-*/
-
-playerY +=
-    joyY *
-    speed *
-    dt;
-
-
-/*
-   Границы карты
-*/
-
-if(playerX<30)
-    playerX=30;
-
-if(playerX>2970)
-    playerX=2970;
-
-
-if(playerY<30)
-    playerY=30;
-
-if(playerY>2170)
-    playerY=2170;
-
-
-/*
-   Перемещаем игрока
-*/
-
-player.style.left =
-    (playerX-28) +
-    "px";
-
-player.style.top =
-    (playerY-28) +
-    "px";
-
-
-/*
-   Двигаем камеру
-*/
-
-updateCamera();
-
-
-/*
-   Показываем координаты
-*/
-
-updateDebug();
-
-
-requestAnimationFrame(
-    updatePlayer
-);
-}
-
-/* =====================================================
-   DEBUG
-===================================================== */
-
-function updateDebug(){
-
-    document.getElementById("debug")
-        .textContent=
-        "TOUCH: "+
-        touchCount+
-        " | POS: "+
-        Math.floor(playerX)+
-        ","+
-        Math.floor(playerY);
 }
 
 
-/* =====================================================
+/* ==============================
    СТРЕЛЬБА
-===================================================== */
+============================== */
 
 let ammo=30;
 
 let reserve=90;
 
+let reloading=false;
 
-document.getElementById("fire")
-.addEventListener(
-    "touchstart",
+
+function updateAmmo(){
+
+    document.getElementById(
+        "ammo"
+    ).textContent =
+        reloading
+        ? "RELOADING..."
+        : ammo+
+          " / "+
+          reserve;
+}
+
+
+document.getElementById(
+    "fire"
+).addEventListener(
+    "pointerdown",
     function(e){
 
         e.preventDefault();
+
+
+        if(reloading)
+            return;
+
 
         if(ammo<=0){
 
@@ -1251,34 +1120,15 @@ document.getElementById("fire")
 
         ammo--;
 
-        updateHUD();
+        updateAmmo();
 
-    },
-    {passive:false}
+    }
 );
 
 
-/* =====================================================
+/* ==============================
    ПЕРЕЗАРЯДКА
-===================================================== */
-
-let reloading=false;
-
-
-document.getElementById("reload")
-.addEventListener(
-    "touchstart",
-    function(e){
-
-        e.
-[29.08.2026 23:56] rahl1k: preventDefault();
-
-        reload();
-
-    },
-    {passive:false}
-);
-
+============================== */
 
 function reload(){
 
@@ -1292,30 +1142,30 @@ function reload(){
 
     reloading=true;
 
-    updateHUD();
+    updateAmmo();
 
 
     setTimeout(
         function(){
 
-            const need=
+            const need =
                 30-ammo;
 
 
-            const amount=
+            const amount =
                 Math.min(
                     need,
                     reserve
                 );
 
 
-            ammo+=amount;
+            ammo += amount;
 
-            reserve-=amount;
+            reserve -= amount;
 
             reloading=false;
 
-            updateHUD();
+            updateAmmo();
 
         },
         900
@@ -1323,88 +1173,32 @@ function reload(){
 }
 
 
-/* =====================================================
-   HUD
-===================================================== */
+document.getElementById(
+    "reload"
+).addEventListener(
+    "pointerdown",
+    function(e){
 
-function updateHUD(){
+        e.preventDefault();
 
-    document.getElementById("ammo")
-        .textContent=
-        reloading
-        ? "RELOADING..."
-        : ammo+
-          " / "+
-          reserve;
-}
+        reload();
+
+    }
+);
 
 
-/* =====================================================
+/* ==============================
    ЗАПУСК
-===================================================== */
+============================== */
 
 updateCamera();
 
-updateHUD();
+updateAmmo();
 
 requestAnimationFrame(
     updatePlayer
 );
-<script>
-const j = document.getElementById("joystick");
-const s = document.getElementById("stick");
 
-j.ontouchstart = function(e) {
-    e.preventDefault();
-
-    const t = e.touches[0];
-
-    s.style.background = "lime";
-
-    document.getElementById("debug").textContent =
-        "TOUCH START: " +
-        Math.round(t.clientX) + "," +
-        Math.round(t.clientY);
-};
-
-j.ontouchmove = function(e) {
-    e.preventDefault();
-
-    const t = e.touches[0];
-
-    const r = j.getBoundingClientRect();
-
-    let x = t.clientX - r.left - r.width / 2;
-    let y = t.clientY - r.top - r.height / 2;
-
-    const max = 40;
-
-    const d = Math.hypot(x,y);
-
-    if(d > max){
-        x = x / d * max;
-        y = y / d * max;
-    }
-
-    s.style.left = (38 + x) + "px";
-    s.style.top  = (38 + y) + "px";
-
-    document.getElementById("debug").textContent =
-        "MOVING: " +
-        Math.round(x) + "," +
-        Math.round(y);
-};
-
-j.ontouchend = function(e) {
-    e.preventDefault();
-
-    s.style.left = "38px";
-    s.style.top = "38px";
-    s.style.background = "rgba(255,255,255,.6)";
-
-    document.getElementById("debug").textContent =
-        "RELEASED";
-};
 </script>
 </body>
 </html>
