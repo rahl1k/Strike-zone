@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>rahl1k • STRIKE ZONE 1.0</title>
+<title>rahl1k • STRIKE ZONE FPS 1.1</title>
 <style>
 *{
     box-sizing:border-box;
@@ -16,213 +16,22 @@ html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#39474a;
+    background:#202629;
     touch-action:none;
     font-family:Arial,sans-serif;
 }
-/* =========================
-   МИР
-========================= */
-#map{
-    position:absolute;
-    width:3000px;
-    height:2200px;
-    background-color:#465356;
-    background-image:
-        linear-gradient(#ffffff12 2px,transparent 2px),
-        linear-gradient(90deg,#ffffff12 2px,transparent 2px);
-    background-size:100px 100px;
-    will-change:transform;
-}
-/* =========================
-   ДОРОГИ
-========================= */
-.road{
-    position:absolute;
-    background:#252b2e;
-    border:4px solid #697477;
-}
-.r1{
-    left:0;
-    top:900px;
-    width:3000px;
-    height:300px;
-}
-.r2{
-    left:1350px;
-    top:0;
-    width:300px;
-    height:2200px;
-}
-/* =========================
-   ЗДАНИЯ
-========================= */
-.building{
-    position:absolute;
-    background:#15191b;
-    border:5px solid #899397;
-    box-shadow:inset 0 0 0 8px #252b2d;
-}
-.b1{
-    left:180px;
-    top:180px;
-    width:650px;
-    height:150px;
-}
-.b2{
-    left:180px;
-    top:180px;
-    width:150px;
-    height:650px;
-}
-.b3{
-    left:1900px;
-    top:180px;
-    width:650px;
-    height:150px;
-}
-.b4{
-    left:2400px;
-    top:180px;
-    width:150px;
-    height:650px;
-}
-.b5{
-    left:180px;
-    top:1450px;
-    width:700px;
-    height:150px;
-}
-.b6{
-    left:180px;
-    top:1450px;
-    width:150px;
-    height:550px;
-}
-.b7{
-    left:1900px;
-    top:1450px;
-    width:650px;
-    height:150px;
-}
-.b8{
-    left:2400px;
-    top:1450px;
-    width:150px;
-    height:550px;
-}
-.b9{
-    left:1100px;
-    top:650px;
-    width:750px;
-    height:130px;
-}
-.b10{
-    left:1100px;
-    top:1420px;
-    width:750px;
-    height:130px;
-}
-.b11{
-    left:1300px;
-    top:950px;
-    width:400px;
-    height:130px;
-}
-/* =========================
-   КОНТЕЙНЕРЫ
-========================= */
-.container{
-    position:absolute;
-    width:180px;
-    height:80px;
-    background:#596c70;
-    border:4px solid #a2abad;
-}
-.c1{
-    left:700px;
-    top:500px;
-}
-.c2{
-    left:2150px;
-    top:500px;
-}
-.c3{
-    left:700px;
-    top:1150px;
-}
-.c4{
-    left:2150px;
-    top:1150px;
-}
-/* =========================
-   ИГРОК
-========================= */
-#player{
-    position:absolute;
-    width:54px;
-    height:54px;
-    border-radius:50%;
-    background:#1688ff;
-    border:4px solid white;
-    box-shadow:0 0 15px #000;
-    transform:translate(-50%,-50%);
-    z-index:50;
-}
-/* направление взгляда */
-#player::after{
-    content:"";
-    position:absolute;
-    right:-32px;
-    top:19px;
-    width:32px;
-    height:7px;
-    border-radius:5px;
-    background:white;
-}
-/* =========================
-   БОТЫ
-========================= */
-.bot{
-    position:absolute;
-    width:54px;
-    height:54px;
-    border-radius:50%;
-    background:#d93640;
-    border:4px solid white;
-    box-shadow:0 0 12px #000;
-    transform:translate(-50%,-50%);
-    z-index:40;
-    transition:background .1s;
-}
-.bot.dead{
-    display:none;
-}
-/* =========================
-   HP БОТА
-========================= */
-.botHP{
-    position:absolute;
-    width:70px;
-    height:6px;
-    left:50%;
-    top:-14px;
-    transform:translateX(-50%);
-    background:#111;
-    border:1px solid #000;
-}
-.botHPbar{
-    height:100%;
+#game{
+    position:fixed;
+    inset:0;
     width:100%;
-    background:#32d06b;
+    height:100%;
+    display:block;
+    touch-action:none;
 }
-/* =========================
-   HUD
-========================= */
 #hud{
     position:fixed;
     inset:0;
-    z-index:200;
+    z-index:20;
     pointer-events:none;
     color:white;
     text-shadow:0 2px 5px #000;
@@ -232,17 +41,17 @@ html,body{
     top:10px;
     left:50%;
     transform:translateX(-50%);
-    font-size:27px;
+    font-size:24px;
     font-weight:bold;
     white-space:nowrap;
 }
 #status{
     position:absolute;
-    top:48px;
+    top:43px;
     left:50%;
     transform:translateX(-50%);
-    font-size:14px;
-    color:#00ff55;
+    font-size:13px;
+    color:#55ff77;
     white-space:nowrap;
 }
 #hp{
@@ -259,39 +68,32 @@ html,body{
     font-size:22px;
     font-weight:bold;
 }
-/* =========================
-   ПРИЦЕЛ
-========================= */
 #crosshair{
-    position:fixed;
+    position:absolute;
     left:50%;
     top:50%;
-    width:30px;
-    height:30px;
+    width:28px;
+    height:28px;
     transform:translate(-50%,-50%);
-    z-index:150;
 }
-#crosshair::before{
+#crosshair:before{
     content:"";
     position:absolute;
     left:0;
-    top:14px;
-    width:30px;
+    top:13px;
+    width:28px;
     height:2px;
     background:white;
 }
-#crosshair::after{
+#crosshair:after{
     content:"";
     position:absolute;
-    left:14px;
+    left:13px;
     top:0;
     width:2px;
-    height:30px;
+    height:28px;
     background:white;
 }
-/* =========================
-   ДЖОЙСТИК
-========================= */
 #joystick{
     position:fixed;
     left:30px;
@@ -301,7 +103,7 @@ html,body{
     border-radius:50%;
     background:#ffffff22;
     border:4px solid #ffffff88;
-    z-index:500;
+    z-index:100;
     touch-action:none;
 }
 #stick{
@@ -315,9 +117,6 @@ html,body{
     border:3px solid white;
     pointer-events:none;
 }
-/* =========================
-   FIRE
-========================= */
 #fire{
     position:fixed;
     right:25px;
@@ -330,12 +129,9 @@ html,body{
     color:white;
     font-weight:bold;
     font-size:16px;
-    z-index:500;
+    z-index:100;
     touch-action:none;
 }
-/* =========================
-   RELOAD
-========================= */
 #reload{
     position:fixed;
     right:130px;
@@ -347,25 +143,21 @@ html,body{
     background:#222;
     color:white;
     font-weight:bold;
-    z-index:500;
+    z-index:100;
     touch-action:none;
 }
-/* =========================
-   СООБЩЕНИЕ
-========================= */
 #message{
     display:none;
     position:fixed;
     left:50%;
     top:50%;
     transform:translate(-50%,-50%);
-    z-index:600;
-    text-align:center;
-    font-size:36px;
-    font-weight:bold;
+    z-index:200;
     color:white;
+    font-size:38px;
+    font-weight:bold;
+    text-align:center;
     text-shadow:0 3px 8px #000;
-    pointer-events:none;
 }
 #restart{
     display:none;
@@ -373,7 +165,6 @@ html,body{
     left:50%;
     top:65%;
     transform:translate(-50%,-50%);
-    z-index:600;
     width:180px;
     height:55px;
     border-radius:14px;
@@ -381,12 +172,8 @@ html,body{
     background:#222;
     color:white;
     font-weight:bold;
-    font-size:16px;
-    touch-action:none;
+    z-index:200;
 }
-/* =========================
-   ПОВОРОТ
-========================= */
 #rotate{
     display:none;
     position:fixed;
@@ -402,72 +189,17 @@ html,body{
 </style>
 </head>
 <body>
-<div id="map">
-<div class="road r1"></div>
-<div class="road r2"></div>
-<div class="building b1"></div>
-<div class="building b2"></div>
-<div class="building b3"></div>
-<div class="building b4"></div>
-<div class="building b5"></div>
-<div class="building b6"></div>
-<div class="building b7"></div>
-<div class="building b8"></div>
-<div class="building b9"></div>
-<div class="building b10"></div>
-<div class="building b11"></div>
-<div class="container c1"></div>
-<div class="container c2"></div>
-<div class="container c3"></div>
-<div class="container c4"></div>
-<div id="player"></div>
-<div class="bot"
-     data-hp="100"
-     style="left:2450px;top:500px">
-    <div class="botHP">
-        <div class="botHPbar"></div>
-    </div>
-</div>
-<div class="bot"
-     data-hp="100"
-     style="left:2300px;top:1050px">
-    <div class="botHP">
-        <div class="botHPbar"></div>
-    </div>
-</div>
-<div class="bot"
-     data-hp="100"
-     style="left:2450px;top:1900px">
-    <div class="botHP">
-        <div class="botHPbar"></div>
-    </div>
-</div>
-<div class="bot"
-     data-hp="100"
-     style="left:700px;top:1900px">
-    <div class="botHP">
-        <div class="botHPbar"></div>
-    </div>
-</div>
-<div class="bot"
-     data-hp="100"
-     style="left:1500px;top:1850px">
-    <div class="botHP">
-        <div class="botHPbar"></div>
-    </div>
-</div>
-</div>
 <div id="rotate">
-↔️<br><br>
-Поверни iPhone<br>
-горизонтально
+    ↔️<br><br>
+    Поверни iPhone<br>
+    горизонтально
 </div>
 <div id="hud">
 <div id="title">
-    rahl1k • STRIKE ZONE 1.0
+    rahl1k • STRIKE ZONE FPS 1.1
 </div>
 <div id="status">
-    JOYSTICK OFF • 5 ENEMIES
+    FPS READY
 </div>
 <div id="crosshair"></div>
 <div id="hp">
@@ -478,61 +210,169 @@ html,body{
 </div>
 </div>
 <div id="joystick">
-<div id="stick"></div>
+    <div id="stick"></div>
 </div>
-<button id="fire">
-    FIRE
-</button>
-<button id="reload">
-    RELOAD
-</button>
+
+FIRE
+
+RELOAD
+
 <div id="message"></div>
 <button id="restart">
     PLAY AGAIN
 </button>
 <script>
-/* =========================
-   ЭЛЕМЕНТЫ
-========================= */
-const map =
-    document.getElementById("map");
-const player =
-    document.getElementById("player");
-const joystick =
-    document.getElementById("joystick");
-const stick =
-    document.getElementById("stick");
-const status =
-    document.getElementById("status");
-const fireButton =
-    document.getElementById("fire");
-const reloadButton =
-    document.getElementById("reload");
-const message =
-    document.getElementById("message");
-const restart =
-    document.getElementById("restart");
-const hpText =
-    document.getElementById("hp");
-const ammoText =
-    document.getElementById("ammo");
-/* =========================
+/* =================================
+   CANVAS
+================================= */
+const canvas =
+    document.getElementById("game");
+const ctx =
+    canvas.getContext("2d");
+let W=0;
+let H=0;
+let DPR=1;
+function resize(){
+    W=window.innerWidth;
+    H=window.innerHeight;
+    DPR=Math.min(
+        window.devicePixelRatio || 1,
+        2
+    );
+    canvas.width=W*DPR;
+    canvas.height=H*DPR;
+    ctx.setTransform(
+        DPR,0,0,DPR,0,0
+    );
+    document.getElementById(
+        "rotate"
+    ).style.display =
+        H>W ? "flex" : "none";
+}
+window.addEventListener(
+    "resize",
+    resize
+);
+resize();
+/* =================================
+   МИР
+================================= */
+const mapWidth=3000;
+const mapHeight=2200;
+/*
+   Стены в мире.
+*/
+const walls=[
+    {x:250,y:250,w:600,h:120},
+    {x:250,y:250,w:120,h:650},
+    {x:1950,y:250,w:600,h:120},
+    {x:2430,y:250,w:120,h:650},
+    {x:250,y:1450,w:650,h:120},
+    {x:250,y:1450,w:120,h:550},
+    {x:1900,y:1450,w:650,h:120},
+    {x:2430,y:1450,w:120,h:550},
+    {x:1100,y:650,w:800,h:130},
+    {x:1100,y:1420,w:800,h:130},
+    {x:1300,y:950,w:400,h:130},
+    {x:700,y:500,w:180,h:80},
+    {x:2100,y:500,w:180,h:80},
+    {x:700,y:1150,w:180,h:80},
+    {x:2100,y:1150,w:180,h:80}
+];
+/* =================================
    ИГРОК
-========================= */
-let playerX=500;
-let playerY=500;
-let angle=0;
-let hp=100;
-/* =========================
+================================= */
+const player={
+    x:500,
+    y:500,
+    angle:0,
+    hp:100
+};
+/* =================================
    ОРУЖИЕ
-========================= */
+================================= */
 let ammo=30;
 let reserve=90;
 let reloading=false;
-let muzzleFlash=0;
-/* =========================
+let flash=0;
+/* =================================
+   БОТЫ
+================================= */
+let bots=[];
+function spawnBots(){
+    bots=[
+        {
+            x:2400,
+            y:500,
+            hp:100,
+            dead:false,
+            cooldown:0
+        },
+        {
+            x:2300,
+            y:1050,
+            hp:100,
+            dead:false,
+            cooldown:0
+        },
+        {
+            x:2450,
+            y:1900,
+            hp:100,
+            dead:false,
+            cooldown:0
+        },
+        {
+            x:700,
+            y:1900,
+            hp:100,
+            dead:false,
+            cooldown:0
+        },
+        {
+            x:1500,
+            y:1850,
+            hp:100,
+            dead:false,
+            cooldown:0
+        }
+    ];
+}
+spawnBots();
+/* =================================
+   СТОЛКНОВЕНИЯ
+================================= */
+function collides(x,y){
+    const r=25;
+    for(
+        const wall of walls
+    ){
+        if(
+            x+r>wall.x &&
+            x-r<wall.x+wall.w &&
+            y+r>wall.y &&
+            y-r<wall.y+wall.h
+        ){
+            return true;
+        }
+    }
+    return false;
+}
+/* =================================
    ДЖОЙСТИК
-========================= */
+================================= */
+const joystick =
+    document.getElementById(
+        "joystick"
+    );
+const stick =
+    document.getElementById(
+        "stick"
+    );
+const status =
+    document.getElementById(
+        "status"
+    );
 let joyX=0;
 let joyY=0;
 let joystickActive=false;
@@ -541,24 +381,22 @@ function moveJoystick(
     clientX,
     clientY
 ){
-    const rect =
+    const r =
         joystick.getBoundingClientRect();
-    const centerX =
-        rect.left+
-        rect.width/2;
-    const centerY =
-        rect.top+
-        rect.height/2;
+    const cx =
+        r.left+r.width/2;
+    const cy =
+        r.top+r.height/2;
     let dx =
-        clientX-centerX;
+        clientX-cx;
     let dy =
-        clientY-centerY;
+        clientY-cy;
     const max=45;
-    const distance =
+    const d =
         Math.hypot(dx,dy);
-    if(distance>max){
-        dx=dx/distance*max;
-        dy=dy/distance*max;
+    if(d>max){
+        dx=dx/d*max;
+        dy=dy/d*max;
     }
     joyX=dx/max;
     joyY=dy/max;
@@ -567,10 +405,10 @@ function moveJoystick(
     stick.style.top =
         (42+dy)+"px";
     status.textContent =
-        "JOYSTICK ON • "+
-        Math.round(playerX)+
+        "MOVE • "+
+        Math.round(player.x)+
         ","+
-        Math.round(playerY);
+        Math.round(player.y);
 }
 joystick.addEventListener(
     "pointerdown",
@@ -612,11 +450,6 @@ function releaseJoystick(){
     joyY=0;
     stick.style.left="42px";
     stick.style.top="42px";
-    status.textContent =
-        "JOYSTICK OFF • "+
-        Math.round(playerX)+
-        ","+
-        Math.round(playerY);
 }
 joystick.addEventListener(
     "pointerup",
@@ -626,9 +459,9 @@ joystick.addEventListener(
     "pointercancel",
     releaseJoystick
 );
-/* =========================
-   СВАЙП КАМЕРЫ
-========================= */
+/* =================================
+   СВАЙП
+================================= */
 let lookActive=false;
 let lookPointer=null;
 let lastLookX=0;
@@ -638,14 +471,14 @@ document.addEventListener(
         if(
             e.target===joystick ||
             joystick.contains(e.target) ||
-            e.target===fireButton ||
-            e.target===reloadButton ||
-            e.target===restart
+            e.target===document.getElementById("fire") ||
+            e.target===document.getElementById("reload") ||
+            e.target===document.getElementById("restart")
         )
             return;
         if(
-            e.clientX >
-            window.innerWidth*0.45
+            e.clientX>
+            W*0.45
         ){
             lookActive=true;
             lookPointer=
@@ -665,128 +498,455 @@ document.addEventListener(
             return;
         const dx =
             e.clientX-lastLookX;
-        angle +=
+        player.angle +=
             dx*0.008;
         lastLookX=
             e.clientX;
-        player.style.transform =
-            "translate(-50%,-50%) rotate("+
-            angle+
-            "rad)";
-        const deg =
-            angle*180/Math.PI;
-        status.textContent =
-            "LOOK "+
-            Math.round(deg)+
-            "° • "+
-            Math.round(playerX)+
-            ","+
-            Math.round(playerY);
     }
 );
 document.addEventListener(
     "pointerup",
     function(e){
         if(
-            e.pointerId===lookPointer
+            e.pointerId===
+            lookPointer
         ){
             lookActive=false;
             lookPointer=null;
         }
     }
 );
-/* =========================
-   КАМЕРА
-========================= */
-function updateCamera(){
-
-    let cx =
-        window.innerWidth / 2 - playerX;
-
-    let cy =
-        window.innerHeight / 2 - playerY;
-
-    const minX =
-        window.innerWidth - 3000;
-
-    const minY =
-        window.innerHeight - 2200;
-
-    cx =
-        Math.min(
-            0,
-            Math.max(minX, cx)
-        );
-
-    cy =
-        Math.min(
-            0,
-            Math.max(minY, cy)
-        );
-
-    map.style.transform =
-        "translate(" + cx + "px," + cy + "px)";
+/* =================================
+   ДВИЖЕНИЕ
+================================= */
+function movePlayer(dt){
+    if(gameEnded)
+        return;
+    const speed=230;
+    /*
+       вверх джойстика = вперёд
+    */
+    const forward=-joyY;
+    const side=joyX;
+    const dx =
+        (
+            Math.cos(player.angle)*
+            forward
+            -
+            Math.sin(player.angle)*
+            side
+        )*
+        speed*dt;
+    const dy =
+        (
+            Math.sin(player.angle)*
+            forward
+            +
+            Math.cos(player.angle)*
+            side
+        )*
+        speed*dt;
+    const nx=
+        player.x+dx;
+    const ny=
+        player.y+dy;
+    if(
+        nx>30 &&
+        nx<mapWidth-30 &&
+        !collides(nx,player.y)
+    ){
+        player.x=nx;
+    }
+    if(
+        ny>30 &&
+        ny<mapHeight-30 &&
+        !collides(player.x,ny)
+    ){
+        player.y=ny;
+    }
 }
-/* =========================
+/* =================================
+   ЛУЧ СТЕНЫ
+================================= */
+function raycast(angle){
+    const maxDistance=1000;
+    const step=8;
+    for(
+        let d=1;
+        d<maxDistance;
+        d+=step
+    ){
+        const x=
+            player.x+
+            Math.cos(angle)*d;
+        const y=
+            player.y+
+            Math.sin(angle)*d;
+        if(
+            x<0 ||
+            y<0 ||
+            x>mapWidth ||
+            y>mapHeight
+        )
+            return d;
+        for(
+            const wall of walls
+        ){
+            if(
+                x>=wall.x &&
+                x<=wall.x+wall.w &&
+                y>=wall.y &&
+                y<=wall.y+wall.h
+            ){
+                return d;
+            }
+        }
+    }
+    return maxDistance;
+}
+/* =================================
    БОТЫ
-========================= */
-const bots =
-    Array.from(
-        document.querySelectorAll(".bot")
-    );
-let gameEnded=false;
+================================= */
 function updateBots(dt){
     if(gameEnded)
         return;
     for(
         const bot of bots
     ){
-        if(
-            bot.classList.contains("dead")
-        )
+        if(bot.dead)
             continue;
-        const bx =
-            parseFloat(bot.style.left);
-        const by =
-            parseFloat(bot.style.top);
-        const dx =
-            playerX-bx;
-        const dy =
-            playerY-by;
-        const distance =
+        const dx=
+            player.x-bot.x;
+        const dy=
+            player.y-bot.y;
+        const distance=
             Math.hypot(dx,dy);
-        if(distance>90){
-            const speed=45;
-            const nx =
-                bx+
+        if(distance>100){
+            const speed=35;
+            const nx=
+                bot.x+
                 dx/distance*
-                speed*
-                dt;
-            const ny =
-                by+
+                speed*dt;
+            const ny=
+                bot.y+
                 dy/distance*
-                speed*
-                dt;
-            bot.style.left=
-                nx+"px";
-            bot.style.top=
-                ny+"px";
-        }else{
-            bot.enemyCooldown =
-                (bot.enemyCooldown||0)-
-                dt;
+                speed*dt;
             if(
-                bot.enemyCooldown<=0
+                !collides(nx,bot.y)
+            )
+                bot.x=nx;
+            if(
+                !collides(bot.x,ny)
+            )
+                bot.y=ny;
+        }else{
+            bot.cooldown-=dt;
+            if(
+                bot.cooldown<=0
             ){
-                hp-=7;
-                bot.enemyCooldown=1;
+                player.hp-=7;
+                bot.cooldown=1;
             }
         }
     }
 }
-/* =========================
+/* =================================
+   ВИД ОТ ПЕРВОГО ЛИЦА
+================================= */
+function drawWorld(){
+    /*
+       Небо
+    */
+    ctx.fillStyle="#718791";
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H/2
+    );
+    /*
+       Земля
+    */
+    ctx.fillStyle="#30383c";
+    ctx.fillRect(
+        0,
+        H/2,
+        W,
+        H/2
+    );
+    /*
+       Полосы земли
+    */
+    ctx.strokeStyle="#465054";
+    ctx.lineWidth=2;
+    for(
+        let i=1;
+        i<12;
+        i++
+    ){
+        const y=
+            H/2+
+            (H/2)*
+            (i/12);
+        ctx.beginPath();
+        ctx.moveTo(
+            0,
+            y
+        );
+        ctx.lineTo(
+            W,
+            y
+        );
+        ctx.stroke();
+    }
+    /*
+       RAYCAST
+    */
+    const rays=
+        Math.min(
+            220,
+            Math.floor(W/3)
+        );
+    const fov=
+        Math.PI/3;
+    const projection=
+        (W/2)/
+        Math.tan(fov/2);
+    for(
+        let i=0;
+        i<rays;
+        i++
+    ){
+        const screenX=
+            i*
+            W/rays;
+        const rayAngle=
+            player.angle-
+            fov/2+
+            (i/rays)*fov;
+        let distance=
+            raycast(rayAngle);
+        /*
+           убираем fish-eye
+        */
+        distance *=
+            Math.cos(
+                rayAngle-
+                player.angle
+            );
+        distance=
+            Math.max(
+                1,
+                distance
+            );
+        const wallHeight=
+            projection/
+            distance*
+            100;
+        const top=
+            H/2-
+            wallHeight/2;
+        const shade=
+            Math.max(
+                25,
+                180-distance/7
+            );
+        ctx.fillStyle=
+            `rgb(${shade*.65},${shade*.72},${shade*.75})`;
+        ctx.fillRect(
+            screenX,
+            top,
+            W/rays+1,
+            wallHeight
+        );
+    }
+    drawEnemies();
+    drawWeapon();
+}
+/* =================================
+   ВРАГИ FPS
+================================= */
+function drawEnemies(){
+    const fov=
+        Math.PI/3;
+    const visible=[];
+    for(
+        const bot of bots
+    ){
+        if(bot.dead)
+            continue;
+        const dx=
+            bot.x-player.x;
+        const dy=
+            bot.y-player.y;
+        const distance=
+            Math.hypot(dx,dy);
+        let relative=
+            Math.atan2(dy,dx)-
+            player.angle;
+        relative=
+            Math.atan2(
+                Math.sin(relative),
+                Math.cos(relative)
+            );
+        if(
+            Math.abs(relative)>
+            fov/2
+        )
+            continue;
+        const corrected=
+            distance*
+            Math.cos(relative);
+        if(corrected<=5)
+            continue;
+        /*
+           Проверяем,
+           есть ли стена между нами
+        */
+        const wallDistance=
+            raycast(
+                player.angle+
+                relative
+            );
+        if(
+            wallDistance<
+            distance-30
+        )
+            continue;
+        const screenX=
+            W/2+
+            Math.tan(relative)*
+            (W/2)/
+            Math.tan(fov/2);
+        const size=
+            Math.min(
+                H*0.8,
+                9000/
+                corrected
+            );
+        visible.push({
+            bot,
+            x:screenX,
+            size,
+            distance:corrected
+        });
+    }
+    visible.sort(
+        (a,b)=>
+            b.distance-a.distance
+    );
+    for(
+        const item of visible
+    ){
+        const bot=
+            item.bot;
+        const x=
+            item.x;
+        const size=
+            item.size;
+        const bottom=
+            H/2+
+            size*.5;
+        /*
+           тело
+        */
+        ctx.fillStyle="#b92d36";
+        ctx.fillRect(
+            x-size*.25,
+            bottom-size,
+            size*.5,
+            size
+        );
+        /*
+           голова
+        */
+        ctx.fillStyle="#dca582";
+        ctx.beginPath();
+        ctx.arc(
+            x,
+            bottom-size*1.18,
+            size*.18,
+            0,
+            Math.PI*2
+        );
+        ctx.fill();
+        /*
+           HP
+        */
+        const barW=
+            size*.65;
+        ctx.fillStyle="#111";
+        ctx.fillRect(
+            x-barW/2,
+            bottom-size*1.45,
+            barW,
+            7
+        );
+        ctx.fillStyle="#35d16b";
+        ctx.fillRect(
+            x-barW/2,
+            bottom-size*1.45,
+            barW*
+            (bot.hp/100),
+            7
+        );
+    }
+}
+/* =================================
+   ОРУЖИЕ
+================================= */
+function drawWeapon(){
+    /*
+       корпус
+    */
+    ctx.fillStyle="#111";
+    ctx.fillRect(
+        W/2-75,
+        H-120,
+        150,
+        120
+    );
+    /*
+       ствол
+    */
+    ctx.fillStyle="#555";
+    ctx.fillRect(
+        W/2-16,
+        H-185,
+        32,
+        85
+    );
+    /*
+       рукоятка
+    */
+    ctx.fillStyle="#171717";
+    ctx.fillRect(
+        W/2-45,
+        H-50,
+        90,
+        60
+    );
+    /*
+       вспышка
+    */
+    if(flash>0){
+        ctx.fillStyle=
+            "rgba(255,210,50,.9)";
+        ctx.beginPath();
+        ctx.arc(
+            W/2,
+            H-190,
+            30,
+            0,
+            Math.PI*2
+        );
+        ctx.fill();
+        flash-=0.016;
+    }
+}
+/* =================================
    СТРЕЛЬБА
-========================= */
+================================= */
 function shoot(){
     if(
         gameEnded ||
@@ -798,79 +958,64 @@ function shoot(){
         return;
     }
     ammo--;
-    muzzleFlash=.08;
+    flash=.08;
+    const fov=
+        Math.PI/3;
     let target=null;
-    let closest=Infinity;
+    let best=Infinity;
     for(
         const bot of bots
     ){
-        if(
-            bot.classList.contains("dead")
-        )
+        if(bot.dead)
             continue;
-        const bx =
-            parseFloat(bot.style.left);
-        const by =
-            parseFloat(bot.style.top);
-        const dx =
-            bx-playerX;
-        const dy =
-            by-playerY;
-        const distance =
+        const dx=
+            bot.x-player.x;
+        const dy=
+            bot.y-player.y;
+        const distance=
             Math.hypot(dx,dy);
-        if(distance>900)
-            continue;
-        let a =
+        let relative=
             Math.atan2(dy,dx)-
-            angle;
-        a =
+            player.angle;
+        relative=
             Math.atan2(
-                Math.sin(a),
-                Math.cos(a)
+                Math.sin(relative),
+                Math.cos(relative)
             );
         if(
-            Math.abs(a)<0.15 &&
-            distance<closest
+            Math.abs(relative)>.12
+        )
+            continue;
+        const wallDistance=
+            raycast(
+                player.angle+
+                relative
+            );
+        if(
+            wallDistance<
+            distance-30
+        )
+            continue;
+        if(
+            distance<best
         ){
-            closest=distance;
+            best=distance;
             target=bot;
         }
     }
     if(target){
-        let botHP =
-            Number(
-                target.dataset.hp
-            );
-        botHP-=50;
-        target.dataset.hp=
-            botHP;
-        const bar =
-            target.querySelector(
-                ".botHPbar"
-            );
-        bar.style.width =
-            Math.max(
-                0,
-                botHP
-            )+"%";
-        if(botHP<=0){
-            target.classList.add(
-                "dead"
-            );
+        target.hp-=50;
+        if(
+            target.hp<=0
+        ){
+            target.hp=0;
+            target.dead=true;
         }
     }
 }
-fireButton.addEventListener(
-    "pointerdown",
-    function(e){
-        e.preventDefault();
-        shoot();
-    },
-    {passive:false}
-);
-/* =========================
+/* =================================
    ПЕРЕЗАРЯДКА
-========================= */
+================================= */
 function reload(){
     if(
         reloading ||
@@ -879,7 +1024,6 @@ function reload(){
     )
         return;
     reloading=true;
-    updateHUD();
     setTimeout(
         function(){
             const need=
@@ -892,12 +1036,23 @@ function reload(){
             ammo+=amount;
             reserve-=amount;
             reloading=false;
-            updateHUD();
         },
         900
     );
 }
-reloadButton.addEventListener(
+document
+.getElementById("fire")
+.addEventListener(
+    "pointerdown",
+    function(e){
+        e.preventDefault();
+        shoot();
+    },
+    {passive:false}
+);
+document
+.getElementById("reload")
+.addEventListener(
     "pointerdown",
     function(e){
         e.preventDefault();
@@ -905,33 +1060,51 @@ reloadButton.addEventListener(
     },
     {passive:false}
 );
-/* =========================
+/* =================================
    HUD
-========================= */
+================================= */
 function updateHUD(){
-    hpText.textContent=
+    document.getElementById(
+        "hp"
+    ).textContent=
         "HP "+
         Math.max(
             0,
-            Math.floor(hp)
+            Math.floor(player.hp)
         );
-    ammoText.textContent=
+    document.getElementById(
+        "ammo"
+    ).textContent=
         reloading
         ? "RELOADING..."
         :
         ammo+
         " / "+
         reserve;
+    const alive=
+        bots.filter(
+            b=>!b.dead
+        ).length;
+    if(
+        !gameEnded &&
+        !joystickActive &&
+        !lookActive
+    ){
+        status.textContent=
+            alive+
+            " ENEMIES • FPS";
+    }
 }
-/* =========================
-   ПРОВЕРКА ПОБЕДЫ
-========================= */
+/* =================================
+   GAME STATE
+================================= */
+let gameEnded=false;
 function checkGame(){
     if(
-        hp<=0 &&
+        player.hp<=0 &&
         !gameEnded
     ){
-        hp=0;
+        player.hp=0;
         gameEnded=true;
         message.textContent=
             "YOU DIED";
@@ -941,10 +1114,9 @@ function checkGame(){
             "block";
         return;
     }
-    const alive =
+    const alive=
         bots.filter(
-            b=>
-                !b.classList.contains("dead")
+            b=>!b.dead
         ).length;
     if(
         alive===0 &&
@@ -959,54 +1131,28 @@ function checkGame(){
             "block";
     }
 }
-/* =========================
-   RESET
-========================= */
+const message=
+    document.getElementById(
+        "message"
+    );
+const restart=
+    document.getElementById(
+        "restart"
+    );
 function resetGame(){
-    playerX=500;
-    playerY=500;
-    angle=0;
-    hp=100;
+    player.x=500;
+    player.y=500;
+    player.angle=0;
+    player.hp=100;
     ammo=30;
     reserve=90;
     reloading=false;
     gameEnded=false;
-    player.style.left=
-        playerX+"px";
-    player.style.top=
-        playerY+"px";
-    player.style.transform=
-        "translate(-50%,-50%) rotate(0rad)";
-    const positions=[
-        [2450,500],
-        [2300,1050],
-        [2450,1900],
-        [700,1900],
-        [1500,1850]
-    ];
-    bots.forEach(
-        (bot,i)=>{
-            bot.classList.remove(
-                "dead"
-            );
-            bot.dataset.hp=100;
-            bot.style.left=
-                positions[i][0]+"px";
-            bot.style.top=
-                positions[i][1]+"px";
-            bot.querySelector(
-                ".botHPbar"
-            ).style.width=
-                "100%";
-            bot.enemyCooldown=0;
-        }
-    );
+    spawnBots();
     message.style.display=
         "none";
     restart.style.display=
         "none";
-    updateHUD();
-    updateCamera();
 }
 restart.addEventListener(
     "pointerdown",
@@ -1016,25 +1162,9 @@ restart.addEventListener(
     },
     {passive:false}
 );
-/* =========================
-   ORIENTATION
-========================= */
-function orientation(){
-    document.getElementById(
-        "rotate"
-    ).style.display=
-        window.innerHeight>
-        window.innerWidth
-        ? "flex"
-        : "none";
-}
-window.addEventListener(
-    "resize",
-    orientation
-);
-/* =========================
+/* =================================
    GAME LOOP
-========================= */
+================================= */
 let last=
     performance.now();
 function loop(now){
@@ -1044,54 +1174,16 @@ function loop(now){
             (now-last)/1000
         );
     last=now;
-    if(
-        !gameEnded
-    ){
-        if(joystickActive){
-            const speed=300;
-            playerX +=
-                joyX*
-                speed*
-                dt;
-            playerY +=
-                joyY*
-                speed*
-                dt;
-            playerX=
-                Math.max(
-                    30,
-                    Math.min(
-                        2970,
-                        playerX
-                    )
-                );
-            playerY=
-                Math.max(
-                    30,
-                    Math.min(
-                        2170,
-                        playerY
-                    )
-                );
-        }
-        updateBots(dt);
-        checkGame();
-    }
-    player.style.left=
-        playerX+"px";
-    player.style.top=
-        playerY+"px";
-    updateCamera();
+    movePlayer(dt);
+    updateBots(dt);
+    checkGame();
     updateHUD();
+    drawWorld();
     requestAnimationFrame(
         loop
     );
 }
-/* =========================
-   START
-========================= */
 resetGame();
-orientation();
 requestAnimationFrame(
     loop
 );
