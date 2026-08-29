@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Strike Zone</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #111;
+  touch-action: none;
+  font-family: Arial, sans-serif;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#hud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  color: white;
+}
+
+#top {
+  position: absolute;
+  top: max(15px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  text-shadow: 0 2px 4px black;
+}
+
+#hp {
+  position: absolute;
+  left: 18px;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  font-size: 22px;
+  font-weight: bold;
+  text-shadow: 0 2px 4px black;
+}
+
+#ammo {
+  position: absolute;
+  right: 18px;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  font-size: 22px;
+  font-weight: bold;
+  text-shadow: 0 2px 4px black;
+}
+
+#crosshair {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  transform: translate(-50%, -50%);
+}
+
+#crosshair::before,
+#crosshair::after {
+  content: "";
+  position: absolute;
+  background: white;
+  box-shadow: 0 0 3px black;
+}
+
+#crosshair::before {
+  width: 22px;
+  height: 2px;
+  top: 10px;
+}
+
+#crosshair::after {
+  width: 2px;
+  height: 22px;
+  left: 10px;
+}
+
+.button {
+  pointer-events: auto;
+  position: absolute;
+  border: 1px solid #ffffff66;
+  background: #222a;
+  color: white;
+  font-weight: bold;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+#fire {
+  right: 25px;
+  bottom: 100px;
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: #b22c2ccc;
+}
+
+#reload {
+  right: 120px;
+  bottom: 35px;
+  width: 95px;
+  height: 45px;
+  border-radius: 12px;
+}
+
+#restart {
+  display: none;
+  left: 50%;
+  top: 58%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 55px;
+  border-radius: 14px;
+}
+
+#joystick {
+  position: absolute;
+  left: 25px;
+  bottom: 35px;
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+  background: #ffffff18;
+  border: 2px solid #ffffff44;
+  pointer-events: auto;
+}
+
+#stick {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  left: 35px;
+  top: 35px;
+  border-radius: 50%;
+  background: #ffffff55;
+  border: 1px solid #ffffff88;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="game"></canvas>
+
+<div id="hud">
+  <div id="top">STRIKE ZONE • 0.1</div>
+  <div id="crosshair"></div>
+
+  <div id="hp">HP 100</div>
+  <div id="ammo">30 / 90</div>
+
+  <div id="joystick">
+    <div id="stick"></div>
+  </div>
+
+  <button id="fire" class="button">FIRE</button>
+  <button id="reload" class="button">RELOAD</button>
+  <button id="restart" class="button">PLAY AGAIN</button>
+</div>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let W, H, dpr;
+
+function resize() {
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = window.innerWidth;
+  H = window.innerHeight;
+
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+window.addEventListener("resize", resize);
+resize();
+
+/* PLAYER */
+
+let player = {
+  x: 0,
+  y: 0,
+  angle: 0,
+  hp: 100
+};
+
+let ammo = 30;
+let reserve = 90;
+let reloading = false;
+let gameOver = false;
+
+/* BOTS */
+
+let bots = [];
+
+function spawnBots() {
+  bots = [];
+
+  for (let i = 0; i < 5; i++) {
+    bots.push({
+      x: 250 + Math.random() * 450,
+      y: -350 + Math.random() * 700,
+      hp: 100,
+      dead: false,
+      cooldown: Math.random()
+    });
+  }
+}
+
+/* CONTROLS */
+
+let joystick = {
+  active: false,
+  x: 0,
+  y: 0
+};
+
+let look = {
+  active: false,
+  x: 0
+};
+
+const joy = document.getElementById("joystick");
+const stick = document.getElementById("stick");
+
+/* MOVEMENT */
+
+joy.addEventListener("touchstart", e => {
+  e.preventDefault();
+  joystick.active = true;
+  updateJoystick(e.touches[0]);
+}, {passive:false});
+
+joy.
+[29.08.2026 22:50] rahl1k: addEventListener("touchmove", e => {
+  e.preventDefault();
+  if (joystick.active) updateJoystick(e.touches[0]);
+}, {passive:false});
+
+joy.addEventListener("touchend", e => {
+  e.preventDefault();
+
+  joystick.active = false;
+  joystick.x = 0;
+  joystick.y = 0;
+
+  stick.style.left = "35px";
+  stick.style.top = "35px";
+}, {passive:false});
+
+function updateJoystick(touch) {
+
+  const r = joy.getBoundingClientRect();
+
+  let x = touch.clientX - (r.left + r.width / 2);
+  let y = touch.clientY - (r.top + r.height / 2);
+
+  const max = 35;
+  const distance = Math.hypot(x, y);
+
+  if (distance > max) {
+    x = x / distance * max;
+    y = y / distance * max;
+  }
+
+  joystick.x = x / max;
+  joystick.y = y / max;
+
+  stick.style.left = (35 + x) + "px";
+  stick.style.top = (35 + y) + "px";
+}
+
+/* CAMERA */
+
+canvas.addEventListener("touchstart", e => {
+
+  const t = e.changedTouches[0];
+
+  if (t.clientX > W * 0.42) {
+    look.active = true;
+    look.x = t.clientX;
+  }
+
+}, {passive:false});
+
+canvas.addEventListener("touchmove", e => {
+
+  e.preventDefault();
+
+  if (!look.active) return;
+
+  const t = e.changedTouches[0];
+
+  const dx = t.clientX - look.x;
+
+  player.angle += dx * 0.008;
+
+  look.x = t.clientX;
+
+}, {passive:false});
+
+canvas.addEventListener("touchend", () => {
+  look.active = false;
+});
+
+/* SHOOTING */
+
+document.getElementById("fire").addEventListener("touchstart", e => {
+  e.preventDefault();
+  shoot();
+}, {passive:false});
+
+function shoot() {
+
+  if (gameOver || reloading) return;
+
+  if (ammo <= 0) {
+    reload();
+    return;
+  }
+
+  ammo--;
+
+  let target = null;
+  let closest = Infinity;
+
+  for (const bot of bots) {
+
+    if (bot.dead) continue;
+
+    const dx = bot.x - player.x;
+    const dy = bot.y - player.y;
+
+    const distance = Math.hypot(dx, dy);
+
+    let targetAngle =
+      Math.atan2(dy, dx) - player.angle;
+
+    targetAngle =
+      Math.atan2(
+        Math.sin(targetAngle),
+        Math.cos(targetAngle)
+      );
+
+    if (
+      Math.abs(targetAngle) < 0.10 &&
+      distance < 800 &&
+      distance < closest
+    ) {
+      target = bot;
+      closest = distance;
+    }
+  }
+
+  if (target) {
+
+    target.hp -= 50;
+
+    if (target.hp <= 0) {
+      target.dead = true;
+    }
+  }
+}
+
+/* RELOAD */
+
+document.getElementById("reload").addEventListener("touchstart", e => {
+  e.preventDefault();
+  reload();
+}, {passive:false});
+
+function reload() {
+
+  if (
+    reloading ||
+    ammo === 30 ||
+    reserve <= 0
+  ) return;
+
+  reloading = true;
+
+  setTimeout(() => {
+
+    const needed = 30 - ammo;
+    const amount = Math.min(needed, reserve);
+
+    ammo += amount;
+    reserve -= amount;
+
+    reloading = false;
+
+  }, 900);
+}
+
+/* GAME UPDATE */
+
+function update(dt) {
+
+  if (gameOver) return;
+
+  const speed = 190;
+
+  const forward = -joystick.y;
+  const side = joystick.x;
+
+  player.x +=
+    (
+      Math.cos(player.angle) * forward -
+      Math.sin(player.angle) * side
+    ) * speed * dt;
+
+  player.y +=
+    (
+      Math.sin(player.angle) * forward +
+      Math.cos(player.angle) * side
+    ) * speed * dt;
+
+  let alive = 0;
+
+  for (const bot of bots) {
+
+    if (bot.dead) continue;
+
+    alive++;
+
+    const dx = player.x - bot.x;
+    const dy = player.y - bot.y;
+
+    const distance = Math.hypot(dx, dy);
+
+    if (distance > 90) {
+
+      bot.x += dx / distance * 35 * dt;
+      bot.y += dy / distance * 35 * dt;
+
+    } else {
+
+      bot.cooldown -= dt;
+
+      if (bot.cooldown <= 0) {
+
+        player.hp -= 8;
+        bot.cooldown = 1;
+      }
+    }
+  }
+
+  if (player.hp <= 0) {
+
+    player.hp = 0;
+    gameOver = true;
+
+    document.getElementById("top").textContent =
+      "YOU DIED";
+
+    document.getElementById("restart").style.display =
+      "block";
+  }
+
+  if (alive === 0) {
+
+    gameOver = true;
+
+    document.getElementById("top").textContent =
+      "ROUND WON";
+
+    document.getElementById("restart").style.display =
+      "block";
+  }
+
+  document.getElementById("hp").textContent =
+    "HP " + player.hp;
+
+  document.getElementById("ammo").textContent =
+    reloading
+      ? "RELOADING..."
+      : ammo + " / " + reserve;
+}
+
+/* DRAW */
+
+function draw() {
+[29.08.2026 22:50] rahl1k: ctx.clearRect(0, 0, W, H);
+
+  /* FLOOR */
+
+  ctx.fillStyle = "#252b30";
+  ctx.fillRect(0, 0, W, H);
+
+  /* GRID */
+
+  ctx.strokeStyle = "#3b4248";
+  ctx.lineWidth = 2;
+
+  for (let i = -15; i <= 15; i++) {
+
+    const x =
+      W / 2 +
+      i * 50 -
+      (player.x % 50);
+
+    ctx.beginPath();
+    ctx.moveTo(x, H / 2);
+    ctx.lineTo(
+      x + (x - W / 2) * 2,
+      H
+    );
+    ctx.stroke();
+  }
+
+  for (let i = 1; i < 10; i++) {
+
+    const y =
+      H / 2 +
+      i * i * 8;
+
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.stroke();
+  }
+
+  /* BOTS */
+
+  for (const bot of bots) {
+
+    if (bot.dead) continue;
+
+    const dx = bot.x - player.x;
+    const dy = bot.y - player.y;
+
+    const distance = Math.hypot(dx, dy);
+
+    let relative =
+      Math.atan2(dy, dx) -
+      player.angle;
+
+    relative =
+      Math.atan2(
+        Math.sin(relative),
+        Math.cos(relative)
+      );
+
+    if (Math.abs(relative) > 1.3)
+      continue;
+
+    const screenX =
+      W / 2 +
+      Math.tan(relative) * W * 0.65;
+
+    const size =
+      Math.max(
+        25,
+        850 / (distance + 100)
+      );
+
+    const bottom =
+      H / 2 + size * 0.6;
+
+    /* BODY */
+
+    ctx.fillStyle = "#c52e35";
+
+    ctx.fillRect(
+      screenX - size * 0.3,
+      bottom - size,
+      size * 0.6,
+      size
+    );
+
+    /* HEAD */
+
+    ctx.fillStyle = "#e0ad8b";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      screenX,
+      bottom - size * 1.15,
+      size * 0.25,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+    /* HEALTH BAR */
+
+    ctx.fillStyle = "#111";
+
+    ctx.fillRect(
+      screenX - size * 0.4,
+      bottom - size * 1.55,
+      size * 0.8,
+      5
+    );
+
+    ctx.fillStyle = "#36d36b";
+
+    ctx.fillRect(
+      screenX - size * 0.4,
+      bottom - size * 1.55,
+      size * 0.8 * (bot.hp / 100),
+      5
+    );
+  }
+
+  /* WEAPON */
+
+  ctx.fillStyle = "#151515";
+
+  ctx.fillRect(
+    W / 2 - 60,
+    H - 105,
+    120,
+    90
+  );
+
+  ctx.fillStyle = "#555";
+
+  ctx.fillRect(
+    W / 2 - 12,
+    H - 145,
+    24,
+    55
+  );
+}
+
+/* LOOP */
+
+let previous = performance.now();
+
+function loop(now) {
+
+  const dt =
+    Math.min(
+      0.05,
+      (now - previous) / 1000
+    );
+
+  previous = now;
+
+  update(dt);
+  draw();
+
+  requestAnimationFrame(loop);
+}
+
+/* RESET */
+
+function resetGame() {
+
+  player.x = 0;
+  player.y = 0;
+  player.angle = 0;
+  player.hp = 100;
+
+  ammo = 30;
+  reserve = 90;
+
+  reloading = false;
+  gameOver = false;
+
+  document.getElementById("top").textContent =
+    "STRIKE ZONE • 0.1";
+
+  document.getElementById("restart").style.display =
+    "none";
+
+  spawnBots();
+}
+
+document.getElementById("restart")
+  .addEventListener("touchstart", e => {
+
+    e.preventDefault();
+    resetGame();
+
+  }, {passive:false});
+
+resetGame();
+requestAnimationFrame(loop);
+</script>
+
+</body>
+</html>
