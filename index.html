@@ -890,222 +890,228 @@ function updateCamera(){
 
 
 /* =====================================================
-   ДЖОЙСТИК
+ДЖОЙСТИК — FINAL iPHONE VERSION
 ===================================================== */
+const joystick =
+document.getElementById(“joystick”);
+const stick =
+document.getElementById(“stick”);
+let joyX = 0;
+let joyY = 0;
+let joystickActive = false;
+let joystickTouchId = null;
+let touchCount = 0;
+/*
+Расчёт положения стика
+*/
+function setJoystick(x,y){
+const rect =
+    joystick.getBoundingClientRect();
 
-const joystick=
-    document.getElementById("joystick");
+const centerX =
+    rect.left +
+    rect.width / 2;
 
-const stick=
-    document.getElementById("stick");
-
-let joystickActive=false;
-
-let joystickId=null;
-
-let touchCount=0;
-
-
-function moveStick(x,y){
-
-    const r=
-        joystick.getBoundingClientRect();
-
-
-    const centerX=
-        r.left+
-        r.width/2;
-
-    const centerY=
-        r.top+
-        r.height/2;
+const centerY =
+    rect.top +
+    rect.height / 2;
 
 
-    let dx=
-        x-centerX;
+let dx =
+    x - centerX;
 
-    let dy=
-        y-centerY;
-
-
-    const max=40;
+let dy =
+    y - centerY;
 
 
-    const distance=
-        Math.sqrt(
-            dx*dx+
-            dy*dy
-        );
+const maxDistance = 42;
 
 
-    if(distance>max){
+const distance =
+    Math.sqrt(
+        dx * dx +
+        dy * dy
+    );
 
-        dx=
-            dx/distance*
-            max;
 
-        dy=
-            dy/distance*
-            max;
+if(distance > maxDistance){
+
+    dx =
+        dx /
+        distance *
+        maxDistance;
+
+    dy =
+        dy /
+        distance *
+        maxDistance;
+}
+
+
+joyX =
+    dx /
+    maxDistance;
+
+joyY =
+    dy /
+    maxDistance;
+
+
+/*
+   Двигаем сам кружок
+*/
+
+stick.style.left =
+    (38 + dx) +
+    "px";
+
+stick.style.top =
+    (38 + dy) +
+    "px";
+
+
+touchCount++;
+
+updateDebug();
+}
+/*
+Сброс
+*/
+function releaseJoystick(){
+joystickActive=false;
+
+joystickTouchId=null;
+
+joyX=0;
+joyY=0;
+
+
+stick.style.left="38px";
+
+stick.style.top="38px";
+
+
+updateDebug();
+}
+/*
+Нажатие именно на джойстик
+*/
+joystick.addEventListener(
+“touchstart”,
+function(e){
+    e.preventDefault();
+
+    const touch =
+        e.changedTouches[0];
+
+    joystickActive=true;
+
+    joystickTouchId =
+        touch.identifier;
+
+
+    setJoystick(
+        touch.clientX,
+        touch.clientY
+    );
+
+},
+{
+    passive:false
+}
+);
+/*
+Движение пальца.
+ВАЖНО:
+слушаем на document,
+потому что палец может уйти
+за пределы круга.
+*/
+document.addEventListener(
+“touchmove”,
+function(e){
+    if(!joystickActive)
+        return;
+
+
+    for(
+        let i=0;
+        i<e.changedTouches.length;
+        i++
+    ){
+
+        const touch =
+            e.changedTouches[i];
+
+
+        if(
+            touch.identifier ===
+            joystickTouchId
+        ){
+
+            e.preventDefault();
+
+
+            setJoystick(
+                touch.clientX,
+                touch.clientY
+            );
+
+
+            break;
+        }
     }
 
-
-    joyX=
-        dx/max;
-
-    joyY=
-        dy/max;
-[29.08.2026 23:56] rahl1k: stick.style.left=
-        (38+dx)+"px";
-
-    stick.style.top=
-        (38+dy)+"px";
-
-
-    touchCount++;
-
-
-    updateDebug();
+},
+{
+    passive:false
 }
+);
+/*
+Отпускание
+*/
+document.addEventListener(
+“touchend”,
+function(e){
+    for(
+        let i=0;
+        i<e.changedTouches.length;
+        i++
+    ){
+
+        const touch =
+            e.changedTouches[i];
 
 
-function resetStick(){
+        if(
+            touch.identifier ===
+            joystickTouchId
+        ){
 
-    joystickActive=false;
+            releaseJoystick();
 
-    joystickId=null;
+            break;
+        }
+    }
 
-    joyX=0;
-    joyY=0;
-
-
-    stick.style.left="38px";
-    stick.style.top="38px";
-
-    updateDebug();
+},
+{
+    passive:false
 }
-
-
+);
 /*
-   Начало
+Отмена
 */
-
 document.addEventListener(
-    "touchstart",
-    function(e){
+“touchcancel”,
+function(){
+    releaseJoystick();
 
-        for(
-            const t of e.changedTouches
-        ){
-
-            const r=
-                joystick.getBoundingClientRect();
-
-
-            if(
-                t.clientX>=r.left &&
-                t.clientX<=r.right &&
-                t.clientY>=r.top &&
-                t.clientY<=r.bottom
-            ){
-
-                e.preventDefault();
-
-                joystickActive=true;
-
-                joystickId=
-                    t.identifier;
-
-
-                moveStick(
-                    t.clientX,
-                    t.clientY
-                );
-
-                return;
-            }
-        }
-
-    },
-    {passive:false}
+},
+{
+    passive:false
+}
 );
-
-
-/*
-   Движение
-*/
-
-document.addEventListener(
-    "touchmove",
-    function(e){
-
-        if(!joystickActive)
-            return;
-
-
-        for(
-            const t of e.changedTouches
-        ){
-
-            if(
-                t.identifier===
-                joystickId
-            ){
-
-                e.preventDefault();
-
-                moveStick(
-                    t.clientX,
-                    t.clientY
-                );
-
-                return;
-            }
-        }
-
-    },
-    {passive:false}
-);
-
-
-/*
-   Конец
-*/
-
-document.addEventListener(
-    "touchend",
-    function(e){
-
-        for(
-            const t of e.changedTouches
-        ){
-
-            if(
-                t.identifier===
-                joystickId
-            ){
-
-                resetStick();
-
-                return;
-            }
-        }
-
-    },
-    {passive:false}
-);
-
-
-document.addEventListener(
-    "touchcancel",
-    function(){
-
-        resetStick();
-
-    },
-    {passive:false}
-);
-
 
 /* =====================================================
    ДВИЖЕНИЕ ИГРОКА
@@ -1117,80 +1123,90 @@ let lastTime=
 
 function updatePlayer(){
 
-    const now=
-        performance.now();
+   const now =
+    performance.now();
 
-
-    const dt=
-        Math.min(
-            .05,
-            (now-lastTime)/1000
-        );
-
-
-    lastTime=now;
-
-
-    const speed=300;
-
-
-    playerX+=
-        joyX*
-        speed*
-        dt;
-
-
-    playerY+=
-        joyY*
-        speed*
-        dt;
-
-
-    /*
-       Границы
-    */
-
-    playerX=
-        Math.max(
-            30,
-            Math.min(
-                2970,
-                playerX
-            )
-        );
-
-
-    playerY=
-        Math.max(
-            30,
-            Math.min(
-                2170,
-                playerY
-            )
-        );
-
-
-    /*
-       Игрок внутри world
-    */
-
-    player.style.left=
-        (playerX-28)+"px";
-
-    player.style.top=
-        (playerY-28)+"px";
-
-
-    updateCamera();
-
-    updateDebug();
-
-
-    requestAnimationFrame(
-        updatePlayer
+const dt =
+    Math.min(
+        0.05,
+        (now-lastTime)/1000
     );
-}
 
+lastTime=now;
+
+
+const speed=300;
+
+
+/*
+   Движение по X
+*/
+
+playerX +=
+    joyX *
+    speed *
+    dt;
+
+
+/*
+   Движение по Y
+*/
+
+playerY +=
+    joyY *
+    speed *
+    dt;
+
+
+/*
+   Границы карты
+*/
+
+if(playerX<30)
+    playerX=30;
+
+if(playerX>2970)
+    playerX=2970;
+
+
+if(playerY<30)
+    playerY=30;
+
+if(playerY>2170)
+    playerY=2170;
+
+
+/*
+   Перемещаем игрока
+*/
+
+player.style.left =
+    (playerX-28) +
+    "px";
+
+player.style.top =
+    (playerY-28) +
+    "px";
+
+
+/*
+   Двигаем камеру
+*/
+
+updateCamera();
+
+
+/*
+   Показываем координаты
+*/
+
+updateDebug();
+
+
+requestAnimationFrame(
+    updatePlayer
+);
+}
 
 /* =====================================================
    DEBUG
