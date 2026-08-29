@@ -224,21 +224,31 @@ joystick.addEventListener(
 </body>
 
 <canvas id="game"></canvas>
+<script>
 
-<div style="
-position:fixed;
-z-index:99999;
-top:0;
-left:0;
-right:0;
-bottom:0;
-background:red;
-color:white;
-font-size:40px;
-display:flex;
-align-items:center;
-justify-content:center;
-">
-TEST GITHUB
-</div>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+ctx.fillStyle = "blue";
+ctx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+);
+
+ctx.fillStyle = "white";
+ctx.font = "40px Arial";
+ctx.textAlign = "center";
+
+ctx.fillText(
+    "CANVAS WORKS!",
+    canvas.width / 2,
+    canvas.height / 2
+);
+
+</script>
 </html>
