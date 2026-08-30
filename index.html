@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>RAHL1K FPS v3</title>
+<title>RAHL1K FPS v4</title>
 <style>
 *{
 box-sizing:border-box;
@@ -83,7 +83,7 @@ height:45px;
 left:calc(50% - 3px);
 }
 /* =====================
-ЗДАНИЯ
+   ЗДАНИЯ
 ===================== */
 .building{
 position:absolute;
@@ -98,7 +98,7 @@ box-shadow:inset 0 0 20px #0008;
 z-index:10;
 }
 /* =====================
-HUD
+   HUD
 ===================== */
 #title{
 position:fixed;
@@ -152,7 +152,7 @@ font-weight:bold;
 text-shadow:0 2px 4px #000;
 }
 /* =====================
-ПРИЦЕЛ
+   ПРИЦЕЛ
 ===================== */
 #crosshair{
 position:fixed;
@@ -182,7 +182,7 @@ height:32px;
 background:white;
 }
 /* =====================
-ДЖОЙСТИК
+   ДЖОЙСТИК
 ===================== */
 #joystick{
 position:fixed;
@@ -208,7 +208,7 @@ border:2px solid white;
 pointer-events:none;
 }
 /* =====================
-КНОПКИ
+   КНОПКИ
 ===================== */
 #fire{
 position:fixed;
@@ -237,7 +237,7 @@ color:white;
 font-weight:bold;
 }
 /* =====================
-ОРУЖИЕ
+   ОРУЖИЕ
 ===================== */
 #weapon{
 position:fixed;
@@ -247,6 +247,7 @@ bottom:-15px;
 width:170px;
 height:130px;
 transform:translateX(-50%);
+transition:transform .07s;
 }
 #gun{
 position:absolute;
@@ -268,39 +269,41 @@ background:#303537;
 border-radius:5px;
 }
 /* =====================
-ВРАГИ
+   ВРАГ
 ===================== */
 .enemy{
 position:absolute;
 z-index:30;
-transform:translate(-50%,-50%);
 width:60px;
 height:120px;
+transform:translate(-50%,-50%);
+transform-origin:center center;
 }
 .enemyBody{
 position:absolute;
-left:12px;
+left:20%;
 bottom:0;
-width:36px;
-height:75px;
+width:60%;
+height:63%;
 background:#a92f38;
 border-radius:8px 8px 2px 2px;
 }
 .enemyHead{
 position:absolute;
-left:16px;
+left:50%;
 top:0;
-width:28px;
-height:28px;
+transform:translateX(-50%);
+width:46%;
+aspect-ratio:1/1;
 border-radius:50%;
 background:#d49a78;
 }
 .enemyGun{
 position:absolute;
-left:40px;
-top:55px;
-width:45px;
-height:9px;
+left:65%;
+top:47%;
+width:75%;
+height:8%;
 background:#161818;
 transform:rotate(-8deg);
 }
@@ -308,7 +311,7 @@ transform:rotate(-8deg);
 position:absolute;
 left:0;
 top:-10px;
-width:60px;
+width:100%;
 height:5px;
 background:#111;
 }
@@ -318,7 +321,7 @@ width:100%;
 background:#39d36b;
 }
 /* =====================
-АПТЕЧКИ
+   АПТЕЧКИ
 ===================== */
 .medkit{
 position:absolute;
@@ -341,7 +344,7 @@ font-weight:bold;
 color:#d33;
 }
 /* =====================
-МИНИ-КАРТА
+   МИНИ-КАРТА
 ===================== */
 #minimap{
 position:fixed;
@@ -377,7 +380,7 @@ border-radius:50%;
 transform:translate(-50%,-50%);
 }
 /* =====================
-УРОН ЭКРАНА
+   УРОН
 ===================== */
 #damage{
 position:fixed;
@@ -388,7 +391,7 @@ background:#d00;
 opacity:0;
 }
 /* =====================
-GAME OVER
+   GAME OVER
 ===================== */
 #gameover{
 display:none;
@@ -414,7 +417,7 @@ background:#333;
 color:white;
 }
 /* =====================
-ПОВЕРНИ ТЕЛЕФОН
+   ПОВЕРНИ ТЕЛЕФОН
 ===================== */
 #rotate{
 display:none;
@@ -445,7 +448,6 @@ display:flex;
 <div class="mark v" style="top:67%"></div>
 <div class="mark v" style="top:80%"></div>
 <div class="mark v" style="top:91%"></div>
-<!-- здания -->
 <div class="building" id="b1"></div>
 <div class="building" id="b2"></div>
 <div class="building" id="b3"></div>
@@ -454,7 +456,7 @@ display:flex;
 <div class="building" id="b6"></div>
 </div>
 <div id="title">
-RAHL1K FPS v3
+RAHL1K FPS v4
 </div>
 <div id="info">
 POS: 1500 / 1100 &nbsp;&nbsp; ANGLE: 0°
@@ -469,7 +471,6 @@ HP 100
 30 / 90
 </div>
 <div id="crosshair"></div>
-<!-- мини-карта -->
 <div id="minimap">
 <div class="mapBuilding"
 style="left:10px;top:10px;width:35px;height:25px"></div>
@@ -481,7 +482,6 @@ style="left:10px;bottom:10px;width:35px;height:30px"></div>
 style="right:10px;bottom:10px;width:35px;height:30px"></div>
 <div id="playerDot"></div>
 </div>
-<!-- джойстик -->
 <div id="joystick">
 <div id="stick"></div>
 </div>
@@ -491,7 +491,6 @@ FIRE
 <button id="reload">
 RELOAD
 </button>
-<!-- оружие -->
 <div id="weapon">
 <div id="barrel"></div>
 <div id="gun"></div>
@@ -523,94 +522,48 @@ y:1100,
 angle:0,
 hp:100
 };
-/* ==========================
-КАРТА
-========================== */
 const MAP_W=4000;
 const MAP_H=3000;
-const buildings=[
-{
-x:300,
-y:300,
-w:800,
-h:350
-},
-{
-x:2750,
-y:300,
-w:800,
-h:350
-},
-{
-x:300,
-y:1900,
-w:800,
-h:400
-},
-{
-x:2750,
-y:1900,
-w:800,
-h:400
-},
-{
-x:1250,
-y:500,
-w:400,
-h:300
-},
-{
-x:2000,
-y:500,
-w:400,
-h:300
-}
-];
 /* ==========================
 ЗДАНИЯ
 ========================== */
+const buildings=[
+{x:300,y:300,w:800,h:350},
+{x:2750,y:300,w:800,h:350},
+{x:300,y:1900,w:800,h:400},
+{x:2750,y:1900,w:800,h:400},
+{x:1250,y:500,w:400,h:300},
+{x:2000,y:500,w:400,h:300}
+];
 function updateBuildings(){
-const cx=
-window.innerWidth/2;
-const cy=
-window.innerHeight*.60;
+const cx=window.innerWidth/2;
+const cy=window.innerHeight*.60;
 for(let i=0;i<buildings.length;i++){
 const b=buildings[i];
 const el=
-document.getElementById(
-"b"+(i+1)
-);
-const dx=
-b.x-player.x;
-const dy=
-b.y-player.y;
-const cos=
-Math.cos(player.angle);
-const sin=
-Math.sin(player.angle);
+document.getElementById("b"+(i+1));
+const dx=b.x-player.x;
+const dy=b.y-player.y;
+const cos=Math.cos(player.angle);
+const sin=Math.sin(player.angle);
 const forward=
-dx*cos+
-dy*sin;
+dx*cos+dy*sin;
 const side=
--dx*sin+
-dy*cos;
+-dx*sin+dy*cos;
 if(forward<-50){
 el.style.display="none";
 continue;
 }
-const f=
-Math.max(100,forward);
+const f=Math.max(100,forward);
 const sx=
-cx+
-side*.55;
+cx+side*.55;
 const sy=
-cy-
-12000/f;
+cy-12000/f;
 const scale=
 Math.min(
 2.5,
 Math.max(
-0.15,
+.15,
 900/f
 )
 );
@@ -629,17 +582,17 @@ el.style.height=
 function blocked(x,y){
 const r=28;
 if(
-x<r ||
-y<r ||
-x>MAP_W-r ||
+x<r||
+y<r||
+x>MAP_W-r||
 y>MAP_H-r
 )
 return true;
 for(const b of buildings){
 if(
-x+r>b.x &&
-x-r<b.x+b.w &&
-y+r>b.y &&
+x+r>b.x&&
+x-r<b.x+b.w&&
+y+r>b.y&&
 y-r<b.y+b.h
 )
 return true;
@@ -691,8 +644,7 @@ joystick.addEventListener(
 e=>{
 e.preventDefault();
 if(joyID!==null)return;
-const t=
-e.changedTouches[0];
+const t=e.changedTouches[0];
 joyID=t.identifier;
 setJoy(
 t.clientX,
@@ -705,9 +657,7 @@ joystick.addEventListener(
 "touchmove",
 e=>{
 e.preventDefault();
-for(
-const t of e.changedTouches
-){
+for(const t of e.changedTouches){
 if(t.identifier===joyID){
 setJoy(
 t.clientX,
@@ -721,37 +671,35 @@ t.clientY
 joystick.addEventListener(
 "touchend",
 e=>{
-for(
-const t of e.changedTouches
-){
+for(const t of e.changedTouches){
 if(t.identifier===joyID){
 resetJoy();
 }
 }
 }
 );
+joystick.addEventListener(
+"touchcancel",
+resetJoy
+);
 /* ==========================
-КАМЕРА
+КАМЕРА 360°
 ========================== */
 let lookID=null;
 let lastLookX=0;
 document.addEventListener(
 "touchstart",
 e=>{
-for(
-const t of e.changedTouches
-){
+for(const t of e.changedTouches){
 if(
 t.clientX>
-window.innerWidth*.42 &&
+window.innerWidth*.42&&
 !t.target.closest(
-"#fire,#reload"
+"#fire,#reload,#joystick"
 )
 ){
-lookID=
-t.identifier;
-lastLookX=
-t.clientX;
+lookID=t.identifier;
+lastLookX=t.clientX;
 }
 }
 },
@@ -761,17 +709,13 @@ document.addEventListener(
 "touchmove",
 e=>{
 if(lookID===null)return;
-for(
-const t of e.changedTouches
-){
+for(const t of e.changedTouches){
 if(t.identifier===lookID){
 e.preventDefault();
 const dx=
 t.clientX-lastLookX;
-player.angle+=
-dx*.008;
-lastLookX=
-t.clientX;
+player.angle+=dx*.008;
+lastLookX=t.clientX;
 }
 }
 },
@@ -780,9 +724,7 @@ t.clientX;
 document.addEventListener(
 "touchend",
 e=>{
-for(
-const t of e.changedTouches
-){
+for(const t of e.changedTouches){
 if(t.identifier===lookID){
 lookID=null;
 }
@@ -795,101 +737,43 @@ lookID=null;
 function updatePlayer(dt){
 if(player.hp<=0)return;
 const speed=270;
-const forward=
--joyY;
-const strafe=
-joyX;
+const forward=-joyY;
+const strafe=joyX;
 const dx=
 (
-Math.cos(player.angle)*
-forward
--
-Math.sin(player.angle)*
-strafe
-)
-*
+Math.cos(player.angle)*forward-
+Math.sin(player.angle)*strafe
+)*
 speed*
 dt;
 const dy=
 (
-Math.sin(player.angle)*
-forward
-+
-Math.cos(player.angle)*
-strafe
-)
-*
+Math.sin(player.angle)*forward+
+Math.cos(player.angle)*strafe
+)*
 speed*
 dt;
-const nx=
-player.x+dx;
-const ny=
-player.y+dy;
-if(
-!blocked(
-nx,
-player.y
-)
-){
+const nx=player.x+dx;
+const ny=player.y+dy;
+if(!blocked(nx,player.y))
 player.x=nx;
-}
-if(
-!blocked(
-player.x,
-ny
-)
-){
+if(!blocked(player.x,ny))
 player.y=ny;
-}
 }
 /* ==========================
 ВРАГИ
 ========================== */
 const enemies=[
-{
-x:700,
-y:900,
-hp:100,
-el:null,
-attack:0
-},
-{
-x:3300,
-y:900,
-hp:100,
-el:null,
-attack:0
-},
-{
-x:700,
-y:2500,
-hp:100,
-el:null,
-attack:0
-},
-{
-x:3300,
-y:2500,
-hp:100,
-el:null,
-attack:0
-},
-{
-x:1800,
-y:2200,
-hp:100,
-el:null,
-attack:0
-}
+{x:700,y:900,hp:100,el:null,attack:0},
+{x:3300,y:900,hp:100,el:null,attack:0},
+{x:700,y:2500,hp:100,el:null,attack:0},
+{x:3300,y:2500,hp:100,el:null,attack:0},
+{x:1800,y:2200,hp:100,el:null,attack:0}
 ];
 function createEnemies(){
-for(
-const enemy of enemies
-){
+for(const enemy of enemies){
 const el=
-document.createElement(
-"div"
-);
+document.createElement("div");
 el.className="enemy";
 el.innerHTML=`
 <div class="enemyHP">
@@ -906,16 +790,10 @@ enemy.el=el;
 }
 }
 createEnemies();
-/* ==========================
-ДВИЖЕНИЕ ВРАГОВ
-========================== */
 function updateEnemies(dt){
-for(
-const enemy of enemies
-){
+for(const enemy of enemies){
 if(enemy.hp<=0){
-enemy.el.style.display=
-"none";
+enemy.el.style.display="none";
 continue;
 }
 const dx=
@@ -924,54 +802,30 @@ const dy=
 player.y-enemy.y;
 const distance=
 Math.hypot(dx,dy);
-/*
-Враг идёт к игроку
-если достаточно далеко.
-*/
 if(
-distance>90 &&
+distance>100&&
 distance<2200
 ){
 const speed=65;
 const ex=
-dx/distance*
-speed*
-dt;
+dx/distance*speed*dt;
 const ey=
-dy/distance*
-speed*
-dt;
-const nx=
-enemy.x+ex;
-const ny=
-enemy.y+ey;
-if(
-!blocked(nx,enemy.y)
-)
+dy/distance*speed*dt;
+const nx=enemy.x+ex;
+const ny=enemy.y+ey;
+if(!blocked(nx,enemy.y))
 enemy.x=nx;
-if(
-!blocked(enemy.x,ny)
-)
+if(!blocked(enemy.x,ny))
 enemy.y=ny;
 }
-/*
-Атака
-*/
-if(
-distance<170
-){
+if(distance<170){
 enemy.attack-=dt;
-if(
-enemy.attack<=0
-){
+if(enemy.attack<=0){
 player.hp-=8;
 enemy.attack=1;
 damageEffect();
 }
 }
-/*
-Показываем врага
-*/
 showEnemy(enemy);
 }
 }
@@ -986,11 +840,7 @@ enemy.y-player.y;
 const distance=
 Math.hypot(dx,dy);
 let relative=
-Math.atan2(
-dy,
-dx
-)-
-player.angle;
+Math.atan2(dy,dx)-player.angle;
 relative=
 Math.atan2(
 Math.sin(relative),
@@ -1016,18 +866,24 @@ Math.min(
 )
 );
 enemy.el.style.display="block";
-enemy.el.style.left=
-sx+"px";
+enemy.el.style.left=sx+"px";
 enemy.el.style.top=
 window.innerHeight*.57+"px";
+/*
+ВАЖНО:
+один размер задаётся всему врагу.
+Голова и тело находятся внутри
+одного контейнера и поэтому
+больше не разъезжаются.
+*/
 enemy.el.style.width=
 size+"px";
 enemy.el.style.height=
 (size*2)+"px";
+enemy.el.style.transform=
+"translate(-50%,-50%)";
 enemy.el
-.querySelector(
-".enemyHPInner"
-)
+.querySelector(".enemyHPInner")
 .style.width=
 Math.max(
 0,
@@ -1051,10 +907,7 @@ shoot();
 {passive:false}
 );
 function shoot(){
-if(
-player.hp<=0
-)
-return;
+if(player.hp<=0)return;
 if(ammo<=0){
 reload();
 return;
@@ -1062,11 +915,8 @@ return;
 ammo--;
 let target=null;
 let closest=Infinity;
-for(
-const enemy of enemies
-){
-if(enemy.hp<=0)
-continue;
+for(const enemy of enemies){
+if(enemy.hp<=0)continue;
 const dx=
 enemy.x-player.x;
 const dy=
@@ -1074,19 +924,15 @@ enemy.y-player.y;
 const distance=
 Math.hypot(dx,dy);
 let a=
-Math.atan2(
-dy,
-dx
-)-
-player.angle;
+Math.atan2(dy,dx)-player.angle;
 a=
 Math.atan2(
 Math.sin(a),
 Math.cos(a)
 );
 if(
-Math.abs(a)<.12 &&
-distance<1500 &&
+Math.abs(a)<.12&&
+distance<1500&&
 distance<closest
 ){
 target=enemy;
@@ -1095,19 +941,12 @@ closest=distance;
 }
 if(target){
 target.hp-=50;
-if(
-target.hp<=0
-){
+if(target.hp<=0){
 kills++;
 }
 }
-/*
-отдача
-*/
 const weapon=
-document.getElementById(
-"weapon"
-);
+document.getElementById("weapon");
 weapon.style.transform=
 "translateX(-50%) translateY(15px)";
 setTimeout(
@@ -1123,7 +962,7 @@ weapon.style.transform=
 ========================== */
 function reload(){
 if(
-ammo>=30 ||
+ammo>=30||
 reserve<=0
 )
 return;
@@ -1150,9 +989,7 @@ reload();
 ========================== */
 function damageEffect(){
 const damage=
-document.getElementById(
-"damage"
-);
+document.getElementById("damage");
 damage.style.opacity=.35;
 setTimeout(
 ()=>{
@@ -1166,43 +1003,25 @@ damage.style.opacity=0;
 ========================== */
 function updateMinimap(){
 const map=
-document.getElementById(
-"minimap"
-);
-const w=
-map.clientWidth;
-const h=
-map.clientHeight;
-const px=
-player.x/MAP_W*w;
-const py=
-player.y/MAP_H*h;
+document.getElementById("minimap");
+const w=map.clientWidth;
+const h=map.clientHeight;
 const dot=
-document.getElementById(
-"playerDot"
-);
+document.getElementById("playerDot");
 dot.style.left=
-px+"px";
+(player.x/MAP_W*w)+"px";
 dot.style.top=
-py+"px";
+(player.y/MAP_H*h)+"px";
 document
-.querySelectorAll(
-".enemyDot"
-)
+.querySelectorAll(".enemyDot")
 .forEach(
 e=>e.remove()
 );
-for(
-const enemy of enemies
-){
-if(enemy.hp<=0)
-continue;
+for(const enemy of enemies){
+if(enemy.hp<=0)continue;
 const dot=
-document.createElement(
-"div"
-);
-dot.className=
-"enemyDot";
+document.createElement("div");
+dot.className="enemyDot";
 dot.style.left=
 (enemy.x/MAP_W*w)+"px";
 dot.style.top=
@@ -1214,33 +1033,14 @@ map.appendChild(dot);
 АПТЕЧКИ
 ========================== */
 const medkits=[
-{
-x:1500,
-y:600,
-used:false,
-el:null
-},
-{
-x:1500,
-y:2500,
-used:false,
-el:null
-},
-{
-x:2500,
-y:1500,
-used:false,
-el:null
-}
+{x:1500,y:600,used:false,el:null},
+{x:1500,y:2500,used:false,el:null},
+{x:2500,y:1500,used:false,el:null}
 ];
 function createMedkits(){
-for(
-const m of medkits
-){
+for(const m of medkits){
 const el=
-document.createElement(
-"div"
-);
+document.createElement("div");
 el.className="medkit";
 document
 .getElementById("game")
@@ -1250,26 +1050,17 @@ m.el=el;
 }
 createMedkits();
 function updateMedkits(){
-for(
-const m of medkits
-){
+for(const m of medkits){
 if(m.used){
-m.el.style.display=
-"none";
+m.el.style.display="none";
 continue;
 }
-const dx=
-m.x-player.x;
-const dy=
-m.y-player.y;
+const dx=m.x-player.x;
+const dy=m.y-player.y;
 const distance=
 Math.hypot(dx,dy);
 let relative=
-Math.atan2(
-dy,
-dx
-)-
-player.angle;
+Math.atan2(dy,dx)-player.angle;
 relative=
 Math.atan2(
 Math.sin(relative),
@@ -1279,8 +1070,7 @@ if(
 Math.abs(relative)>
 Math.PI/2
 ){
-m.el.style.display=
-"none";
+m.el.style.display="none";
 continue;
 }
 const sx=
@@ -1295,18 +1085,14 @@ Math.min(
 35000/distance
 )
 );
-m.el.style.display=
-"block";
-m.el.style.left=
-sx+"px";
+m.el.style.display="block";
+m.el.style.left=sx+"px";
 m.el.style.top=
 window.innerHeight*.60+"px";
-m.el.style.width=
-size+"px";
-m.el.style.height=
-size+"px";
+m.el.style.width=size+"px";
+m.el.style.height=size+"px";
 if(
-distance<80 &&
+distance<80&&
 player.hp<100
 ){
 player.hp=
@@ -1365,31 +1151,23 @@ reserve;
 GAME OVER
 ========================== */
 function gameOver(){
-if(
-document
-.getElementById(
+const screen=
+document.getElementById(
 "gameover"
-)
-.style.display==="flex"
+);
+if(
+screen.style.display==="flex"
 )
 return;
+screen.style.display="flex";
 document
-.getElementById(
-"gameover"
-)
-.style.display="flex";
-document
-.getElementById(
-"finalScore"
-)
+.getElementById("finalScore")
 .textContent=
 "KILLS: "+
 kills;
 }
 document
-.getElementById(
-"restart"
-)
+.getElementById("restart")
 .addEventListener(
 "touchstart",
 ()=>{
