@@ -14591,5 +14591,2315 @@ window.RAHL1K_SFX=
 })();
 </script>
 
+<!-- =========================================================
+     RAHL1K FPS — INVENTORY SYSTEM
+     ВСТАВИТЬ ПЕРЕД </body>
+========================================================= -->
+
+<style>
+
+/* =========================================================
+   INVENTORY PAGE
+========================================================= */
+
+#inventoryPage{
+    display:none;
+    position:absolute;
+    z-index:900;
+    left:82px;
+    right:0;
+    top:0;
+    bottom:0;
+    color:white;
+    overflow:hidden;
+}
+
+#inventoryPage.active{
+    display:block;
+}
+
+#inventoryTitle{
+    position:absolute;
+    left:50%;
+    top:max(10px,env(safe-area-inset-top));
+    transform:translateX(-50%);
+    font-size:clamp(22px,5vh,34px);
+    font-weight:900;
+    letter-spacing:2px;
+    text-shadow:0 4px 12px #000;
+}
+
+#inventorySubtitle{
+    position:absolute;
+    top:54px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:11px;
+    color:#ffffff88;
+    white-space:nowrap;
+}
+
+#inventoryContent{
+    position:absolute;
+    left:50%;
+    top:51%;
+    transform:translate(-50%,-50%);
+
+    width:min(760px,88vw);
+
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+#inventoryWeapons{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:14px;
+}
+
+
+/* =========================================================
+   WEAPON CARDS
+========================================================= */
+
+.inventoryWeaponCard{
+    position:relative;
+
+    width:190px;
+    height:145px;
+
+    border:2px solid #ffffff2a;
+    border-radius:16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #263744,
+            #121b22
+        );
+
+    box-shadow:
+        0 8px 20px #0007,
+        inset 0 0 24px #ffffff08;
+
+    overflow:hidden;
+
+    transition:
+        transform .16s ease,
+        border-color .16s ease,
+        box-shadow .16s ease,
+        background .16s ease;
+
+    touch-action:manipulation;
+}
+
+.inventoryWeaponCard:active{
+    transform:scale(.95);
+}
+
+.inventoryWeaponCard.selected{
+    transform:translateY(-4px) scale(1.025);
+
+    border-color:#7fc8ff;
+
+    box-shadow:
+        0 9px 25px #0009,
+        0 0 20px #62b7ff35,
+        inset 0 0 22px #ffffff0d;
+}
+
+.inventoryWeaponName{
+    position:absolute;
+
+    left:10px;
+    right:10px;
+    bottom:9px;
+
+    font-size:13px;
+    font-weight:900;
+
+    text-align:center;
+
+    color:white;
+
+    text-shadow:
+        0 2px 5px #000;
+}
+
+.inventoryWeaponType{
+    position:absolute;
+
+    left:10px;
+    top:9px;
+
+    color:#ffffff77;
+
+    font-size:9px;
+    font-weight:bold;
+
+    letter-spacing:1px;
+}
+
+
+/* =========================================================
+   CT / T CHECKS
+========================================================= */
+
+.inventoryChecks{
+    position:absolute;
+
+    right:8px;
+    top:8px;
+
+    display:flex;
+
+    gap:5px;
+
+    z-index:10;
+}
+
+.inventoryCheck{
+    width:25px;
+    height:25px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:6px;
+
+    border:2px solid #ffffff28;
+
+    background:#080d12aa;
+
+    font-size:16px;
+    font-weight:900;
+
+    opacity:.35;
+
+    transition:
+        opacity .15s ease,
+        transform .15s ease,
+        background .15s ease,
+        border-color .15s ease,
+        box-shadow .15s ease;
+}
+
+.inventoryCheck.ct.active{
+    opacity:1;
+
+    color:#8ed5ff;
+
+    background:#176aa4cc;
+
+    border-color:#73c8ff;
+
+    box-shadow:
+        0 0 10px #36aaff66;
+}
+
+.inventoryCheck.t.active{
+    opacity:1;
+
+    color:#ffd09a;
+
+    background:#a65414cc;
+
+    border-color:#ffad55;
+
+    box-shadow:
+        0 0 10px #ff842f66;
+}
+
+.inventoryCheck.active{
+    transform:scale(1.06);
+}
+
+
+/* =========================================================
+   ICON AREA
+========================================================= */
+
+.inventoryWeaponIcon{
+    position:absolute;
+
+    left:50%;
+    top:49%;
+
+    transform:
+        translate(-50%,-50%);
+
+    width:145px;
+    height:75px;
+}
+
+
+/* =========================================================
+   RIFLE ICON
+========================================================= */
+
+.invRifleBody{
+    position:absolute;
+
+    left:25px;
+    top:29px;
+
+    width:78px;
+    height:20px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #4d5356,
+            #171b1d
+        );
+
+    border:
+        2px solid #090b0c;
+
+    border-radius:
+        4px;
+}
+
+.invRifleBarrel{
+    position:absolute;
+
+    left:98px;
+    top:34px;
+
+    width:39px;
+    height:8px;
+
+    background:#15191b;
+
+    border-radius:2px;
+}
+
+.invRifleStock{
+    position:absolute;
+
+    left:7px;
+    top:31px;
+
+    width:28px;
+    height:17px;
+
+    background:#23282b;
+
+    transform:
+        skewY(-13deg);
+
+    border:
+        2px solid #101214;
+}
+
+.invRifleMag{
+    position:absolute;
+
+    left:70px;
+    top:45px;
+
+    width:18px;
+    height:27px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #16191b,
+            #3a4043
+        );
+
+    transform:
+        rotate(10deg);
+
+    border-radius:
+        1px 1px 6px 5px;
+}
+
+.invRifleGrip{
+    position:absolute;
+
+    left:52px;
+    top:45px;
+
+    width:10px;
+    height:22px;
+
+    background:#181b1d;
+
+    transform:
+        rotate(11deg);
+
+    border-radius:3px;
+}
+
+.invRifleSight{
+    position:absolute;
+
+    left:60px;
+    top:22px;
+
+    width:28px;
+    height:8px;
+
+    background:#151819;
+
+    border-radius:3px;
+}
+
+
+/* =========================================================
+   PISTOL ICON
+========================================================= */
+
+.invPistolSlide{
+    position:absolute;
+
+    left:40px;
+    top:25px;
+
+    width:75px;
+    height:23px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #555d61,
+            #181b1d
+        );
+
+    border:
+        2px solid #0b0d0e;
+
+    border-radius:
+        5px 8px 3px 3px;
+}
+
+.invPistolBarrel{
+    position:absolute;
+
+    left:111px;
+    top:31px;
+
+    width:25px;
+    height:8px;
+
+    background:#111416;
+
+    border-radius:
+        0 4px 4px 0;
+}
+
+.invPistolGrip{
+    position:absolute;
+
+    left:65px;
+    top:43px;
+
+    width:31px;
+    height:38px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #191c1d,
+            #363b3e
+        );
+
+    transform:
+        skewX(-8deg);
+
+    border:
+        2px solid #0b0d0e;
+
+    border-radius:
+        2px 2px 7px 7px;
+}
+
+.invPistolTrigger{
+    position:absolute;
+
+    left:93px;
+    top:45px;
+
+    width:22px;
+    height:14px;
+
+    border:
+        3px solid #1a1d1e;
+
+    border-top:0;
+
+    border-radius:
+        0 0 10px 10px;
+}
+
+
+/* =========================================================
+   KNIFE ICON
+========================================================= */
+
+.invKnife{
+    transform:
+        rotate(-12deg);
+}
+
+.invKnifeBlade{
+    position:absolute;
+
+    left:57px;
+    top:2px;
+
+    width:32px;
+    height:58px;
+
+    background:
+        linear-gradient(
+            125deg,
+            #ffffff,
+            #aeb4b7 45%,
+            #5c6367
+        );
+
+    border:
+        2px solid #333;
+
+    clip-path:
+        polygon(
+            50% 0,
+            100% 16%,
+            82% 100%,
+            18% 100%,
+            0 16%
+        );
+}
+
+.invKnifeDragon{
+    position:absolute;
+
+    left:65px;
+    top:18px;
+
+    color:#ff1c1c;
+
+    font-size:15px;
+
+    text-shadow:
+        0 0 5px #ff0000;
+
+    z-index:3;
+}
+
+.invKnifeGuard{
+    position:absolute;
+
+    left:47px;
+    top:57px;
+
+    width:52px;
+    height:8px;
+
+    background:#5c2020;
+
+    border:
+        2px solid #261010;
+
+    border-radius:4px;
+}
+
+.invKnifeHandle{
+    position:absolute;
+
+    left:59px;
+    top:63px;
+
+    width:28px;
+    height:35px;
+
+    background:
+        repeating-linear-gradient(
+            45deg,
+            #1a1b1c 0 5px,
+            #6e1515 5px 9px
+        );
+
+    border:
+        2px solid #090a0a;
+
+    border-radius:
+        4px 4px 8px 8px;
+}
+
+
+/* =========================================================
+   ACTION PANEL
+========================================================= */
+
+#inventoryActionPanel{
+    display:none;
+
+    width:min(610px,90%);
+
+    margin:
+        0 auto;
+
+    padding:11px 14px;
+
+    background:#101820e8;
+
+    border:
+        1px solid #ffffff2e;
+
+    border-radius:13px;
+
+    box-shadow:
+        0 7px 22px #0006;
+}
+
+#inventoryActionPanel.active{
+    display:block;
+
+    animation:
+        inventoryPanelIn
+        .2s
+        ease
+        both;
+}
+
+@keyframes inventoryPanelIn{
+
+    from{
+        opacity:0;
+
+        transform:
+            translateY(8px)
+            scale(.98);
+    }
+
+    to{
+        opacity:1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+#inventorySelectedName{
+    font-size:13px;
+    font-weight:900;
+
+    margin-bottom:9px;
+
+    text-align:center;
+}
+
+#inventoryButtons{
+    display:flex;
+
+    gap:10px;
+}
+
+.inventoryApplyButton{
+    flex:1;
+
+    height:44px;
+
+    border-radius:9px;
+
+    color:white;
+
+    font-size:11px;
+    font-weight:900;
+
+    transition:
+        transform .12s ease,
+        filter .12s ease,
+        background .15s ease;
+
+    touch-action:manipulation;
+}
+
+.inventoryApplyButton:active{
+    transform:scale(.96);
+
+    filter:brightness(1.15);
+}
+
+#inventoryCTButton{
+    background:#246fa5;
+
+    border:
+        2px solid #79caff;
+}
+
+#inventoryTButton{
+    background:#a85b1c;
+
+    border:
+        2px solid #ffb66c;
+}
+
+#inventoryCTButton.remove,
+#inventoryTButton.remove{
+    background:#702d31;
+
+    border-color:#de7379;
+}
+
+#inventoryStatus{
+    margin-top:8px;
+
+    min-height:13px;
+
+    text-align:center;
+
+    color:#ffffff8f;
+
+    font-size:9px;
+}
+
+
+/* =========================================================
+   NO WEAPON MESSAGE
+========================================================= */
+
+#inventoryNoWeapon{
+    display:none;
+
+    position:fixed;
+
+    z-index:170;
+
+    left:50%;
+    bottom:22%;
+
+    transform:
+        translateX(-50%);
+
+    padding:
+        8px 14px;
+
+    border-radius:9px;
+
+    background:#111d;
+
+    border:
+        1px solid #ffffff55;
+
+    color:#fff;
+
+    font-size:11px;
+
+    font-weight:bold;
+
+    pointer-events:none;
+}
+
+
+/* =========================================================
+   INVENTORY PAGE ANIMATION
+========================================================= */
+
+#inventoryPage.inventoryPageIn{
+    animation:
+        inventoryPageIn
+        .28s
+        cubic-bezier(.2,.8,.2,1)
+        both;
+}
+
+@keyframes inventoryPageIn{
+
+    from{
+        opacity:0;
+
+        transform:
+            translateX(20px)
+            scale(.985);
+    }
+
+    to{
+        opacity:1;
+
+        transform:
+            translateX(0)
+            scale(1);
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONE LANDSCAPE
+========================================================= */
+
+@media(max-height:430px){
+
+    #inventoryContent{
+        top:54%;
+    }
+
+    .inventoryWeaponCard{
+        width:170px;
+        height:125px;
+    }
+
+    .inventoryWeaponIcon{
+        transform:
+            translate(-50%,-55%)
+            scale(.86);
+    }
+
+    #inventoryTitle{
+        font-size:24px;
+    }
+
+}
+
+</style>
+
+
+<script>
+
+(()=>{
+"use strict";
+
+
+/* =========================================================
+   INVENTORY CONFIG
+========================================================= */
+
+const INVENTORY_STORAGE_KEY=
+    "rahl1k_inventory_v1";
+
+
+const WEAPON_INFO={
+
+    rifle:{
+        name:"АВТОМАТ",
+        type:"АВТОМАТ"
+    },
+
+    pistol:{
+        name:"ПИСТОЛЕТ",
+        type:"ПИСТОЛЕТ"
+    },
+
+    knife:{
+        name:"M9 RED DRAGON",
+        type:"НОЖ"
+    }
+
+};
+
+
+function defaultInventory(){
+
+    return{
+
+        rifle:{
+            ct:true,
+            t:true
+        },
+
+        pistol:{
+            ct:true,
+            t:true
+        },
+
+        knife:{
+            ct:true,
+            t:true
+        }
+
+    };
+
+}
+
+
+function loadInventory(){
+
+    try{
+
+        const saved=
+            JSON.parse(
+                localStorage.getItem(
+                    INVENTORY_STORAGE_KEY
+                )
+            );
+
+        const defaults=
+            defaultInventory();
+
+        if(
+            !saved ||
+            typeof saved!=="object"
+        ){
+
+            return defaults;
+
+        }
+
+        for(
+            const weapon of
+            Object.keys(
+                defaults
+            )
+        ){
+
+            if(
+                !saved[weapon]
+            ){
+
+                saved[weapon]=
+                    defaults[weapon];
+
+            }
+
+            if(
+                typeof saved[weapon].ct!==
+                "boolean"
+            ){
+
+                saved[weapon].ct=
+                    true;
+
+            }
+
+            if(
+                typeof saved[weapon].t!==
+                "boolean"
+            ){
+
+                saved[weapon].t=
+                    true;
+
+            }
+
+        }
+
+        return saved;
+
+    }catch{
+
+        return defaultInventory();
+
+    }
+
+}
+
+
+let inventoryState=
+    loadInventory();
+
+
+function saveInventory(){
+
+    localStorage.setItem(
+        INVENTORY_STORAGE_KEY,
+        JSON.stringify(
+            inventoryState
+        )
+    );
+
+}
+
+
+/* =========================================================
+   SOUND HELPERS
+========================================================= */
+
+function inventoryClickSound(){
+
+    try{
+
+        if(
+            window.RAHL1K_SFX &&
+            typeof
+            window.RAHL1K_SFX.click===
+            "function"
+        ){
+
+            window.RAHL1K_SFX.click();
+
+        }
+
+    }catch{}
+
+}
+
+
+function inventoryTabSound(){
+
+    try{
+
+        if(
+            window.RAHL1K_SFX &&
+            typeof
+            window.RAHL1K_SFX.tab===
+            "function"
+        ){
+
+            window.RAHL1K_SFX.tab();
+
+        }
+
+    }catch{}
+
+}
+
+
+/* =========================================================
+   CREATE INVENTORY TAB
+========================================================= */
+
+const menuTabs=
+    document.getElementById(
+        "menuTabs"
+    );
+
+
+if(
+    !menuTabs
+){
+
+    console.warn(
+        "RAHL1K inventory: menuTabs not found"
+    );
+
+    return;
+
+}
+
+
+const inventoryTab=
+    document.createElement(
+        "button"
+    );
+
+
+inventoryTab.className=
+    "menuTab";
+
+
+inventoryTab.id=
+    "inventoryTab";
+
+
+inventoryTab.innerHTML=
+    "🎒";
+
+
+inventoryTab.setAttribute(
+    "aria-label",
+    "Инвентарь"
+);
+
+
+/*
+Ставим вкладку перед настройками.
+*/
+
+const existingSettingsTab=
+    document.getElementById(
+        "settingsTab"
+    );
+
+
+if(
+    existingSettingsTab
+){
+
+    menuTabs.insertBefore(
+        inventoryTab,
+        existingSettingsTab
+    );
+
+}else{
+
+    menuTabs.appendChild(
+        inventoryTab
+    );
+
+}
+
+
+/* =========================================================
+   CREATE INVENTORY PAGE
+========================================================= */
+
+const menu=
+    document.getElementById(
+        "menu"
+    );
+
+
+const inventoryPage=
+    document.createElement(
+        "div"
+    );
+
+
+inventoryPage.id=
+    "inventoryPage";
+
+
+inventoryPage.innerHTML=`
+
+<div id="inventoryTitle">
+ИНВЕНТАРЬ
+</div>
+
+<div id="inventorySubtitle">
+Выбери оружие и сторону
+</div>
+
+<div id="inventoryContent">
+
+<div id="inventoryWeapons">
+
+
+<div
+class="inventoryWeaponCard"
+data-weapon="rifle"
+>
+
+<div class="inventoryWeaponType">
+АВТОМАТ
+</div>
+
+<div class="inventoryChecks">
+
+<div
+class="inventoryCheck ct"
+data-check="ct"
+>
+✓
+</div>
+
+<div
+class="inventoryCheck t"
+data-check="t"
+>
+✓
+</div>
+
+</div>
+
+<div class="inventoryWeaponIcon">
+
+<div class="invRifleStock"></div>
+
+<div class="invRifleBody"></div>
+
+<div class="invRifleBarrel"></div>
+
+<div class="invRifleMag"></div>
+
+<div class="invRifleGrip"></div>
+
+<div class="invRifleSight"></div>
+
+</div>
+
+<div class="inventoryWeaponName">
+АВТОМАТ
+</div>
+
+</div>
+
+
+<div
+class="inventoryWeaponCard"
+data-weapon="pistol"
+>
+
+<div class="inventoryWeaponType">
+ПИСТОЛЕТ
+</div>
+
+<div class="inventoryChecks">
+
+<div
+class="inventoryCheck ct"
+data-check="ct"
+>
+✓
+</div>
+
+<div
+class="inventoryCheck t"
+data-check="t"
+>
+✓
+</div>
+
+</div>
+
+<div class="inventoryWeaponIcon">
+
+<div class="invPistolSlide"></div>
+
+<div class="invPistolBarrel"></div>
+
+<div class="invPistolGrip"></div>
+
+<div class="invPistolTrigger"></div>
+
+</div>
+
+<div class="inventoryWeaponName">
+ПИСТОЛЕТ
+</div>
+
+</div>
+
+
+<div
+class="inventoryWeaponCard"
+data-weapon="knife"
+>
+
+<div class="inventoryWeaponType">
+НОЖ
+</div>
+
+<div class="inventoryChecks">
+
+<div
+class="inventoryCheck ct"
+data-check="ct"
+>
+✓
+</div>
+
+<div
+class="inventoryCheck t"
+data-check="t"
+>
+✓
+</div>
+
+</div>
+
+<div
+class="inventoryWeaponIcon invKnife"
+>
+
+<div class="invKnifeBlade"></div>
+
+<div class="invKnifeDragon">
+🐉
+</div>
+
+<div class="invKnifeGuard"></div>
+
+<div class="invKnifeHandle"></div>
+
+</div>
+
+<div class="inventoryWeaponName">
+M9 RED DRAGON
+</div>
+
+</div>
+
+
+</div>
+
+
+<div id="inventoryActionPanel">
+
+<div id="inventorySelectedName">
+ОРУЖИЕ
+</div>
+
+<div id="inventoryButtons">
+
+<button
+id="inventoryCTButton"
+class="inventoryApplyButton"
+>
+ПРИМЕНИТЬ ЗА CT
+</button>
+
+<button
+id="inventoryTButton"
+class="inventoryApplyButton"
+>
+ПРИМЕНИТЬ ЗА T
+</button>
+
+</div>
+
+<div id="inventoryStatus"></div>
+
+</div>
+
+
+</div>
+`;
+
+
+menu.appendChild(
+    inventoryPage
+);
+
+
+/* =========================================================
+   NO WEAPON INFO
+========================================================= */
+
+const noWeaponNotice=
+    document.createElement(
+        "div"
+    );
+
+
+noWeaponNotice.id=
+    "inventoryNoWeapon";
+
+
+noWeaponNotice.textContent=
+    "На этой стороне нет применённого оружия";
+
+
+document.body.appendChild(
+    noWeaponNotice
+);
+
+
+/* =========================================================
+   SELECT WEAPON
+========================================================= */
+
+let selectedInventoryWeapon=
+    null;
+
+
+function renderInventory(){
+
+    document
+    .querySelectorAll(
+        ".inventoryWeaponCard"
+    )
+    .forEach(
+        card=>{
+
+            const weapon=
+                card.dataset.weapon;
+
+
+            const state=
+                inventoryState[
+                    weapon
+                ];
+
+
+            const ctCheck=
+                card.querySelector(
+                    ".inventoryCheck.ct"
+                );
+
+
+            const tCheck=
+                card.querySelector(
+                    ".inventoryCheck.t"
+                );
+
+
+            ctCheck
+            .classList.toggle(
+                "active",
+                state.ct
+            );
+
+
+            tCheck
+            .classList.toggle(
+                "active",
+                state.t
+            );
+
+
+            card
+            .classList.toggle(
+                "selected",
+                weapon===
+                selectedInventoryWeapon
+            );
+
+        }
+    );
+
+
+    const panel=
+        document.getElementById(
+            "inventoryActionPanel"
+        );
+
+
+    if(
+        !selectedInventoryWeapon
+    ){
+
+        panel.classList.remove(
+            "active"
+        );
+
+        return;
+
+    }
+
+
+    panel.classList.add(
+        "active"
+    );
+
+
+    const state=
+        inventoryState[
+            selectedInventoryWeapon
+        ];
+
+
+    const info=
+        WEAPON_INFO[
+            selectedInventoryWeapon
+        ];
+
+
+    document.getElementById(
+        "inventorySelectedName"
+    )
+    .textContent=
+        info.name;
+
+
+    const ctButton=
+        document.getElementById(
+            "inventoryCTButton"
+        );
+
+
+    const tButton=
+        document.getElementById(
+            "inventoryTButton"
+        );
+
+
+    ctButton.textContent=
+        state.ct
+        ?
+        "СНЯТЬ С CT"
+        :
+        "ПРИМЕНИТЬ ЗА CT";
+
+
+    tButton.textContent=
+        state.t
+        ?
+        "СНЯТЬ С T"
+        :
+        "ПРИМЕНИТЬ ЗА T";
+
+
+    ctButton.classList.toggle(
+        "remove",
+        state.ct
+    );
+
+
+    tButton.classList.toggle(
+        "remove",
+        state.t
+    );
+
+
+    let status=[];
+
+
+    if(
+        state.ct
+    ){
+
+        status.push(
+            "✓ CT"
+        );
+
+    }
+
+
+    if(
+        state.t
+    ){
+
+        status.push(
+            "✓ T"
+        );
+
+    }
+
+
+    document.getElementById(
+        "inventoryStatus"
+    )
+    .textContent=
+        status.length
+        ?
+        "Применено: "+
+        status.join(
+            "   "
+        )
+        :
+        "Оружие сейчас не применено";
+
+}
+
+
+/* =========================================================
+   CARD PRESS
+========================================================= */
+
+document
+.querySelectorAll(
+    ".inventoryWeaponCard"
+)
+.forEach(
+    card=>{
+
+        card.addEventListener(
+            "pointerup",
+            e=>{
+
+                e.preventDefault();
+
+                inventoryClickSound();
+
+
+                selectedInventoryWeapon=
+                    card.dataset.weapon;
+
+
+                renderInventory();
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================================================
+   TOGGLE CT/T
+========================================================= */
+
+function toggleInventorySide(
+    side
+){
+
+    if(
+        !selectedInventoryWeapon
+    ){
+
+        return;
+
+    }
+
+
+    inventoryClickSound();
+
+
+    inventoryState[
+        selectedInventoryWeapon
+    ][side]=
+        !inventoryState[
+            selectedInventoryWeapon
+        ][side];
+
+
+    saveInventory();
+
+
+    renderInventory();
+
+
+    /*
+    Если игрок сейчас находится
+    в матче — сразу проверяем,
+    можно ли ему держать оружие.
+    */
+
+    ensureCurrentWeaponAllowed();
+
+}
+
+
+document.getElementById(
+    "inventoryCTButton"
+)
+.addEventListener(
+    "pointerup",
+    e=>{
+
+        e.preventDefault();
+
+        toggleInventorySide(
+            "ct"
+        );
+
+    }
+);
+
+
+document.getElementById(
+    "inventoryTButton"
+)
+.addEventListener(
+    "pointerup",
+    e=>{
+
+        e.preventDefault();
+
+        toggleInventorySide(
+            "t"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   DETERMINE PLAYER SIDE
+========================================================= */
+
+function currentInventorySide(){
+
+    /*
+    В сетевом матче:
+    myTeam === "ct"
+    или
+    myTeam === "t"
+
+    В одиночной игре используем
+    набор CT как основной.
+    */
+
+
+    try{
+
+        if(
+            typeof myTeam!==
+            "undefined"
+        ){
+
+            const team=
+                String(
+                    myTeam||
+                    ""
+                )
+                .toLowerCase();
+
+
+            if(
+                team==="ct"
+            ){
+
+                return "ct";
+
+            }
+
+
+            if(
+                team==="t"
+            ){
+
+                return "t";
+
+            }
+
+        }
+
+    }catch{}
+
+
+    return "ct";
+
+}
+
+
+/* =========================================================
+   CHECK IF WEAPON IS AVAILABLE
+========================================================= */
+
+function inventoryWeaponAllowed(
+    weapon
+){
+
+    if(
+        !inventoryState[
+            weapon
+        ]
+    ){
+
+        return false;
+
+    }
+
+
+    const side=
+        currentInventorySide();
+
+
+    return !!inventoryState[
+        weapon
+    ][side];
+
+}
+
+
+function getAllowedWeapons(){
+
+    return[
+        "rifle",
+        "pistol",
+        "knife"
+    ]
+    .filter(
+        inventoryWeaponAllowed
+    );
+
+}
+
+
+/* =========================================================
+   EMPTY LOADOUT
+========================================================= */
+
+let noWeaponTimer=
+    null;
+
+
+function showNoWeaponNotice(){
+
+    noWeaponNotice.style.display=
+        "block";
+
+
+    clearTimeout(
+        noWeaponTimer
+    );
+
+
+    noWeaponTimer=
+        setTimeout(
+            ()=>{
+
+                noWeaponNotice.style.display=
+                    "none";
+
+            },
+            1300
+        );
+
+}
+
+
+function hideWeaponCompletely(){
+
+    try{
+
+        document.getElementById(
+            "gun"
+        ).style.display=
+            "none";
+
+
+        document.getElementById(
+            "barrel"
+        ).style.display=
+            "none";
+
+
+        document.getElementById(
+            "pistol"
+        ).style.display=
+            "none";
+
+
+        document.getElementById(
+            "knife"
+        ).style.display=
+            "none";
+
+
+        document.getElementById(
+            "ammo"
+        ).style.display=
+            "none";
+
+
+        document.getElementById(
+            "reload"
+        ).style.display=
+            "none";
+
+
+        document.getElementById(
+            "fire"
+        ).style.display=
+            "none";
+
+
+        document.getElementById(
+            "weaponSwipeIcon"
+        ).textContent=
+            "🚫";
+
+    }catch{}
+
+}
+
+
+/* =========================================================
+   SAVE ORIGINAL FUNCTIONS
+========================================================= */
+
+const originalShowWeapon=
+    typeof showWeapon===
+    "function"
+    ?
+    showWeapon
+    :
+    null;
+
+
+const originalSwitchWeapon=
+    typeof switchWeapon===
+    "function"
+    ?
+    switchWeapon
+    :
+    null;
+
+
+const originalShoot=
+    typeof shoot===
+    "function"
+    ?
+    shoot
+    :
+    null;
+
+
+/* =========================================================
+   REPLACE showWeapon
+========================================================= */
+
+if(
+    originalShowWeapon
+){
+
+    showWeapon=
+        function(
+            type
+        ){
+
+            if(
+                !inventoryWeaponAllowed(
+                    type
+                )
+            ){
+
+                return false;
+
+            }
+
+
+            document.getElementById(
+                "fire"
+            ).style.display=
+                "block";
+
+
+            return originalShowWeapon.apply(
+                this,
+                arguments
+            );
+
+        };
+
+}
+
+
+/* =========================================================
+   REPLACE switchWeapon
+========================================================= */
+
+if(
+    originalSwitchWeapon
+){
+
+    switchWeapon=
+        function(
+            type
+        ){
+
+            if(
+                !inventoryWeaponAllowed(
+                    type
+                )
+            ){
+
+                showNoWeaponNotice();
+
+                return false;
+
+            }
+
+
+            return originalSwitchWeapon.apply(
+                this,
+                arguments
+            );
+
+        };
+
+}
+
+
+/* =========================================================
+   BLOCK SHOOT WITHOUT WEAPON
+========================================================= */
+
+if(
+    originalShoot
+){
+
+    shoot=
+        function(){
+
+            try{
+
+                if(
+                    !currentWeapon ||
+                    !inventoryWeaponAllowed(
+                        currentWeapon
+                    )
+                ){
+
+                    showNoWeaponNotice();
+
+                    return;
+
+                }
+
+            }catch{}
+
+
+            return originalShoot.apply(
+                this,
+                arguments
+            );
+
+        };
+
+}
+
+
+/* =========================================================
+   ENSURE CURRENT WEAPON
+========================================================= */
+
+function ensureCurrentWeaponAllowed(){
+
+    let started=false;
+
+
+    try{
+
+        started=
+            typeof gameStarted!==
+            "undefined" &&
+            gameStarted;
+
+    }catch{}
+
+
+    if(
+        !started
+    ){
+
+        return;
+
+    }
+
+
+    const available=
+        getAllowedWeapons();
+
+
+    if(
+        !available.length
+    ){
+
+        try{
+
+            currentWeapon=
+                null;
+
+        }catch{}
+
+
+        hideWeaponCompletely();
+
+        return;
+
+    }
+
+
+    let current=null;
+
+
+    try{
+
+        current=
+            currentWeapon;
+
+    }catch{}
+
+
+    if(
+        current &&
+        inventoryWeaponAllowed(
+            current
+        )
+    ){
+
+        return;
+
+    }
+
+
+    const first=
+        available[0];
+
+
+    try{
+
+        currentWeapon=
+            first;
+
+    }catch{}
+
+
+    document.getElementById(
+        "fire"
+    ).style.display=
+        "block";
+
+
+    if(
+        originalShowWeapon
+    ){
+
+        originalShowWeapon(
+            first
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   AUTOMATIC MATCH SYNC
+========================================================= */
+
+/*
+Проверяем только 4 раза в секунду.
+Это практически не влияет на FPS.
+*/
+
+setInterval(
+    ()=>{
+
+        ensureCurrentWeaponAllowed();
+
+    },
+    250
+);
+
+
+/* =========================================================
+   UPDATE SWIPE HINT
+========================================================= */
+
+function updateInventorySwipeHint(){
+
+    const hint=
+        document.getElementById(
+            "weaponSwipeHint"
+        );
+
+
+    if(
+        !hint
+    ){
+
+        return;
+
+    }
+
+
+    const side=
+        currentInventorySide();
+
+
+    const available=
+        getAllowedWeapons();
+
+
+    const names=[];
+
+
+    if(
+        available.includes(
+            "knife"
+        )
+    ){
+
+        names.push(
+            "← НОЖ"
+        );
+
+    }
+
+
+    if(
+        available.includes(
+            "rifle"
+        )
+    ){
+
+        names.push(
+            "↓ АВТО"
+        );
+
+    }
+
+
+    if(
+        available.includes(
+            "pistol"
+        )
+    ){
+
+        names.push(
+            "ПИСТОЛЕТ →"
+        );
+
+    }
+
+
+    hint.textContent=
+        names.length
+        ?
+        names.join(
+            "   "
+        )
+        :
+        (
+            side==="ct"
+            ?
+            "НЕТ ОРУЖИЯ ДЛЯ CT"
+            :
+            "НЕТ ОРУЖИЯ ДЛЯ T"
+        );
+
+}
+
+
+setInterval(
+    updateInventorySwipeHint,
+    400
+);
+
+
+/* =========================================================
+   MENU PAGE INTEGRATION
+========================================================= */
+
+const originalHideAllMenuPages=
+    typeof hideAllMenuPages===
+    "function"
+    ?
+    hideAllMenuPages
+    :
+    null;
+
+
+if(
+    originalHideAllMenuPages
+){
+
+    hideAllMenuPages=
+        function(){
+
+            const result=
+                originalHideAllMenuPages.apply(
+                    this,
+                    arguments
+                );
+
+
+            inventoryTab
+            .classList.remove(
+                "active"
+            );
+
+
+            inventoryPage
+            .classList.remove(
+                "active"
+            );
+
+
+            return result;
+
+        };
+
+}
+
+
+/* =========================================================
+   SHOW INVENTORY
+========================================================= */
+
+function showInventoryPage(){
+
+    inventoryTabSound();
+
+
+    if(
+        typeof hideAllMenuPages===
+        "function"
+    ){
+
+        hideAllMenuPages();
+
+    }
+
+
+    inventoryTab
+    .classList.add(
+        "active"
+    );
+
+
+    inventoryPage
+    .classList.add(
+        "active"
+    );
+
+
+    inventoryPage
+    .classList.remove(
+        "inventoryPageIn"
+    );
+
+
+    void inventoryPage.offsetWidth;
+
+
+    inventoryPage
+    .classList.add(
+        "inventoryPageIn"
+    );
+
+
+    renderInventory();
+
+}
+
+
+inventoryTab.addEventListener(
+    "touchstart",
+    e=>{
+
+        e.preventDefault();
+
+        showInventoryPage();
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+/* PC */
+
+inventoryTab.addEventListener(
+    "click",
+    ()=>{
+
+        if(
+            window.matchMedia(
+                "(pointer:fine)"
+            ).matches
+        ){
+
+            showInventoryPage();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INITIAL RENDER
+========================================================= */
+
+renderInventory();
+
+
+/* =========================================================
+   DEBUG
+========================================================= */
+
+window.RAHL1K_INVENTORY={
+
+    getState:
+        ()=>inventoryState,
+
+    reset:
+        ()=>{
+
+            inventoryState=
+                defaultInventory();
+
+            saveInventory();
+
+            renderInventory();
+
+            ensureCurrentWeaponAllowed();
+
+        },
+
+    isAllowed:
+        inventoryWeaponAllowed
+
+};
+
+
+})();
+</script>
+
 </body>
 </html>
