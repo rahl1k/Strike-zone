@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>RAHL1K FPS v6 ONLINE</title>
+<title>RAHL1K FPS v7 CITY</title>
 
 <style>
+
 *{
 box-sizing:border-box;
 user-select:none;
@@ -17,16 +18,21 @@ margin:0;
 width:100%;
 height:100%;
 overflow:hidden;
-background:#8b5a3c;
+background:#111;
 touch-action:none;
 font-family:Arial,sans-serif;
 }
+
+
+/* =========================
+ИГРОВОЙ МИР
+========================= */
 
 #game{
 position:fixed;
 inset:0;
 overflow:hidden;
-background:#65b9ed;
+background:#78b7dc;
 perspective:900px;
 }
 
@@ -37,7 +43,13 @@ right:0;
 top:0;
 height:55%;
 z-index:0;
-background:#65b9ed;
+background:
+linear-gradient(
+to bottom,
+#4e9bd0 0%,
+#78bce4 52%,
+#b8dff2 100%
+);
 overflow:hidden;
 }
 
@@ -55,6 +67,7 @@ width:180px;
 height:55px;
 left:12%;
 top:18%;
+
 box-shadow:
 35px -15px 0 5px #fff,
 75px 0 0 0 #fff,
@@ -69,12 +82,18 @@ width:150px;
 height:45px;
 right:10%;
 top:38%;
+
 box-shadow:
 -35px -15px 0 5px #fff,
 -75px 0 0 0 #fff,
 -300px 30px 0 8px #fff,
 -340px 15px 0 0 #fff;
 }
+
+
+/* =========================
+ЗЕМЛЯ / АСФАЛЬТ
+========================= */
 
 #ground{
 position:absolute;
@@ -83,1639 +102,3877 @@ right:-100%;
 top:50%;
 bottom:-100%;
 z-index:1;
-background-color:#8b5a3c;
+
+background-color:#53575a;
+
 background-image:
-linear-gradient(to right,#70452f 2px,transparent 2px),
-linear-gradient(to bottom,#70452f 2px,transparent 2px);
-background-size:80px 40px;
+
+radial-gradient(
+circle at 20% 30%,
+#777 0 1px,
+transparent 2px
+),
+
+radial-gradient(
+circle at 70% 70%,
+#343638 0 1px,
+transparent 2px
+),
+
+linear-gradient(
+105deg,
+transparent 0 47%,
+#ffffff0c 48%,
+transparent 50%
+),
+
+linear-gradient(
+to bottom,
+#666b6e,
+#414548
+);
+
+background-size:
+17px 19px,
+23px 21px,
+190px 190px,
+100% 100%;
+
 transform-origin:center top;
-transform:perspective(500px) rotateX(12deg) scaleY(2);
+
+transform:
+perspective(520px)
+rotateX(12deg)
+scaleY(2.15);
 }
 
-.roadV,.roadH,.mark,.building{
-display:none!important;
+
+/* =========================
+ЗДАНИЯ / СТЕНЫ
+========================= */
+
+.worldObject{
+position:absolute;
+z-index:20;
+
+display:none;
+
+transform:
+translate(-50%,-100%);
+
+overflow:hidden;
+
+border:
+1px solid #0008;
+
+box-shadow:
+0 15px 30px #0009,
+inset 0 0 20px #0004;
 }
 
-/* MENU */
+
+/* КИРПИЧНОЕ ЗДАНИЕ */
+
+.worldObject.brick{
+
+background:
+
+linear-gradient(
+#0000 0 91%,
+#37271f 91% 95%,
+#0000 95%
+),
+
+linear-gradient(
+90deg,
+#0000 0 94%,
+#3b2b24 94%
+),
+
+linear-gradient(
+135deg,
+#9d725a,
+#6e4d3e
+);
+
+background-size:
+55px 27px,
+55px 27px,
+100% 100%;
+}
+
+
+/* БЕТОН */
+
+.worldObject.concrete{
+
+background:
+
+radial-gradient(
+circle at 15% 20%,
+#fff3 0 1px,
+transparent 2px
+),
+
+radial-gradient(
+circle at 70% 65%,
+#0003 0 1px,
+transparent 2px
+),
+
+linear-gradient(
+135deg,
+#aeb2b3,
+#747b7d 55%,
+#5e6466
+);
+
+background-size:
+22px 22px,
+28px 28px,
+100% 100%;
+}
+
+
+/* СКЛАД */
+
+.worldObject.warehouse{
+
+background:
+
+repeating-linear-gradient(
+90deg,
+#606b70 0 17px,
+#4d575c 17px 21px
+);
+
+border-top:
+10px solid #30383b;
+}
+
+
+/* КОНТЕЙНЕР */
+
+.worldObject.container{
+
+background:
+
+repeating-linear-gradient(
+90deg,
+#99432e 0 12px,
+#713020 12px 16px
+);
+
+border:
+4px solid #4c2116;
+}
+
+
+/* НИЗКАЯ СТЕНА */
+
+.worldObject.wall{
+
+background:
+
+linear-gradient(
+to bottom,
+#aaaead,
+#646a6c
+);
+
+border-top:
+5px solid #d3d5d4;
+}
+
+
+/* ОКНА */
+
+.worldObject.windows:before{
+
+content:"";
+
+position:absolute;
+
+left:7%;
+right:7%;
+
+top:15%;
+bottom:18%;
+
+background:
+
+repeating-linear-gradient(
+90deg,
+transparent 0 10%,
+#102d3ecc 10% 22%,
+transparent 22% 32%
+),
+
+repeating-linear-gradient(
+0deg,
+transparent 0 16%,
+#193c50cc 16% 30%,
+transparent 30% 43%
+);
+
+}
+
+
+/* НАЗВАНИЕ */
+
+.worldSign{
+
+position:absolute;
+
+left:50%;
+top:7%;
+
+transform:
+translateX(-50%);
+
+padding:
+4px 8px;
+
+background:
+#111d;
+
+border:
+1px solid #ffffff33;
+
+border-radius:
+3px;
+
+color:#ddd;
+
+font-size:
+9px;
+
+font-weight:bold;
+
+letter-spacing:
+1px;
+
+white-space:
+nowrap;
+}
+
+
+/* =========================
+МЕНЮ
+========================= */
 
 #menu{
+
 position:fixed;
+
 z-index:1000;
+
 inset:0;
-background:linear-gradient(to bottom,#182635,#263746 55%,#111820);
+
+background:
+linear-gradient(
+to bottom,
+#182635,
+#263746 55%,
+#111820
+);
+
 display:flex;
+
 align-items:center;
+
 justify-content:center;
+
 overflow:hidden;
 }
 
+
 #menuTitle{
+
 position:absolute;
+
 top:55px;
+
 left:50%;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 color:white;
+
 font-size:42px;
+
 font-weight:900;
+
 letter-spacing:3px;
-text-shadow:0 4px 12px #000;
+
+text-shadow:
+0 4px 12px #000;
 }
 
+
 #menuSubtitle{
+
 position:absolute;
+
 top:110px;
+
 left:50%;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 color:#ffffffaa;
+
 font-size:15px;
+
 letter-spacing:2px;
 }
 
+
+/* =========================
+ГЛАВНЫЙ ПЕРСОНАЖ
+========================= */
+
 #lobby{
+
 position:absolute;
+
 left:50%;
+
 top:50%;
-transform:translate(-50%,-50%);
+
+transform:
+translate(-50%,-50%);
+
 width:260px;
+
 height:400px;
 }
 
+
 #character{
+
 position:absolute;
+
 left:50%;
+
 bottom:10px;
+
 width:150px;
+
 height:340px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
 }
 
+
 #characterHead{
+
 position:absolute;
+
 left:50%;
+
 top:5px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:82px;
+
 height:82px;
+
 border-radius:50%;
+
 background:#c98f6c;
-border:3px solid #222;
+
+border:
+3px solid #222;
+
 z-index:3;
 }
 
+
 #helmet{
+
 position:absolute;
+
 left:50%;
+
 top:-8px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:105px;
+
 height:62px;
+
 background:#26352d;
-border-radius:55px 55px 20px 20px;
-border:4px solid #151b18;
+
+border-radius:
+55px 55px 20px 20px;
+
+border:
+4px solid #151b18;
+
 z-index:4;
 }
 
+
 #helmetFront{
+
 position:absolute;
+
 left:50%;
+
 top:39px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:96px;
+
 height:13px;
+
 background:#17201b;
+
 border-radius:5px;
+
 z-index:5;
 }
 
+
 #characterNeck{
+
 position:absolute;
+
 left:50%;
+
 top:76px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:30px;
+
 height:35px;
+
 background:#b97e60;
 }
 
+
 #characterBody{
+
 position:absolute;
+
 left:50%;
+
 top:92px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:115px;
+
 height:145px;
+
 background:#27352f;
+
 border-radius:18px;
-border:4px solid #151b18;
+
+border:
+4px solid #151b18;
+
 z-index:2;
 }
 
+
 #vest{
+
 position:absolute;
+
 left:50%;
+
 top:101px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:105px;
+
 height:105px;
+
 background:#343d38;
-border:5px solid #171c19;
+
+border:
+5px solid #171c19;
+
 border-radius:12px;
+
 z-index:4;
 }
 
+
 #vestPlate{
+
 position:absolute;
+
 left:50%;
+
 top:12px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:70px;
+
 height:65px;
+
 background:#252c29;
-border:3px solid #151917;
+
+border:
+3px solid #151917;
+
 border-radius:7px;
 }
 
+
 #vestStrap1{
+
 position:absolute;
+
 left:7px;
+
 top:0;
+
 width:15px;
+
 height:95px;
+
 background:#202722;
 }
+
 
 #vestStrap2{
+
 position:absolute;
+
 right:7px;
+
 top:0;
+
 width:15px;
+
 height:95px;
+
 background:#202722;
 }
 
-#armLeft,#armRight{
+
+#armLeft,
+#armRight{
+
 position:absolute;
+
 top:105px;
+
 width:38px;
+
 height:120px;
+
 background:#27352f;
-border:4px solid #151b18;
+
+border:
+4px solid #151b18;
+
 border-radius:18px;
 }
 
+
 #armLeft{
+
 left:5px;
-transform:rotate(8deg);
+
+transform:
+rotate(8deg);
 }
+
 
 #armRight{
+
 right:5px;
-transform:rotate(-8deg);
+
+transform:
+rotate(-8deg);
 }
 
-#legLeft,#legRight{
+
+#legLeft,
+#legRight{
+
 position:absolute;
+
 top:225px;
+
 width:45px;
+
 height:105px;
+
 background:#202723;
-border:4px solid #151b18;
+
+border:
+4px solid #151b18;
+
 border-radius:8px;
 }
 
-#legLeft{left:28px}
-#legRight{right:28px}
+
+#legLeft{
+left:28px;
+}
+
+
+#legRight{
+right:28px;
+}
+
 
 #menuName{
+
 position:absolute;
+
 bottom:-25px;
+
 left:50%;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 color:white;
+
 font-weight:bold;
+
 font-size:18px;
+
 white-space:nowrap;
 }
 
-/* PROFILE */
+
+/* =========================
+ПРОФИЛЬ
+========================= */
 
 #profileBox{
+
 position:absolute;
+
 left:130px;
+
 top:35px;
+
 width:225px;
+
 padding:12px;
-border:1px solid #ffffff33;
+
+border:
+1px solid #ffffff33;
+
 border-radius:12px;
+
 background:#111a22cc;
+
 z-index:1030;
+
 color:white;
 }
 
+
 #profileStatus{
+
 font-size:11px;
+
 color:#ffd45b;
+
 margin-bottom:7px;
+
 font-weight:bold;
 }
 
+
 #profileID{
+
 font-size:14px;
+
 font-weight:bold;
+
 margin-bottom:8px;
 }
 
+
 #nicknameRow{
+
 display:flex;
+
 gap:6px;
 }
 
+
 #nicknameInput{
+
 width:145px;
+
 height:35px;
+
 border-radius:7px;
-border:1px solid #ffffff55;
+
+border:
+1px solid #ffffff55;
+
 background:#202d38;
+
 color:white;
-padding:0 9px;
+
+padding:
+0 9px;
+
 font-size:13px;
+
 user-select:text;
+
 -webkit-user-select:text;
 }
 
+
 #saveNickname{
+
 width:50px;
+
 height:35px;
+
 border:0;
+
 border-radius:7px;
+
 background:#22b94b;
+
 color:white;
+
 font-size:16px;
+
 font-weight:bold;
 }
+
+
+/* =========================
+КНОПКИ ИГРАТЬ
+========================= */
 
 #playButton,
 #lobbyPlayButton{
-border:3px solid #baffc7;
+
+border:
+3px solid #baffc7;
+
 border-radius:15px;
+
 background:#22b94b;
+
 color:white;
+
 font-weight:bold;
-box-shadow:0 5px 0 #13732e,0 8px 18px #0008;
+
+box-shadow:
+0 5px 0 #13732e,
+0 8px 18px #0008;
 }
 
+
 #playButton{
+
 position:absolute;
+
 right:45px;
+
 bottom:45px;
+
 width:190px;
+
 height:70px;
+
 font-size:28px;
 }
 
+
+/* =========================
+ОТСЧЕТ
+========================= */
+
 #countdown{
+
 display:none;
+
 position:absolute;
-z-index:1100;
+
+z-index:1400;
+
 left:50%;
+
 top:50%;
-transform:translate(-50%,-50%);
+
+transform:
+translate(-50%,-50%);
+
 color:#e52222;
+
 font-size:120px;
+
 font-weight:900;
-text-shadow:0 4px 10px #000;
+
+text-shadow:
+0 4px 10px #000;
 }
 
+
 #countdownText{
+
 display:none;
+
 position:absolute;
-z-index:1100;
+
+z-index:1400;
+
 left:50%;
+
 top:36%;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 color:white;
+
 font-size:24px;
+
 font-weight:bold;
 }
 
-/* TABS */
+
+/* =========================
+ТАБЫ
+========================= */
 
 #menuTabs{
+
 position:absolute;
+
 left:0;
+
 top:0;
+
 bottom:0;
+
 width:105px;
+
 z-index:1050;
+
 background:#111a22dd;
-border-right:2px solid #ffffff18;
+
+border-right:
+2px solid #ffffff18;
+
 display:flex;
+
 flex-direction:column;
+
 align-items:center;
+
 justify-content:center;
+
 gap:12px;
 }
 
+
 .menuTab{
+
 width:78px;
+
 height:78px;
-border:2px solid #ffffff22;
+
+border:
+2px solid #ffffff22;
+
 border-radius:16px;
+
 background:#202d38;
+
 display:flex;
+
 align-items:center;
+
 justify-content:center;
+
 color:#d7dde1;
+
 font-size:34px;
+
 padding:0;
 }
 
+
 .menuTab.active{
+
 background:#30414d;
+
 border-color:#ffffff66;
 }
 
+
 .friendsIcon{
+
 position:relative;
+
 width:50px;
+
 height:42px;
 }
 
+
 .person{
+
 position:absolute;
+
 width:16px;
+
 height:16px;
+
 border-radius:50%;
+
 background:#c7cdd1;
 }
+
 
 .person:after{
+
 content:"";
+
 position:absolute;
+
 left:-5px;
+
 top:15px;
+
 width:26px;
+
 height:18px;
-border-radius:14px 14px 5px 5px;
+
+border-radius:
+14px 14px 5px 5px;
+
 background:#c7cdd1;
 }
 
-.person.p1{left:0;top:5px}
-.person.p2{left:17px;top:0}
-.person.p3{right:0;top:5px}
 
-/* FRIENDS / LOBBY */
+.person.p1{
+left:0;
+top:5px;
+}
 
-#friendsPage,#lobbyPage{
+.person.p2{
+left:17px;
+top:0;
+}
+
+.person.p3{
+right:0;
+top:5px;
+}
+
+
+/* =========================
+ДРУЗЬЯ / ЛОББИ
+========================= */
+
+#friendsPage,
+#lobbyPage{
+
 display:none;
+
 position:absolute;
+
 z-index:900;
+
 inset:0;
+
 color:white;
 }
 
-#friendsPage.active,#lobbyPage.active{
+
+#friendsPage.active,
+#lobbyPage.active{
+
 display:block;
 }
 
+
 #friendsPage{
+
 padding-left:125px;
+
 padding-right:25px;
+
 padding-top:115px;
 }
 
-#friendsTitle,#lobbyPageTitle{
+
+#friendsTitle,
+#lobbyPageTitle{
+
 position:absolute;
+
 top:45px;
+
 left:50%;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 font-size:34px;
+
 font-weight:900;
 }
 
+
 #friendSearchBox{
+
 max-width:600px;
-margin:0 auto;
+
+margin:
+0 auto;
+
 background:#111a22cc;
-border:1px solid #ffffff33;
+
+border:
+1px solid #ffffff33;
+
 border-radius:14px;
+
 padding:14px;
 }
 
+
 #friendSearchRow{
+
 display:flex;
+
 gap:8px;
 }
 
+
 #friendIDInput{
+
 flex:1;
+
 height:42px;
-border:1px solid #ffffff55;
+
+border:
+1px solid #ffffff55;
+
 border-radius:8px;
+
 background:#202d38;
+
 color:white;
+
 font-size:16px;
-padding:0 12px;
+
+padding:
+0 12px;
+
 user-select:text;
+
 -webkit-user-select:text;
 }
 
+
 #findFriendButton{
+
 width:110px;
+
 border:0;
+
 border-radius:8px;
+
 background:#3a78d4;
+
 color:white;
+
 font-weight:bold;
 }
 
+
 #friendResult{
+
 display:none;
+
 margin-top:12px;
+
 padding:10px;
+
 border-radius:9px;
+
 background:#202d38;
 }
 
+
 #addFriendButton{
+
 display:none;
+
 margin-top:8px;
+
 width:100%;
+
 height:38px;
+
 border:0;
+
 border-radius:8px;
+
 background:#22b94b;
+
 color:white;
+
 font-weight:bold;
 }
 
+
 #friendsMessage{
+
 min-height:18px;
+
 margin-top:8px;
+
 font-size:12px;
+
 color:#ffd45b;
 }
 
+
 #friendsList{
+
 margin-top:7px;
+
 max-height:150px;
+
 overflow:auto;
 }
 
+
 .friendItem{
+
 display:flex;
+
 align-items:center;
+
 justify-content:space-between;
-padding:9px 10px;
+
+padding:
+9px 10px;
+
 margin-bottom:6px;
+
 border-radius:8px;
+
 background:#202d38;
 }
 
+
 .friendOnline{
+
 color:#46dc73;
+
 font-size:12px;
 }
 
+
+/* =========================
+ЛОББИ
+========================= */
+
 #lobbyPage{
+
 padding-left:120px;
 }
 
+
 #partyArea{
+
 position:absolute;
+
 left:48%;
+
 top:51%;
-transform:translate(-50%,-50%);
+
+transform:
+translate(-50%,-50%);
+
 display:flex;
+
 gap:35px;
+
 width:430px;
+
 height:285px;
+
 align-items:flex-end;
+
 justify-content:center;
 }
+
 
 .partySlot{
+
 position:relative;
+
 width:170px;
+
 height:280px;
+
 display:flex;
+
 align-items:flex-end;
+
 justify-content:center;
 }
 
+
 .partySlot.empty{
+
 opacity:.35;
 }
 
+
 .partySoldier{
+
 position:relative;
+
 width:120px;
+
 height:245px;
 }
 
+
 .partyHead{
+
 position:absolute;
+
 left:50%;
+
 top:9px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:62px;
+
 height:62px;
+
 border-radius:50%;
+
 background:#c98f6c;
-border:3px solid #222;
+
+border:
+3px solid #222;
+
 z-index:3;
 }
 
+
 .partyHelmet{
+
 position:absolute;
+
 left:50%;
+
 top:0;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:80px;
+
 height:48px;
+
 background:#26352d;
-border-radius:45px 45px 17px 17px;
-border:3px solid #151b18;
+
+border-radius:
+45px 45px 17px 17px;
+
+border:
+3px solid #151b18;
+
 z-index:4;
 }
 
+
 .partyHelmetFront{
+
 position:absolute;
+
 left:50%;
+
 top:36px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:73px;
+
 height:10px;
+
 background:#17201b;
+
 border-radius:5px;
+
 z-index:5;
 }
 
+
 .partyNeck{
+
 position:absolute;
+
 left:50%;
+
 top:67px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:23px;
+
 height:28px;
+
 background:#b97e60;
 }
 
+
 .partyBody{
+
 position:absolute;
+
 left:50%;
+
 top:82px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:90px;
+
 height:107px;
+
 background:#27352f;
+
 border-radius:15px;
-border:3px solid #151b18;
+
+border:
+3px solid #151b18;
 }
 
+
 .partyVest{
+
 position:absolute;
+
 left:50%;
+
 top:89px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:82px;
+
 height:80px;
+
 background:#343d38;
-border:4px solid #171c19;
+
+border:
+4px solid #171c19;
+
 border-radius:9px;
+
 z-index:4;
 }
 
+
 .partyArm{
+
 position:absolute;
+
 top:91px;
+
 width:29px;
+
 height:94px;
+
 background:#27352f;
-border:3px solid #151b18;
+
+border:
+3px solid #151b18;
+
 border-radius:14px;
 }
 
-.partyArm.left{left:2px}
-.partyArm.right{right:2px}
 
-.partyLeg{
-position:absolute;
-top:181px;
-width:34px;
-height:61px;
-background:#202723;
-border:3px solid #151b18;
+.partyArm.left{
+left:2px;
 }
 
-.partyLeg.left{left:24px}
-.partyLeg.right{right:24px}
+.partyArm.right{
+right:2px;
+}
+
+
+.partyLeg{
+
+position:absolute;
+
+top:181px;
+
+width:34px;
+
+height:61px;
+
+background:#202723;
+
+border:
+3px solid #151b18;
+}
+
+
+.partyLeg.left{
+left:24px;
+}
+
+.partyLeg.right{
+right:24px;
+}
+
 
 .partyPlayerName{
+
 position:absolute;
+
 bottom:-3px;
+
 left:50%;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 font-size:14px;
+
 font-weight:bold;
+
 white-space:nowrap;
 }
 
+
+/* =========================
+ДРУЗЬЯ В ЛОББИ
+========================= */
+
 #lobbyFriendsPanel{
+
 position:absolute;
+
 right:22px;
+
 top:82px;
+
 width:235px;
-max-height:255px;
+
+max-height:225px;
+
 padding:12px;
+
 background:#111a22dd;
-border:1px solid #ffffff2f;
+
+border:
+1px solid #ffffff2f;
+
 border-radius:13px;
+
 overflow:auto;
 }
 
+
 .lobbyFriendItem{
+
 padding:9px;
+
 margin-bottom:7px;
+
 border-radius:8px;
+
 background:#202d38;
 }
 
+
 .lobbyFriendItem.selected{
-outline:1px solid #7fbeff;
+
+outline:
+1px solid #7fbeff;
 }
 
+
 .lobbyFriendTop{
+
 display:flex;
+
 justify-content:space-between;
 }
 
+
 .lobbyFriendName{
+
 font-size:13px;
+
 font-weight:bold;
 }
 
+
 .lobbyFriendStatus{
+
 font-size:10px;
+
 color:#46dc73;
 }
 
+
 .inviteLobbyButton{
+
 display:none;
+
 margin-top:8px;
+
 width:100%;
+
 height:34px;
+
 border:0;
+
 border-radius:7px;
+
 background:#3a78d4;
+
 color:white;
+
 font-size:11px;
+
 font-weight:bold;
 }
 
-.lobbyFriendItem.selected .inviteLobbyButton{
+
+.lobbyFriendItem.selected
+.inviteLobbyButton{
+
 display:block;
 }
 
-#lobbyMessage{
+
+/* =========================
+БОТЫ
+========================= */
+
+#botsControl{
+
 position:absolute;
+
 right:22px;
-top:350px;
+
+top:320px;
+
 width:235px;
+
+height:52px;
+
+border:
+2px solid #7eff9c;
+
+border-radius:12px;
+
+background:#237e40;
+
+color:white;
+
+font-size:15px;
+
+font-weight:900;
+}
+
+
+#botsControl.off{
+
+background:#773535;
+
+border-color:#ff9090;
+}
+
+
+#botsControl:disabled{
+
+opacity:.5;
+}
+
+
+#lobbyMessage{
+
+position:absolute;
+
+right:22px;
+
+top:382px;
+
+width:235px;
+
 text-align:center;
+
 font-size:12px;
+
 color:#ffd45b;
 }
 
+
 #lobbyPlayButton{
+
 position:absolute;
+
 left:135px;
+
 bottom:28px;
+
 width:190px;
+
 height:66px;
+
 font-size:25px;
 }
 
+
 #lobbyLeaveButton{
+
 position:absolute;
+
 right:25px;
+
 bottom:28px;
+
 width:150px;
+
 height:42px;
-border:1px solid #ffffff66;
+
+border:
+1px solid #ffffff66;
+
 border-radius:10px;
+
 background:#8d3232;
+
 color:white;
+
 font-weight:bold;
 }
 
+
+/* =========================
+ПРИГЛАШЕНИЕ
+========================= */
+
 #lobbyInvitePopup{
+
 display:none;
+
 position:absolute;
+
 z-index:1250;
+
 left:50%;
+
 top:50%;
-transform:translate(-50%,-50%);
+
+transform:
+translate(-50%,-50%);
+
 width:330px;
+
 padding:20px;
-border:2px solid #ffffff44;
+
+border:
+2px solid #ffffff44;
+
 border-radius:16px;
+
 background:#101820f2;
+
 text-align:center;
+
 color:white;
 }
 
+
 #inviteButtons{
+
 display:flex;
+
 gap:10px;
 }
 
-#acceptLobbyInvite,#declineLobbyInvite{
+
+#acceptLobbyInvite,
+#declineLobbyInvite{
+
 flex:1;
+
 height:44px;
+
 border:0;
+
 border-radius:9px;
+
 color:white;
+
 font-weight:bold;
 }
 
-#acceptLobbyInvite{background:#22b94b}
-#declineLobbyInvite{background:#a53737}
 
-/* HUD */
+#acceptLobbyInvite{
+background:#22b94b;
+}
+
+
+#declineLobbyInvite{
+background:#a53737;
+}
+
+
+/* =========================
+ВЫБОР КОМАНДЫ
+========================= */
+
+#teamSelectPopup{
+
+display:none;
+
+position:absolute;
+
+z-index:1300;
+
+inset:0;
+
+background:#081018ed;
+
+align-items:center;
+
+justify-content:center;
+
+color:white;
+}
+
+
+#teamSelectCard{
+
+width:
+min(620px,82vw);
+
+padding:
+22px;
+
+background:#17232d;
+
+border:
+2px solid #ffffff35;
+
+border-radius:18px;
+
+box-shadow:
+0 20px 60px #000c;
+
+text-align:center;
+}
+
+
+#teamSelectCard h2{
+
+margin:
+0 0 8px 0;
+
+font-size:28px;
+}
+
+
+#teamButtons{
+
+display:flex;
+
+gap:18px;
+
+margin-top:20px;
+}
+
+
+.teamButton{
+
+flex:1;
+
+height:95px;
+
+border:
+2px solid #ffffff44;
+
+border-radius:14px;
+
+color:white;
+
+font-weight:900;
+
+font-size:19px;
+}
+
+
+#teamCT{
+
+background:
+linear-gradient(
+#3972a4,
+#203e59
+);
+}
+
+
+#teamT{
+
+background:
+linear-gradient(
+#a96b32,
+#65401f
+);
+}
+
+
+.teamButton:disabled{
+
+opacity:.35;
+
+filter:
+grayscale(1);
+}
+
+
+.teamButton.selected{
+
+outline:
+4px solid white;
+}
+
+
+#teamStatus{
+
+margin-top:15px;
+
+min-height:20px;
+
+font-size:13px;
+
+color:#ffd45b;
+}
+
+
+/* =========================
+HUD
+========================= */
 
 #title{
+
 position:fixed;
+
 z-index:100;
+
 top:10px;
+
 left:50%;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 color:white;
+
 font-size:23px;
+
 font-weight:bold;
 }
 
-#info,#score{
+
+#info,
+#score{
+
 position:fixed;
+
 z-index:100;
+
 left:15px;
+
 color:white;
+
 font-weight:bold;
 }
 
-#info{top:44px;font-size:14px}
-#score{top:68px;color:#ffd84d}
+
+#info{
+
+top:44px;
+
+font-size:14px;
+}
+
+
+#score{
+
+top:68px;
+
+color:#ffd84d;
+}
+
+
+#teamHUD{
+
+position:fixed;
+
+z-index:110;
+
+left:20px;
+
+bottom:55px;
+
+padding:
+5px 9px;
+
+border-radius:7px;
+
+background:#000a;
+
+color:white;
+
+font-size:11px;
+
+font-weight:bold;
+}
+
 
 #healthBox{
+
 position:fixed;
+
 z-index:100;
+
 left:20px;
+
 bottom:20px;
+
 width:190px;
+
 height:28px;
+
 background:#111c;
-border:2px solid white;
+
+border:
+2px solid white;
+
 border-radius:6px;
+
 overflow:hidden;
 }
 
+
 #healthBar{
+
 height:100%;
+
 width:100%;
+
 background:#36c968;
 }
 
+
 #healthText{
+
 position:absolute;
+
 inset:0;
+
 display:flex;
+
 align-items:center;
+
 justify-content:center;
+
 color:white;
+
 font-weight:bold;
 }
+
 
 #ammo{
+
 position:fixed;
+
 z-index:100;
+
 right:20px;
+
 bottom:20px;
+
 color:white;
+
 font-size:22px;
+
 font-weight:bold;
 }
 
+
 #crosshair{
+
 position:fixed;
+
 z-index:100;
+
 left:50%;
+
 top:50%;
+
 width:32px;
+
 height:32px;
-transform:translate(-50%,-50%);
+
+transform:
+translate(-50%,-50%);
 }
+
 
 #crosshair:before{
+
 content:"";
+
 position:absolute;
+
 left:0;
+
 top:15px;
+
 width:32px;
+
 height:2px;
+
 background:white;
 }
+
 
 #crosshair:after{
+
 content:"";
+
 position:absolute;
+
 left:15px;
+
 top:0;
+
 width:2px;
+
 height:32px;
+
 background:white;
 }
 
+
+/* =========================
+УПРАВЛЕНИЕ
+========================= */
+
 #joystick{
+
 position:fixed;
+
 z-index:200;
+
 left:25px;
+
 bottom:65px;
+
 width:140px;
+
 height:140px;
+
 border-radius:50%;
-border:3px solid #ffffff66;
+
+border:
+3px solid #ffffff66;
+
 background:#ffffff18;
 }
 
+
 #stick{
+
 position:absolute;
+
 left:40px;
+
 top:40px;
+
 width:60px;
+
 height:60px;
+
 border-radius:50%;
+
 background:#ffffff70;
-border:2px solid white;
+
+border:
+2px solid white;
 }
+
 
 #fire{
+
 position:fixed;
+
 z-index:200;
+
 right:30px;
+
 bottom:95px;
+
 width:85px;
+
 height:85px;
+
 border-radius:50%;
-border:2px solid white;
+
+border:
+2px solid white;
+
 background:#a52c2ccc;
+
 color:white;
+
 font-weight:bold;
 }
+
 
 #reload{
+
 position:fixed;
+
 z-index:200;
+
 right:135px;
+
 bottom:35px;
+
 width:100px;
+
 height:45px;
+
 border-radius:12px;
-border:1px solid white;
+
+border:
+1px solid white;
+
 background:#222c;
+
 color:white;
+
 font-weight:bold;
 }
 
-/* WEAPON */
+
+/* =========================
+ОРУЖИЕ
+========================= */
 
 #weapon{
+
 position:fixed;
+
 z-index:80;
+
 left:50%;
+
 bottom:-15px;
+
 width:170px;
+
 height:130px;
-transform:translateX(-50%);
-transition:transform .07s;
+
+transform:
+translateX(-50%);
+
+transition:
+transform .07s;
 }
 
-/* АНИМАЦИЯ АВТОМАТА/ПИСТОЛЕТА */
 
 #weapon.weaponSwitching{
-animation:weaponDraw .42s ease-out;
+
+animation:
+weaponDraw .42s ease-out;
 }
+
 
 @keyframes weaponDraw{
+
 0%{
-transform:translateX(-50%) translateY(150px) rotate(8deg);
+transform:
+translateX(-50%)
+translateY(150px)
+rotate(8deg);
 opacity:0;
 }
+
 45%{
-transform:translateX(-50%) translateY(35px) rotate(-3deg);
+transform:
+translateX(-50%)
+translateY(35px)
+rotate(-3deg);
 opacity:1;
-}
-75%{
-transform:translateX(-50%) translateY(-8px) rotate(1deg);
-}
-100%{
-transform:translateX(-50%) translateY(0) rotate(0deg);
-opacity:1;
-}
 }
 
-/* НОЖ: ПОДБРОС + ВРАЩЕНИЕ + ЛОВЛЯ */
+75%{
+transform:
+translateX(-50%)
+translateY(-8px)
+rotate(1deg);
+}
+
+100%{
+transform:
+translateX(-50%)
+translateY(0)
+rotate(0);
+opacity:1;
+}
+
+}
+
 
 #weapon.knifeDraw{
-animation:knifeDraw .85s cubic-bezier(.2,.75,.25,1);
+
+animation:
+knifeDraw .85s
+cubic-bezier(.2,.75,.25,1);
 }
+
 
 @keyframes knifeDraw{
+
 0%{
-transform:translateX(-50%) translateY(180px) rotate(-35deg);
+transform:
+translateX(-50%)
+translateY(180px)
+rotate(-35deg);
 opacity:0;
 }
+
 12%{
-transform:translateX(-50%) translateY(125px) rotate(-20deg);
+transform:
+translateX(-50%)
+translateY(125px)
+rotate(-20deg);
 opacity:1;
-}
-25%{
-transform:translateX(-50%) translateY(45px) rotate(35deg);
-}
-40%{
-transform:translateX(-50%) translateY(-75px) rotate(180deg);
-}
-55%{
-transform:translateX(-50%) translateY(-105px) rotate(360deg);
-}
-68%{
-transform:translateX(-50%) translateY(-65px) rotate(540deg);
-}
-80%{
-transform:translateX(-50%) translateY(-15px) rotate(690deg);
-}
-91%{
-transform:translateX(-50%) translateY(5px) rotate(770deg);
-}
-100%{
-transform:translateX(-50%) translateY(0) rotate(720deg);
-opacity:1;
-}
 }
 
+25%{
+transform:
+translateX(-50%)
+translateY(45px)
+rotate(35deg);
+}
+
+40%{
+transform:
+translateX(-50%)
+translateY(-75px)
+rotate(180deg);
+}
+
+55%{
+transform:
+translateX(-50%)
+translateY(-105px)
+rotate(360deg);
+}
+
+68%{
+transform:
+translateX(-50%)
+translateY(-65px)
+rotate(540deg);
+}
+
+80%{
+transform:
+translateX(-50%)
+translateY(-15px)
+rotate(690deg);
+}
+
+91%{
+transform:
+translateX(-50%)
+translateY(5px)
+rotate(770deg);
+}
+
+100%{
+transform:
+translateX(-50%)
+translateY(0)
+rotate(720deg);
+opacity:1;
+}
+
+}
+
+
 #gun{
+
 position:absolute;
+
 left:30px;
+
 bottom:0;
+
 width:110px;
+
 height:75px;
+
 background:#151718;
+
 border-radius:15px;
 }
 
+
 #barrel{
+
 position:absolute;
+
 left:72px;
+
 bottom:65px;
+
 width:25px;
+
 height:70px;
+
 background:#303537;
+
 border-radius:5px;
 }
 
+
 #pistol{
+
 display:none;
+
 position:absolute;
+
 left:54px;
+
 bottom:0;
+
 width:65px;
+
 height:85px;
 }
 
+
 #pistolSlide{
+
 position:absolute;
+
 left:10px;
+
 top:8px;
+
 width:52px;
+
 height:28px;
+
 background:#17191a;
+
 border-radius:5px;
 }
 
+
 #pistolBarrel{
+
 position:absolute;
+
 left:25px;
+
 top:0;
+
 width:22px;
+
 height:18px;
+
 background:#303537;
 }
 
+
 #pistolHandle{
+
 position:absolute;
+
 left:20px;
+
 top:32px;
+
 width:32px;
+
 height:52px;
+
 background:#202324;
-border-radius:3px 3px 9px 9px;
+
+border-radius:
+3px 3px 9px 9px;
 }
+
 
 #knife{
+
 display:none;
+
 position:absolute;
+
 left:45px;
+
 bottom:0;
+
 width:80px;
+
 height:125px;
-transform:rotate(-12deg);
+
+transform:
+rotate(-12deg);
 }
+
 
 #knifeBlade{
+
 position:absolute;
+
 left:27px;
+
 top:0;
+
 width:25px;
+
 height:82px;
-background:linear-gradient(135deg,#eee,#888);
-clip-path:polygon(50% 0,100% 20%,85% 100%,15% 100%,0 20%);
+
+background:
+linear-gradient(
+135deg,
+#eee,
+#888
+);
+
+clip-path:
+polygon(
+50% 0,
+100% 20%,
+85% 100%,
+15% 100%,
+0 20%
+);
 }
 
+
 #knifeHandle{
+
 position:absolute;
+
 left:24px;
+
 bottom:0;
+
 width:31px;
+
 height:55px;
+
 background:#181a1b;
+
 border-radius:7px;
 }
 
+
 #knifeGuard{
+
 position:absolute;
+
 left:17px;
+
 bottom:48px;
+
 width:45px;
+
 height:8px;
+
 background:#444;
 }
 
+
 #muzzle{
+
 display:none;
+
 position:absolute;
+
 left:78px;
+
 bottom:125px;
+
 width:35px;
+
 height:35px;
+
 background:#ffd34d;
-clip-path:polygon(50% 0,65% 35%,100% 50%,65% 65%,50% 100%,35% 65%,0 50%,35% 35%);
+
+clip-path:
+polygon(
+50% 0,
+65% 35%,
+100% 50%,
+65% 65%,
+50% 100%,
+35% 65%,
+0 50%,
+35% 35%
+);
 }
 
+
 #weaponSwitch{
+
 position:fixed;
+
 z-index:250;
+
 top:48px;
+
 right:150px;
+
 width:82px;
+
 height:55px;
+
 border-radius:10px;
+
 background:#111c;
-border:2px solid #ffffff88;
+
+border:
+2px solid #ffffff88;
+
 display:flex;
+
 align-items:center;
+
 justify-content:center;
 }
 
+
 #weaponSwipeHint{
+
 position:absolute;
+
 bottom:-13px;
+
 font-size:8px;
+
 color:#ffffff99;
+
 white-space:nowrap;
 }
 
-/* ENEMIES / REMOTE */
 
-.enemy,.remotePlayer{
+/* =========================
+БОТЫ / ИГРОКИ
+========================= */
+
+.enemy,
+.remotePlayer{
+
 position:absolute;
+
 z-index:30;
+
 width:60px;
+
 height:120px;
-transform:translate(-50%,-50%);
+
+transform:
+translate(-50%,-50%);
 }
 
-.enemyBody,.remotePlayerBody{
+
+.enemyBody,
+.remotePlayerBody{
+
 position:absolute;
+
 left:20%;
+
 bottom:0;
+
 width:60%;
+
 height:63%;
+
 border-radius:8px;
 }
 
-.enemyHead,.remotePlayerHead{
+
+.enemyHead,
+.remotePlayerHead{
+
 position:absolute;
+
 left:50%;
+
 top:0;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:46%;
+
 aspect-ratio:1;
+
 border-radius:50%;
+
 background:#d49a78;
 }
 
-.enemyGun,.remotePlayerGun{
+
+.enemyGun,
+.remotePlayerGun{
+
 position:absolute;
+
 left:65%;
+
 top:47%;
+
 width:75%;
+
 height:8%;
+
 background:#161818;
 }
 
-.enemyHP,.remotePlayerHP{
+
+.enemyHP,
+.remotePlayerHP{
+
 position:absolute;
+
 left:0;
+
 top:-10px;
+
 width:100%;
+
 height:5px;
+
 background:#111;
 }
 
-.enemyHPInner,.remotePlayerHPInner{
+
+.enemyHPInner,
+.remotePlayerHPInner{
+
 height:100%;
+
 width:100%;
+
 background:#39d36b;
 }
 
-.enemy.normal .enemyBody{background:#a92f38}
-.enemy.fast .enemyBody{background:#8b35b8}
+
+.enemy.normal
+.enemyBody{
+
+background:#a92f38;
+}
+
+
+.enemy.fast
+.enemyBody{
+
+background:#8b35b8;
+}
+
 
 .remotePlayer{
+
 z-index:35;
+
 pointer-events:none;
 }
 
+
 .remotePlayerBody{
+
 background:#27352f;
-border:3px solid #151b18;
+
+border:
+3px solid #151b18;
 }
 
+
+.remotePlayer.ct
+.remotePlayerBody{
+
+background:#275f89;
+}
+
+
+.remotePlayer.t
+.remotePlayerBody{
+
+background:#825027;
+}
+
+
 .remotePlayerHelmet{
+
 position:absolute;
+
 left:50%;
+
 top:-5%;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 width:58%;
+
 height:30%;
+
 background:#26352d;
-border:2px solid #151b18;
-border-radius:50% 50% 20% 20%;
+
+border:
+2px solid #151b18;
+
+border-radius:
+50% 50% 20% 20%;
+
 z-index:3;
 }
 
+
 .remotePlayerName{
+
 position:absolute;
+
 left:50%;
+
 top:-28px;
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 color:white;
+
 font-size:12px;
+
 font-weight:bold;
+
 white-space:nowrap;
-text-shadow:0 2px 4px #000;
+
+text-shadow:
+0 2px 4px #000;
 }
 
+
 .remotePlayerWeapon{
+
 position:absolute;
+
 left:65%;
+
 top:47%;
+
 font-size:18px;
 }
 
+
+/* =========================
+ЭФФЕКТЫ
+========================= */
+
 #damage{
+
 position:fixed;
+
 z-index:120;
+
 inset:0;
+
 background:#d00;
+
 opacity:0;
+
 pointer-events:none;
 }
 
+
 #hitmark{
+
 position:fixed;
+
 z-index:150;
+
 left:50%;
+
 top:50%;
-transform:translate(-50%,-50%);
+
+transform:
+translate(-50%,-50%);
+
 color:#f44;
+
 font-size:35px;
+
 font-weight:bold;
+
 opacity:0;
 }
 
+
+/* =========================
+МИНИКАРТА
+========================= */
+
 #minimap{
+
 position:fixed;
+
 z-index:150;
+
 right:15px;
+
 top:15px;
+
 width:120px;
+
 height:120px;
-background:#777;
-border:2px solid #ffffff99;
+
+background:#555;
+
+border:
+2px solid #ffffff99;
+
 border-radius:8px;
+
 overflow:hidden;
 }
 
-#playerDot,.enemyDot,.remotePlayerDot{
+
+#playerDot,
+.enemyDot,
+.remotePlayerDot{
+
 position:absolute;
+
 border-radius:50%;
-transform:translate(-50%,-50%);
+
+transform:
+translate(-50%,-50%);
+
+z-index:4;
 }
 
+
 #playerDot{
+
 width:9px;
+
 height:9px;
+
 background:#21a5ff;
 }
 
+
 .enemyDot{
+
 width:7px;
+
 height:7px;
+
 background:#e33;
 }
 
+
 .remotePlayerDot{
+
 width:8px;
+
 height:8px;
+
 background:#46dc73;
 }
 
+
+.mapBuilding{
+
+position:absolute;
+
+background:#1e2225;
+
+border:
+1px solid #aaa6;
+
+z-index:1;
+}
+
+
+/* =========================
+GAME OVER
+========================= */
+
 #gameover{
+
 display:none;
+
 position:fixed;
+
 z-index:500;
+
 inset:0;
+
 background:#000d;
+
 align-items:center;
+
 justify-content:center;
+
 flex-direction:column;
+
 color:white;
+
 font-size:32px;
+
 font-weight:bold;
+
 text-align:center;
 }
+
 
 #restart{
+
 margin-top:20px;
-padding:15px 30px;
+
+padding:
+15px 30px;
+
 font-size:20px;
+
 border-radius:10px;
-border:2px solid white;
+
+border:
+2px solid white;
+
 background:#333;
+
 color:white;
 }
 
+
+/* =========================
+ПОВОРОТ
+========================= */
+
 #rotate{
+
 display:none;
+
 position:fixed;
+
 z-index:9999;
+
 inset:0;
+
 background:#111;
+
 color:white;
+
 align-items:center;
+
 justify-content:center;
+
 text-align:center;
+
 font-size:24px;
 }
 
-@media(max-width:700px) and (orientation:portrait){
-#rotate{display:flex}
+
+@media(
+max-width:700px
+)
+and
+(orientation:portrait){
+
+#rotate{
+display:flex;
 }
+
+}
+
 </style>
 </head>
 
+
 <body>
+
+
+<!-- =========================
+МЕНЮ
+========================= -->
 
 <div id="menu">
 
+
 <div id="menuTabs">
-<button class="menuTab active" id="gameTab">▶</button>
-<button class="menuTab" id="lobbyTab">🛡️</button>
-<button class="menuTab" id="friendsTab">
+
+<button
+class="menuTab active"
+id="gameTab">
+▶
+</button>
+
+
+<button
+class="menuTab"
+id="lobbyTab">
+🛡️
+</button>
+
+
+<button
+class="menuTab"
+id="friendsTab">
+
 <div class="friendsIcon">
+
 <div class="person p1"></div>
 <div class="person p2"></div>
 <div class="person p3"></div>
+
 </div>
+
 </button>
+
 </div>
+
+
+<!-- PROFILE -->
 
 <div id="profileBox">
-<div id="profileStatus">СОЕДИНЕНИЕ С СЕРВЕРОМ...</div>
-<div id="profileID">ID: —</div>
+
+<div id="profileStatus">
+СОЕДИНЕНИЕ С СЕРВЕРОМ...
+</div>
+
+<div id="profileID">
+ID: —
+</div>
+
 <div id="nicknameRow">
-<input id="nicknameInput" maxlength="16" placeholder="Введите ник">
-<button id="saveNickname">✓</button>
+
+<input
+id="nicknameInput"
+maxlength="16"
+placeholder="Введите ник">
+
+<button id="saveNickname">
+✓
+</button>
+
 </div>
+
 </div>
+
+
+<!-- =========================
+ЛОББИ
+========================= -->
 
 <div id="lobbyPage">
-<div id="lobbyPageTitle">ЛОББИ</div>
+
+<div id="lobbyPageTitle">
+ЛОББИ
+</div>
+
 
 <div id="partyArea">
-<div class="partySlot" id="partySlot1"></div>
-<div class="partySlot empty" id="partySlot2"></div>
+
+<div
+class="partySlot"
+id="partySlot1">
 </div>
+
+<div
+class="partySlot empty"
+id="partySlot2">
+</div>
+
+</div>
+
 
 <div id="lobbyFriendsPanel">
-<b>ДРУЗЬЯ</b>
-<div id="lobbyFriendsList">Загрузка...</div>
+
+<b>
+ДРУЗЬЯ
+</b>
+
+<div id="lobbyFriendsList">
+Загрузка...
 </div>
 
-<div id="lobbyMessage"></div>
-
-<button id="lobbyPlayButton">ИГРАТЬ</button>
-<button id="lobbyLeaveButton">ПОКИНУТЬ ЛОББИ</button>
 </div>
+
+
+<button
+id="botsControl"
+class="on">
+БОТЫ: ВКЛ
+</button>
+
+
+<div id="lobbyMessage">
+</div>
+
+
+<button id="lobbyPlayButton">
+ИГРАТЬ
+</button>
+
+
+<button id="lobbyLeaveButton">
+ПОКИНУТЬ ЛОББИ
+</button>
+
+</div>
+
+
+<!-- =========================
+ПРИГЛАШЕНИЕ
+========================= -->
 
 <div id="lobbyInvitePopup">
-<h3>ПРИГЛАШЕНИЕ В ЛОББИ</h3>
-<div id="lobbyInviteText"></div>
+
+<h3>
+ПРИГЛАШЕНИЕ В ЛОББИ
+</h3>
+
+<div id="lobbyInviteText">
+</div>
+
 <br>
+
 <div id="inviteButtons">
-<button id="acceptLobbyInvite">ПРИНЯТЬ</button>
-<button id="declineLobbyInvite">ОТКЛОНИТЬ</button>
+
+<button id="acceptLobbyInvite">
+ПРИНЯТЬ
+</button>
+
+<button id="declineLobbyInvite">
+ОТКЛОНИТЬ
+</button>
+
 </div>
+
 </div>
+
+
+<!-- =========================
+ВЫБОР КОМАНДЫ
+========================= -->
+
+<div id="teamSelectPopup">
+
+<div id="teamSelectCard">
+
+<h2>
+ВЫБЕРИ СТОРОНУ
+</h2>
+
+<div>
+Другой игрок должен выбрать противоположную сторону
+</div>
+
+
+<div id="teamButtons">
+
+<button
+class="teamButton"
+id="teamCT">
+
+🛡️ СПЕЦНАЗ
+
+</button>
+
+
+<button
+class="teamButton"
+id="teamT">
+
+💣 ТЕРРОРИСТЫ
+
+</button>
+
+</div>
+
+
+<div id="teamStatus">
+Выбери сторону
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+ДРУЗЬЯ
+========================= -->
 
 <div id="friendsPage">
-<div id="friendsTitle">ДРУЗЬЯ</div>
+
+<div id="friendsTitle">
+ДРУЗЬЯ
+</div>
+
 
 <div id="friendSearchBox">
+
 <div id="friendSearchRow">
-<input id="friendIDInput" inputmode="numeric" placeholder="Введите ID игрока">
-<button id="findFriendButton">НАЙТИ</button>
+
+<input
+id="friendIDInput"
+inputmode="numeric"
+placeholder="Введите ID игрока">
+
+
+<button id="findFriendButton">
+НАЙТИ
+</button>
+
 </div>
 
-<div id="friendResult"></div>
-<button id="addFriendButton">ДОБАВИТЬ В ДРУЗЬЯ</button>
 
-<div id="friendsMessage"></div>
-
-<b>МОИ ДРУЗЬЯ</b>
-<div id="friendsList"></div>
-</div>
+<div id="friendResult">
 </div>
 
-<div id="menuTitle">RAHL1K FPS</div>
-<div id="menuSubtitle">LOBBY</div>
+
+<button id="addFriendButton">
+ДОБАВИТЬ В ДРУЗЬЯ
+</button>
+
+
+<div id="friendsMessage">
+</div>
+
+
+<b>
+МОИ ДРУЗЬЯ
+</b>
+
+
+<div id="friendsList">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+ГЛАВНЫЙ ЭКРАН
+========================= -->
+
+<div id="menuTitle">
+RAHL1K FPS
+</div>
+
+
+<div id="menuSubtitle">
+LOBBY
+</div>
+
 
 <div id="lobby">
+
 <div id="character">
 
 <div id="characterHead"></div>
+
 <div id="helmet"></div>
+
 <div id="helmetFront"></div>
+
 <div id="characterNeck"></div>
 
 <div id="armLeft"></div>
+
 <div id="armRight"></div>
 
 <div id="characterBody"></div>
 
 <div id="vest">
+
 <div id="vestPlate"></div>
 <div id="vestStrap1"></div>
 <div id="vestStrap2"></div>
+
 </div>
 
 <div id="legLeft"></div>
+
 <div id="legRight"></div>
 
-<div id="menuName">RAHL1K</div>
+<div id="menuName">
+RAHL1K
+</div>
 
 </div>
+
 </div>
 
-<button id="playButton">ИГРАТЬ</button>
 
-<div id="countdown">5</div>
-<div id="countdownText">ПРИГОТОВЬСЯ</div>
+<button id="playButton">
+ИГРАТЬ
+</button>
+
+
+<div id="countdown">
+5
 </div>
+
+
+<div id="countdownText">
+ПРИГОТОВЬСЯ
+</div>
+
+</div>
+
+
+<!-- =========================
+ИГРА
+========================= -->
 
 <div id="game">
+
 <div id="sky"></div>
+
 <div id="ground"></div>
+
 </div>
 
-<div id="title">RAHL1K FPS v6 ONLINE</div>
+
+<div id="title">
+RAHL1K FPS v7 CITY
+</div>
+
 
 <div id="info">
-POS: 1500 / 1500 &nbsp;&nbsp; ANGLE: 0°
+POS: 1500 / 1500
+&nbsp;&nbsp;
+ANGLE: 0°
 </div>
 
-<div id="score">KILLS: 0</div>
+
+<div id="score">
+KILLS: 0
+</div>
+
+
+<div id="teamHUD">
+СВОБОДНАЯ ИГРА
+</div>
+
 
 <div id="weaponSwitch">
-<div id="weaponSwipeIcon">🔫</div>
+
+<div id="weaponSwipeIcon">
+🔫
+</div>
+
 <div id="weaponSwipeHint">
-← НОЖ &nbsp; ↓ АВТО &nbsp; ПИСТОЛЕТ →
+← НОЖ
+&nbsp;
+↓ АВТО
+&nbsp;
+ПИСТОЛЕТ →
 </div>
+
 </div>
+
 
 <div id="healthBox">
-<div id="healthBar"></div>
-<div id="healthText">HP 100</div>
+
+<div id="healthBar">
 </div>
 
-<div id="ammo">30 / 90</div>
+<div id="healthText">
+HP 100
+</div>
 
-<div id="crosshair"></div>
-<div id="hitmark">×</div>
+</div>
+
+
+<div id="ammo">
+30 / 90
+</div>
+
+
+<div id="crosshair">
+</div>
+
+
+<div id="hitmark">
+×
+</div>
+
 
 <div id="minimap">
-<div id="playerDot"></div>
+
+<div id="playerDot">
 </div>
+
+</div>
+
 
 <div id="joystick">
-<div id="stick"></div>
+
+<div id="stick">
 </div>
 
-<button id="fire">FIRE</button>
-<button id="reload">RELOAD</button>
+</div>
+
+
+<button id="fire">
+FIRE
+</button>
+
+
+<button id="reload">
+RELOAD
+</button>
+
 
 <div id="weapon">
 
-<div id="muzzle"></div>
+<div id="muzzle">
+</div>
 
-<div id="barrel"></div>
-<div id="gun"></div>
+<div id="barrel">
+</div>
+
+<div id="gun">
+</div>
+
 
 <div id="pistol">
-<div id="pistolBarrel"></div>
-<div id="pistolSlide"></div>
-<div id="pistolHandle"></div>
+
+<div id="pistolBarrel">
 </div>
+
+<div id="pistolSlide">
+</div>
+
+<div id="pistolHandle">
+</div>
+
+</div>
+
 
 <div id="knife">
-<div id="knifeBlade"></div>
-<div id="knifeGuard"></div>
-<div id="knifeHandle"></div>
+
+<div id="knifeBlade">
+</div>
+
+<div id="knifeGuard">
+</div>
+
+<div id="knifeHandle">
 </div>
 
 </div>
 
-<div id="damage"></div>
+</div>
+
+
+<div id="damage">
+</div>
+
 
 <div id="gameover">
+
 GAME OVER
-<div id="finalScore"></div>
-<button id="restart">ИГРАТЬ СНОВА</button>
+
+<div id="finalScore">
 </div>
 
-<div id="rotate">
-↔️
-<br>
-Поверни телефон горизонтально
+<button id="restart">
+ИГРАТЬ СНОВА
+</button>
+
 </div>
+
+
+<div id="rotate">
+
+↔️
+
+<br>
+
+Поверни телефон горизонтально
+
+</div>
+
 
 <script>
 
-let onlineSocket=null;
-let myOnlineID=null;
-let myNickname="";
-let foundFriendID=null;
 
-let cachedFriends=[];
+/* =========================
+ОСНОВНЫЕ ПЕРЕМЕННЫЕ
+========================= */
 
-let incomingLobbyFromID=null;
-
-let currentLobbyMembers=[];
-
-/* НОВОЕ: ID ЛИДЕРА */
-
-let lobbyLeaderID=null;
-
-let lobbyCountdownTimer=null;
-
-const remotePlayers=
-new Map();
-
-let multiplayerMatch=false;
-
-let lastStateSend=0;
-
-
-const $=
-id=>
+const $ =
+id =>
 document.getElementById(id);
 
 
-const profileStatus=$("profileStatus");
-const profileID=$("profileID");
+let onlineSocket =
+null;
 
-const nicknameInput=$("nicknameInput");
-const saveNickname=$("saveNickname");
 
-const friendIDInput=$("friendIDInput");
-const findFriendButton=$("findFriendButton");
-const friendResult=$("friendResult");
-const addFriendButton=$("addFriendButton");
-const friendsMessage=$("friendsMessage");
-const friendsList=$("friendsList");
+let myOnlineID =
+null;
 
-const lobbyFriendsList=$("lobbyFriendsList");
-const lobbyMessage=$("lobbyMessage");
 
-const lobbyInvitePopup=$("lobbyInvitePopup");
-const lobbyInviteText=$("lobbyInviteText");
+let myNickname =
+"";
 
-const acceptLobbyInvite=$("acceptLobbyInvite");
-const declineLobbyInvite=$("declineLobbyInvite");
 
-const lobbyPlayButton=$("lobbyPlayButton");
-const lobbyLeaveButton=$("lobbyLeaveButton");
+let foundFriendID =
+null;
 
+
+let cachedFriends =
+[];
+
+
+let incomingLobbyFromID =
+null;
+
+
+let currentLobbyMembers =
+[];
+
+
+let lobbyLeaderID =
+null;
+
+
+let lobbyBotsEnabled =
+true;
+
+
+let botsEnabled =
+true;
+
+
+let teamSelectionActive =
+false;
+
+
+let teamAssignments =
+{};
+
+
+let myTeam =
+null;
+
+
+let lobbyCountdownTimer =
+null;
+
+
+const remotePlayers =
+new Map();
+
+
+let multiplayerMatch =
+false;
+
+
+let lastStateSend =
+0;
+
+
+/* =========================
+ЭЛЕМЕНТЫ
+========================= */
+
+const profileStatus =
+$("profileStatus");
+
+
+const profileID =
+$("profileID");
+
+
+const nicknameInput =
+$("nicknameInput");
+
+
+const saveNickname =
+$("saveNickname");
+
+
+const friendIDInput =
+$("friendIDInput");
+
+
+const findFriendButton =
+$("findFriendButton");
+
+
+const friendResult =
+$("friendResult");
+
+
+const addFriendButton =
+$("addFriendButton");
+
+
+const friendsMessage =
+$("friendsMessage");
+
+
+const friendsList =
+$("friendsList");
+
+
+const lobbyFriendsList =
+$("lobbyFriendsList");
+
+
+const lobbyMessage =
+$("lobbyMessage");
+
+
+const lobbyInvitePopup =
+$("lobbyInvitePopup");
+
+
+const lobbyInviteText =
+$("lobbyInviteText");
+
+
+const acceptLobbyInvite =
+$("acceptLobbyInvite");
+
+
+const declineLobbyInvite =
+$("declineLobbyInvite");
+
+
+const lobbyPlayButton =
+$("lobbyPlayButton");
+
+
+const lobbyLeaveButton =
+$("lobbyLeaveButton");
+
+
+const botsControl =
+$("botsControl");
+
+
+const teamSelectPopup =
+$("teamSelectPopup");
+
+
+const teamCT =
+$("teamCT");
+
+
+const teamT =
+$("teamT");
+
+
+const teamStatus =
+$("teamStatus");
+
+
+/* =========================
+HTML SAFE
+========================= */
 
 function escapeHTML(t){
 
 return String(t)
-.replaceAll("&","&amp;")
-.replaceAll("<","&lt;")
-.replaceAll(">","&gt;")
-.replaceAll('"',"&quot;")
-.replaceAll("'","&#039;");
+
+.replaceAll(
+"&",
+"&amp;"
+)
+
+.replaceAll(
+"<",
+"&lt;"
+)
+
+.replaceAll(
+">",
+"&gt;"
+)
+
+.replaceAll(
+'"',
+"&quot;"
+)
+
+.replaceAll(
+"'",
+"&#039;"
+);
 
 }
 
 
-function sendOnline(data){
+/* =========================
+SEND ONLINE
+========================= */
+
+function sendOnline(
+data
+){
 
 if(
 onlineSocket &&
-onlineSocket.readyState===
+onlineSocket.readyState ===
 WebSocket.OPEN
 ){
 
 onlineSocket.send(
-JSON.stringify(data)
+JSON.stringify(
+data
+)
 );
 
 return true;
 
 }
 
-friendsMessage.textContent=
+
+friendsMessage.textContent =
 "Нет соединения с сервером";
 
-lobbyMessage.textContent=
+
+lobbyMessage.textContent =
 "Нет соединения с сервером";
+
 
 return false;
 
 }
 
 
-/* ==========================
+/* =========================
 ONLINE
-========================== */
+========================= */
 
 function connectOnline(){
 
-const protocol=
-location.protocol==="https:"
-?"wss:"
-:"ws:";
+const protocol =
 
-onlineSocket=
+location.protocol ===
+"https:"
+
+?
+
+"wss:"
+
+:
+
+"ws:";
+
+
+onlineSocket =
+
 new WebSocket(
-protocol+"//"+location.host
+
+protocol +
+"//" +
+location.host
+
 );
 
 
+/* OPEN */
+
 onlineSocket.addEventListener(
+
 "open",
+
 ()=>{
 
-profileStatus.textContent=
+profileStatus.textContent =
 "● ONLINE";
 
-profileStatus.style.color=
+
+profileStatus.style.color =
 "#46dc73";
 
 }
+
 );
 
 
+/* CLOSE */
+
 onlineSocket.addEventListener(
+
 "close",
+
 ()=>{
 
-profileStatus.textContent=
+profileStatus.textContent =
 "● OFFLINE";
 
-profileStatus.style.color=
+
+profileStatus.style.color =
 "#ff5555";
+
 
 setTimeout(
 connectOnline,
@@ -1723,32 +3980,45 @@ connectOnline,
 );
 
 }
+
 );
 
 
+/* ERROR */
+
 onlineSocket.addEventListener(
+
 "error",
+
 ()=>{
 
-profileStatus.textContent=
+profileStatus.textContent =
 "ОШИБКА СОЕДИНЕНИЯ";
 
-profileStatus.style.color=
+
+profileStatus.style.color =
 "#ff5555";
 
 }
+
 );
 
 
+/* MESSAGE */
+
 onlineSocket.addEventListener(
+
 "message",
+
 event=>{
+
 
 let data;
 
+
 try{
 
-data=
+data =
 JSON.parse(
 event.data
 );
@@ -1760,25 +4030,29 @@ return;
 }
 
 
-/* WELCOME */
+/* =========================
+WELCOME
+========================= */
 
 if(
-data.type===
+data.type ===
 "welcome"
 ){
 
-myOnlineID=
+myOnlineID =
 data.id;
 
-myNickname=
+
+myNickname =
 data.nickname;
 
-profileID.textContent=
-"ID: "+
+
+profileID.textContent =
+"ID: " +
 myOnlineID;
 
 
-const saved=
+const saved =
 localStorage.getItem(
 "rahl1kNickname"
 );
@@ -1786,20 +4060,25 @@ localStorage.getItem(
 
 if(saved){
 
-nicknameInput.value=
+nicknameInput.value =
 saved;
 
+
 sendOnline({
-type:"setNickname",
-nickname:saved
+type:
+"setNickname",
+
+nickname:
+saved
 });
 
 }else{
 
-nicknameInput.value=
+nicknameInput.value =
 myNickname;
 
-$("menuName").textContent=
+
+$("menuName").textContent =
 myNickname;
 
 }
@@ -1807,26 +4086,32 @@ myNickname;
 }
 
 
-/* NICK */
+/* =========================
+NICK
+========================= */
 
 if(
-data.type===
+data.type ===
 "nicknameChanged"
 ){
 
-myNickname=
+myNickname =
 data.nickname;
 
-nicknameInput.value=
+
+nicknameInput.value =
 myNickname;
 
-$("menuName").textContent=
+
+$("menuName").textContent =
 myNickname;
+
 
 localStorage.setItem(
 "rahl1kNickname",
 myNickname
 );
+
 
 renderLobbyMembers(
 currentLobbyMembers
@@ -1835,41 +4120,55 @@ currentLobbyMembers
 }
 
 
-/* FIND */
+/* =========================
+ПОИСК
+========================= */
 
 if(
-data.type===
+data.type ===
 "findResult"
 ){
 
-if(!data.found){
+if(
+!data.found
+){
 
-foundFriendID=null;
+foundFriendID =
+null;
 
-friendResult.style.display=
+
+friendResult.style.display =
 "block";
 
-friendResult.textContent=
+
+friendResult.textContent =
 "Игрок не найден";
 
-addFriendButton.style.display=
+
+addFriendButton.style.display =
 "none";
 
 }else{
 
-foundFriendID=
+foundFriendID =
 data.id;
 
-friendResult.style.display=
+
+friendResult.style.display =
 "block";
 
-friendResult.innerHTML=
-"<b>"+
-escapeHTML(data.nickname)+
-"</b><br>ID: "+
+
+friendResult.innerHTML =
+
+"<b>" +
+escapeHTML(
+data.nickname
+) +
+"</b><br>ID: " +
 data.id;
 
-addFriendButton.style.display=
+
+addFriendButton.style.display =
 "block";
 
 }
@@ -1877,26 +4176,42 @@ addFriendButton.style.display=
 }
 
 
-/* FRIEND RESULT */
+/* =========================
+ДОБАВИЛИ ДРУГА
+========================= */
 
 if(
-data.type===
+data.type ===
 "friendResult"
 ){
 
-friendsMessage.textContent=
+friendsMessage.textContent =
+
 data.success
-?"Игрок добавлен в друзья"
-:(data.message||"Не удалось добавить");
+
+?
+
+"Игрок добавлен в друзья"
+
+:
+
+(
+data.message ||
+"Не удалось добавить"
+);
 
 
-if(data.success){
+if(
+data.success
+){
 
-addFriendButton.style.display=
+addFriendButton.style.display =
 "none";
 
+
 sendOnline({
-type:"getFriends"
+type:
+"getFriends"
 });
 
 }
@@ -1907,34 +4222,40 @@ type:"getFriends"
 /* FRIEND ADDED */
 
 if(
-data.type===
+data.type ===
 "friendAdded"
 ){
 
-friendsMessage.textContent=
-data.nickname+
+friendsMessage.textContent =
+
+data.nickname +
 " добавлен в друзья";
 
+
 sendOnline({
-type:"getFriends"
+type:
+"getFriends"
 });
 
 }
 
 
-/* FRIENDS LIST */
+/* FRIENDS */
 
 if(
-data.type===
+data.type ===
 "friendsList"
 ){
 
-cachedFriends=
-data.friends||[];
+cachedFriends =
+data.friends ||
+[];
+
 
 renderFriends(
 cachedFriends
 );
+
 
 renderLobbyFriends(
 cachedFriends
@@ -1946,31 +4267,37 @@ cachedFriends
 /* LOBBY MESSAGE */
 
 if(
-data.type===
+data.type ===
 "lobbyMessage"
 ){
 
-lobbyMessage.textContent=
-data.message||"";
+lobbyMessage.textContent =
+data.message ||
+"";
 
 }
 
 
-/* INVITE */
+/* =========================
+ПРИГЛАШЕНИЕ
+========================= */
 
 if(
-data.type===
+data.type ===
 "lobbyInvite"
 ){
 
-incomingLobbyFromID=
+incomingLobbyFromID =
 data.fromID;
 
-lobbyInviteText.textContent=
-data.fromNickname+
+
+lobbyInviteText.textContent =
+
+data.fromNickname +
 " приглашает тебя в лобби";
 
-lobbyInvitePopup.style.display=
+
+lobbyInvitePopup.style.display =
 "block";
 
 }
@@ -1979,100 +4306,277 @@ lobbyInvitePopup.style.display=
 /* ACCEPT */
 
 if(
-data.type===
+data.type ===
 "lobbyInviteAccepted"
 ){
 
-lobbyMessage.textContent=
-data.nickname+
+lobbyMessage.textContent =
+
+data.nickname +
 " вошёл в лобби";
 
 }
 
 
-/* LOBBY STATE */
+/* =========================
+LOBBY STATE
+========================= */
 
 if(
-data.type===
+data.type ===
 "lobbyState"
 ){
 
-currentLobbyMembers=
-data.members||[];
+currentLobbyMembers =
+data.members ||
+[];
 
-lobbyLeaderID=
-data.leaderID??null;
+
+lobbyLeaderID =
+data.leaderID ??
+null;
+
+
+lobbyBotsEnabled =
+data.botsEnabled !==
+false;
+
+
+teamAssignments =
+data.teams ||
+teamAssignments;
+
 
 renderLobbyMembers(
 currentLobbyMembers
 );
 
-updateLobbyLeaderControls();
 
+updateLobbyControls();
 
-if(data.inLobby){
-
-lobbyMessage.textContent=
-currentLobbyMembers.length>=2
-?"Лобби готово"
-:"Ожидание второго игрока";
-
-}
-
-}
-
-
-/* COUNTDOWN */
 
 if(
-data.type===
-"lobbyCountdown"
+data.inLobby
 ){
 
-showLobbyCountdown(
-Number(data.startAt)
+lobbyMessage.textContent =
+
+currentLobbyMembers.length >= 2
+
+?
+
+"Лобби готово"
+
+:
+
+"Ожидание второго игрока";
+
+}
+
+}
+
+
+/* =========================
+ВЫБОР КОМАНД
+========================= */
+
+if(
+data.type ===
+"teamSelectionStart"
+){
+
+teamSelectionActive =
+true;
+
+
+teamAssignments =
+{};
+
+
+myTeam =
+null;
+
+
+teamSelectPopup.style.display =
+"flex";
+
+
+updateTeamButtons();
+
+}
+
+
+/* СОСТОЯНИЕ КОМАНД */
+
+if(
+data.type ===
+"teamState"
+){
+
+teamAssignments =
+data.teams ||
+{};
+
+
+if(
+data.members
+){
+
+currentLobbyMembers =
+data.members;
+
+
+renderLobbyMembers(
+currentLobbyMembers
 );
 
 }
 
 
-/* START ONLINE */
+const mine =
+
+teamAssignments[
+String(
+myOnlineID
+)
+] ||
+
+teamAssignments[
+myOnlineID
+];
+
+
+if(mine){
+
+myTeam =
+mine;
+
+}
+
+
+updateTeamButtons();
+
+}
+
+
+/* ОШИБКА КОМАНДЫ */
 
 if(
-data.type===
+data.type ===
+"teamSelectError"
+){
+
+teamStatus.textContent =
+
+data.message ||
+"Эта сторона уже занята";
+
+}
+
+
+/* =========================
+LOBBY COUNTDOWN
+========================= */
+
+if(
+data.type ===
+"lobbyCountdown"
+){
+
+teamSelectPopup.style.display =
+"none";
+
+
+showLobbyCountdown(
+Number(
+data.startAt
+)
+);
+
+}
+
+
+/* =========================
+START ONLINE
+========================= */
+
+if(
+data.type ===
 "startGame"
 ){
 
-multiplayerMatch=
+multiplayerMatch =
 true;
+
+
+botsEnabled =
+data.botsEnabled !==
+false;
+
+
+myTeam =
+data.team ||
+null;
+
+
+teamSelectionActive =
+false;
+
+
+teamSelectPopup.style.display =
+"none";
+
 
 clearRemotePlayers();
 
 
-if(data.spawn){
+if(
+data.spawn
+){
 
-player.x=
-Number(data.spawn.x)||1500;
+player.x =
+Number(
+data.spawn.x
+) ||
+1500;
 
-player.y=
-Number(data.spawn.y)||1500;
 
-player.angle=
-Number(data.spawn.angle)||0;
+player.y =
+Number(
+data.spawn.y
+) ||
+1500;
 
-player.hp=100;
+
+player.angle =
+Number(
+data.spawn.angle
+) ||
+0;
+
+
+player.hp =
+100;
 
 }
 
 
 for(
 const p
-of (data.players||[])
+of
+(
+data.players ||
+[]
+)
 ){
 
 if(
-Number(p.id)!==
-Number(myOnlineID)
+Number(
+p.id
+) !==
+Number(
+myOnlineID
+)
 ){
 
 upsertRemotePlayer(
@@ -2084,15 +4588,44 @@ p
 }
 
 
+if(
+myTeam ===
+"ct"
+){
+
+$("teamHUD").textContent =
+"🛡️ СПЕЦНАЗ";
+
+}else if(
+myTeam ===
+"t"
+){
+
+$("teamHUD").textContent =
+"💣 ТЕРРОРИСТЫ";
+
+}else{
+
+$("teamHUD").textContent =
+"МАТЧ";
+
+}
+
+
+resetEnemiesForMatch();
+
+
 launchLobbyGame();
 
 }
 
 
-/* REMOTE STATE */
+/* =========================
+REMOTE STATE
+========================= */
 
 if(
-data.type===
+data.type ===
 "remotePlayerState"
 ){
 
@@ -2106,7 +4639,7 @@ data
 /* REMOTE SHOT */
 
 if(
-data.type===
+data.type ===
 "remotePlayerShot"
 ){
 
@@ -2120,7 +4653,7 @@ data.id
 /* REMOTE LEFT */
 
 if(
-data.type===
+data.type ===
 "remotePlayerLeft"
 ){
 
@@ -2130,7 +4663,56 @@ data.id
 
 }
 
+
+/* =========================
+PVP HITMARK
+========================= */
+
+if(
+data.type ===
+"hitConfirmed"
+){
+
+showHit();
+
+
+if(
+data.killed
+){
+
+kills++;
+
 }
+
+}
+
+
+/* =========================
+PVP DAMAGE
+========================= */
+
+if(
+data.type ===
+"playerDamaged"
+){
+
+player.hp =
+
+Math.max(
+0,
+Number(
+data.hp
+) ||
+0
+);
+
+
+damageEffect();
+
+}
+
+}
+
 );
 
 }
@@ -2139,41 +4721,68 @@ data.id
 connectOnline();
 
 
-/* FRIENDS */
+/* =========================
+ДРУЗЬЯ
+========================= */
 
-function renderFriends(friends){
+function renderFriends(
+friends
+){
 
-friendsList.innerHTML="";
+friendsList.innerHTML =
+"";
 
-if(!friends.length){
 
-friendsList.innerHTML=
-'<div style="color:#ffffff77;padding:8px 0">Список пуст</div>';
+if(
+!friends.length
+){
+
+friendsList.innerHTML =
+
+'<div style="color:#ffffff77;padding:8px 0">'+
+'Список пуст'+
+'</div>';
+
 
 return;
 
 }
 
 
-for(const f of friends){
+for(
+const f
+of friends
+){
 
-const item=
+const item =
+
 document.createElement(
 "div"
 );
 
-item.className=
+
+item.className =
 "friendItem";
 
-item.innerHTML=
-'<div><b>'+
-escapeHTML(f.nickname)+
-'</b><br>'+
+
+item.innerHTML =
+
+'<div>'+
+'<b>'+
+escapeHTML(
+f.nickname
+)+
+'</b>'+
+'<br>'+
 '<span style="font-size:11px;color:#ffffff88">'+
 'ID: '+
 f.id+
-'</span></div>'+
-'<div class="friendOnline">● ONLINE</div>';
+'</span>'+
+'</div>'+
+'<div class="friendOnline">'+
+'● ONLINE'+
+'</div>';
+
 
 friendsList.appendChild(
 item
@@ -2184,70 +4793,112 @@ item
 }
 
 
-function renderLobbyFriends(friends){
+/* =========================
+ДРУЗЬЯ В ЛОББИ
+========================= */
 
-lobbyFriendsList.innerHTML="";
+function renderLobbyFriends(
+friends
+){
 
-if(!friends.length){
+lobbyFriendsList.innerHTML =
+"";
 
-lobbyFriendsList.innerHTML=
-'<div style="color:#ffffff77;font-size:12px">Нет друзей онлайн</div>';
+
+if(
+!friends.length
+){
+
+lobbyFriendsList.innerHTML =
+
+'<div style="color:#ffffff77;font-size:12px">'+
+'Нет друзей онлайн'+
+'</div>';
+
 
 return;
 
 }
 
 
-for(const f of friends){
+for(
+const f
+of friends
+){
 
-const item=
+const item =
+
 document.createElement(
 "div"
 );
 
-item.className=
+
+item.className =
 "lobbyFriendItem";
 
-item.innerHTML=
+
+item.innerHTML =
+
 '<div class="lobbyFriendTop">'+
 '<div>'+
 '<div class="lobbyFriendName">'+
-escapeHTML(f.nickname)+
+escapeHTML(
+f.nickname
+)+
 '</div>'+
-'<div style="font-size:10px;color:#ffffff77">ID: '+
+'<div style="font-size:10px;color:#ffffff77">'+
+'ID: '+
 f.id+
 '</div>'+
 '</div>'+
-'<div class="lobbyFriendStatus">● ONLINE</div>'+
+'<div class="lobbyFriendStatus">'+
+'● ONLINE'+
+'</div>'+
 '</div>';
 
 
-const button=
+const button =
+
 document.createElement(
 "button"
 );
 
-button.className=
+
+button.className =
 "inviteLobbyButton";
 
-button.textContent=
+
+button.textContent =
 "ПРИГЛАСИТЬ В ЛОББИ";
 
 
 button.addEventListener(
+
 "touchstart",
+
 e=>{
 
 e.preventDefault();
+
 e.stopPropagation();
 
+
 sendOnline({
-type:"inviteToLobby",
-id:f.id
+
+type:
+"inviteToLobby",
+
+id:
+f.id
+
 });
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
@@ -2257,23 +4908,31 @@ button
 
 
 item.addEventListener(
+
 "touchstart",
+
 e=>{
 
 if(
 e.target.closest(
 ".inviteLobbyButton"
 )
-)
+){
+
 return;
+
+}
+
 
 e.preventDefault();
 
 
 document
+
 .querySelectorAll(
 ".lobbyFriendItem"
 )
+
 .forEach(
 x=>
 x.classList.remove(
@@ -2287,7 +4946,11 @@ item.classList.add(
 );
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
@@ -2300,80 +4963,160 @@ item
 }
 
 
-/* PARTY SOLDIER */
+/* =========================
+ПЕРСОНАЖ В ЛОББИ
+========================= */
 
-function createPartySoldier(nickname){
+function createPartySoldier(
+member
+){
 
-const s=
+const s =
+
 document.createElement(
 "div"
 );
 
-s.className=
+
+s.className =
 "partySoldier";
 
-s.innerHTML=
-'<div class="partyHead"></div>'+
-'<div class="partyHelmet"></div>'+
-'<div class="partyHelmetFront"></div>'+
-'<div class="partyNeck"></div>'+
-'<div class="partyArm left"></div>'+
-'<div class="partyArm right"></div>'+
-'<div class="partyBody"></div>'+
-'<div class="partyVest"></div>'+
-'<div class="partyLeg left"></div>'+
-'<div class="partyLeg right"></div>'+
-'<div class="partyPlayerName">'+
-escapeHTML(nickname)+
+
+let teamText =
+"";
+
+
+if(
+member.team ===
+"ct"
+){
+
+teamText =
+'<div style="font-size:9px;color:#70baff;margin-top:2px">'+
+'СПЕЦНАЗ'+
 '</div>';
+
+}
+
+
+if(
+member.team ===
+"t"
+){
+
+teamText =
+'<div style="font-size:9px;color:#ffae5d;margin-top:2px">'+
+'ТЕРРОРИСТ'+
+'</div>';
+
+}
+
+
+s.innerHTML =
+
+'<div class="partyHead"></div>'+
+
+'<div class="partyHelmet"></div>'+
+
+'<div class="partyHelmetFront"></div>'+
+
+'<div class="partyNeck"></div>'+
+
+'<div class="partyArm left"></div>'+
+
+'<div class="partyArm right"></div>'+
+
+'<div class="partyBody"></div>'+
+
+'<div class="partyVest"></div>'+
+
+'<div class="partyLeg left"></div>'+
+
+'<div class="partyLeg right"></div>'+
+
+'<div class="partyPlayerName">'+
+
+escapeHTML(
+member.nickname
+)+
+
+teamText+
+
+'</div>';
+
 
 return s;
 
 }
 
 
-function renderLobbyMembers(members){
+/* =========================
+ОТОБРАЖЕНИЕ ЛОББИ
+========================= */
 
-const a=
+function renderLobbyMembers(
+members
+){
+
+const a =
 $("partySlot1");
 
-const b=
+
+const b =
 $("partySlot2");
 
-a.innerHTML="";
-b.innerHTML="";
+
+a.innerHTML =
+"";
+
+
+b.innerHTML =
+"";
+
 
 a.classList.remove(
 "empty"
 );
+
 
 b.classList.remove(
 "empty"
 );
 
 
-const first=
-members[0]||
+const first =
+
+members[0] ||
+
 {
 nickname:
-myNickname||
-"Игрок"
+myNickname ||
+"Игрок",
+
+team:
+null
 };
 
 
 a.appendChild(
+
 createPartySoldier(
-first.nickname
+first
 )
+
 );
 
 
-if(members[1]){
+if(
+members[1]
+){
 
 b.appendChild(
+
 createPartySoldier(
-members[1].nickname
+members[1]
 )
+
 );
 
 }else{
@@ -2382,46 +5125,95 @@ b.classList.add(
 "empty"
 );
 
-b.innerHTML=
-'<div style="font-size:55px;color:#ffffff55;margin:auto">+</div>';
+
+b.innerHTML =
+
+'<div style="font-size:55px;color:#ffffff55;margin:auto">'+
+'+'+
+'</div>';
 
 }
 
 }
 
 
-/* ==========================
-ЛИДЕР ЛОББИ
-========================== */
+/* =========================
+ЛИДЕР
+========================= */
 
 function isLobbyLeader(){
 
 return(
-lobbyLeaderID!==null &&
-Number(lobbyLeaderID)===
-Number(myOnlineID)
+
+lobbyLeaderID !==
+null
+
+&&
+
+Number(
+lobbyLeaderID
+) ===
+Number(
+myOnlineID
+)
+
 );
 
 }
 
 
-function updateLobbyLeaderControls(){
+/* =========================
+КНОПКИ ЛОББИ
+========================= */
+
+function updateLobbyControls(){
+
+const leader =
+isLobbyLeader();
+
+
+/* BOTS */
+
+botsControl.textContent =
+
+lobbyBotsEnabled
+
+?
+
+"БОТЫ: ВКЛ"
+
+:
+
+"БОТЫ: ВЫКЛ";
+
+
+botsControl.classList.toggle(
+"off",
+!lobbyBotsEnabled
+);
+
+
+botsControl.disabled =
+!leader;
+
+
+/* PLAY */
 
 if(
-currentLobbyMembers.length<2
+currentLobbyMembers.length < 2
 ){
 
-lobbyPlayButton.disabled=
+lobbyPlayButton.disabled =
 false;
 
-lobbyPlayButton.style.opacity=
+
+lobbyPlayButton.style.opacity =
 "1";
 
-lobbyPlayButton.style.background=
-"#22b94b";
 
-lobbyPlayButton.textContent=
+lobbyPlayButton.textContent =
 "ИГРАТЬ";
+
 
 return;
 
@@ -2429,33 +5221,31 @@ return;
 
 
 if(
-isLobbyLeader()
+leader
 ){
 
-lobbyPlayButton.disabled=
+lobbyPlayButton.disabled =
 false;
 
-lobbyPlayButton.style.opacity=
+
+lobbyPlayButton.style.opacity =
 "1";
 
-lobbyPlayButton.style.background=
-"#22b94b";
 
-lobbyPlayButton.textContent=
+lobbyPlayButton.textContent =
 "ИГРАТЬ";
 
 }else{
 
-lobbyPlayButton.disabled=
+lobbyPlayButton.disabled =
 true;
 
-lobbyPlayButton.style.opacity=
+
+lobbyPlayButton.style.opacity =
 ".55";
 
-lobbyPlayButton.style.background=
-"#56615a";
 
-lobbyPlayButton.textContent=
+lobbyPlayButton.textContent =
 "ЖДЁМ ЛИДЕРА";
 
 }
@@ -2463,143 +5253,483 @@ lobbyPlayButton.textContent=
 }
 
 
-/* PROFILE BUTTONS */
+/* =========================
+КОМАНДЫ
+========================= */
+
+function updateTeamButtons(){
+
+let ctOwner =
+null;
+
+
+let tOwner =
+null;
+
+
+for(
+const id
+in teamAssignments
+){
+
+if(
+teamAssignments[id] ===
+"ct"
+){
+
+ctOwner =
+id;
+
+}
+
+
+if(
+teamAssignments[id] ===
+"t"
+){
+
+tOwner =
+id;
+
+}
+
+}
+
+
+teamCT.disabled =
+
+ctOwner !==
+null
+
+&&
+
+Number(
+ctOwner
+) !==
+Number(
+myOnlineID
+);
+
+
+teamT.disabled =
+
+tOwner !==
+null
+
+&&
+
+Number(
+tOwner
+) !==
+Number(
+myOnlineID
+);
+
+
+teamCT.classList.toggle(
+
+"selected",
+
+myTeam ===
+"ct"
+
+);
+
+
+teamT.classList.toggle(
+
+"selected",
+
+myTeam ===
+"t"
+
+);
+
+
+if(
+myTeam ===
+"ct"
+){
+
+teamStatus.textContent =
+
+"Ты выбрал СПЕЦНАЗ. Ждём второго игрока...";
+
+}else if(
+myTeam ===
+"t"
+){
+
+teamStatus.textContent =
+
+"Ты выбрал ТЕРРОРИСТОВ. Ждём второго игрока...";
+
+}else{
+
+teamStatus.textContent =
+"Выбери сторону";
+
+}
+
+}
+
+
+/* =========================
+PROFILE BUTTONS
+========================= */
 
 saveNickname.addEventListener(
+
 "touchstart",
+
 e=>{
 
 e.preventDefault();
 
-const n=
+
+const n =
+
 nicknameInput.value.trim();
+
 
 if(n){
 
 sendOnline({
-type:"setNickname",
-nickname:n
+
+type:
+"setNickname",
+
+nickname:
+n
+
 });
 
 }
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
 findFriendButton.addEventListener(
+
 "touchstart",
+
 e=>{
 
 e.preventDefault();
 
-const id=
+
+const id =
+
 Number(
 friendIDInput.value
 );
 
+
 if(id){
 
 sendOnline({
-type:"findPlayer",
-id:id
+
+type:
+"findPlayer",
+
+id:
+id
+
 });
 
 }
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
 addFriendButton.addEventListener(
+
 "touchstart",
-e=>{
 
-e.preventDefault();
-
-if(foundFriendID){
-
-sendOnline({
-type:"addFriend",
-id:foundFriendID
-});
-
-}
-
-},
-{passive:false}
-);
-
-
-acceptLobbyInvite.addEventListener(
-"touchstart",
-e=>{
-
-e.preventDefault();
-
-if(incomingLobbyFromID){
-
-sendOnline({
-type:"acceptLobbyInvite",
-fromID:
-incomingLobbyFromID
-});
-
-}
-
-lobbyInvitePopup.style.display=
-"none";
-
-incomingLobbyFromID=null;
-
-showLobbyPage();
-
-},
-{passive:false}
-);
-
-
-declineLobbyInvite.addEventListener(
-"touchstart",
-e=>{
-
-e.preventDefault();
-
-if(incomingLobbyFromID){
-
-sendOnline({
-type:"declineLobbyInvite",
-fromID:
-incomingLobbyFromID
-});
-
-}
-
-lobbyInvitePopup.style.display=
-"none";
-
-incomingLobbyFromID=null;
-
-},
-{passive:false}
-);
-
-
-lobbyPlayButton.addEventListener(
-"touchstart",
 e=>{
 
 e.preventDefault();
 
 
 if(
-currentLobbyMembers.length<2
+foundFriendID
 ){
 
-lobbyMessage.textContent=
+sendOnline({
+
+type:
+"addFriend",
+
+id:
+foundFriendID
+
+});
+
+}
+
+},
+
+{
+passive:false
+}
+
+);
+
+
+/* =========================
+БОТЫ
+========================= */
+
+botsControl.addEventListener(
+
+"touchstart",
+
+e=>{
+
+e.preventDefault();
+
+
+if(
+!isLobbyLeader()
+){
+
+lobbyMessage.textContent =
+
+"Только лидер может менять ботов";
+
+
+return;
+
+}
+
+
+sendOnline({
+
+type:
+"setBotsEnabled",
+
+enabled:
+!lobbyBotsEnabled
+
+});
+
+},
+
+{
+passive:false
+}
+
+);
+
+
+/* =========================
+ВЫБОР CT
+========================= */
+
+teamCT.addEventListener(
+
+"touchstart",
+
+e=>{
+
+e.preventDefault();
+
+
+if(
+!teamSelectionActive
+){
+
+return;
+
+}
+
+
+sendOnline({
+
+type:
+"selectTeam",
+
+team:
+"ct"
+
+});
+
+},
+
+{
+passive:false
+}
+
+);
+
+
+/* =========================
+ВЫБОР T
+========================= */
+
+teamT.addEventListener(
+
+"touchstart",
+
+e=>{
+
+e.preventDefault();
+
+
+if(
+!teamSelectionActive
+){
+
+return;
+
+}
+
+
+sendOnline({
+
+type:
+"selectTeam",
+
+team:
+"t"
+
+});
+
+},
+
+{
+passive:false
+}
+
+);
+
+
+/* =========================
+ACCEPT INVITE
+========================= */
+
+acceptLobbyInvite.addEventListener(
+
+"touchstart",
+
+e=>{
+
+e.preventDefault();
+
+
+if(
+incomingLobbyFromID
+){
+
+sendOnline({
+
+type:
+"acceptLobbyInvite",
+
+fromID:
+incomingLobbyFromID
+
+});
+
+}
+
+
+lobbyInvitePopup.style.display =
+"none";
+
+
+incomingLobbyFromID =
+null;
+
+
+showLobbyPage();
+
+},
+
+{
+passive:false
+}
+
+);
+
+
+/* DECLINE */
+
+declineLobbyInvite.addEventListener(
+
+"touchstart",
+
+e=>{
+
+e.preventDefault();
+
+
+if(
+incomingLobbyFromID
+){
+
+sendOnline({
+
+type:
+"declineLobbyInvite",
+
+fromID:
+incomingLobbyFromID
+
+});
+
+}
+
+
+lobbyInvitePopup.style.display =
+"none";
+
+
+incomingLobbyFromID =
+null;
+
+},
+
+{
+passive:false
+}
+
+);
+
+
+/* =========================
+PLAY ONLINE
+========================= */
+
+lobbyPlayButton.addEventListener(
+
+"touchstart",
+
+e=>{
+
+e.preventDefault();
+
+
+if(
+currentLobbyMembers.length <
+2
+){
+
+lobbyMessage.textContent =
 "Сначала пригласи друга";
+
 
 return;
 
@@ -2610,8 +5740,10 @@ if(
 !isLobbyLeader()
 ){
 
-lobbyMessage.textContent=
+lobbyMessage.textContent =
+
 "Только лидер лобби может начать матч";
+
 
 return;
 
@@ -2619,134 +5751,791 @@ return;
 
 
 sendOnline({
-type:"startLobbyGame"
+type:
+"startLobbyGame"
 });
 
 
-lobbyMessage.textContent=
-"Запускаем матч...";
+lobbyMessage.textContent =
+"Выбираем команды...";
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
+/* =========================
+LEAVE LOBBY
+========================= */
+
 lobbyLeaveButton.addEventListener(
+
 "touchstart",
+
 e=>{
 
 e.preventDefault();
 
+
 sendOnline({
-type:"leaveLobby"
+type:
+"leaveLobby"
 });
 
-currentLobbyMembers=[];
 
-lobbyLeaderID=null;
+currentLobbyMembers =
+[];
 
-renderLobbyMembers([]);
 
-updateLobbyLeaderControls();
+lobbyLeaderID =
+null;
 
-},
-{passive:false}
+
+teamAssignments =
+{};
+
+
+renderLobbyMembers(
+[]
 );
 
 
-/* PLAYER */
+updateLobbyControls();
 
-const player={
-x:1500,
-y:1500,
-angle:0,
-hp:100
+},
+
+{
+passive:false
+}
+
+);
+
+
+/* =========================
+PLAYER
+========================= */
+
+const player = {
+
+x:
+1500,
+
+y:
+1500,
+
+angle:
+0,
+
+hp:
+100
+
 };
 
-const MAP_W=3000;
-const MAP_H=3000;
 
-let cameraPitch=0;
-const MAX_PITCH=65;
+const MAP_W =
+3000;
 
 
-function blocked(x,y){
+const MAP_H =
+3000;
 
-const r=28;
 
-return(
-x<r||
-y<r||
-x>MAP_W-r||
-y>MAP_H-r
+let cameraPitch =
+0;
+
+
+const MAX_PITCH =
+65;
+
+
+/* =========================
+КАРТА
+========================= */
+
+const worldObjects = [
+
+
+/* ВЕРХНЯЯ ЧАСТЬ */
+
+{
+x:470,
+y:500,
+w:510,
+h:320,
+height:300,
+kind:"brick windows",
+name:"APARTMENTS"
+},
+
+
+{
+x:1280,
+y:460,
+w:430,
+h:300,
+height:270,
+kind:"concrete windows",
+name:"OFFICE"
+},
+
+
+{
+x:2280,
+y:520,
+w:520,
+h:330,
+height:285,
+kind:"warehouse",
+name:"WAREHOUSE"
+},
+
+
+/* ЛЕВАЯ СТОРОНА */
+
+{
+x:430,
+y:1430,
+w:350,
+h:620,
+height:260,
+kind:"concrete windows",
+name:"BLOCK A"
+},
+
+
+/* ПРАВАЯ СТОРОНА */
+
+{
+x:2560,
+y:1440,
+w:350,
+h:610,
+height:275,
+kind:"brick windows",
+name:"BLOCK B"
+},
+
+
+/* НИЗ */
+
+{
+x:730,
+y:2460,
+w:650,
+h:350,
+height:230,
+kind:"warehouse",
+name:"GARAGE"
+},
+
+
+{
+x:2100,
+y:2450,
+w:700,
+h:360,
+height:290,
+kind:"brick windows",
+name:"HOTEL"
+},
+
+
+/* ЦЕНТРАЛЬНЫЕ СТЕНЫ */
+
+{
+x:1470,
+y:1120,
+w:610,
+h:80,
+height:100,
+kind:"wall",
+name:""
+},
+
+
+{
+x:1470,
+y:1900,
+w:610,
+h:80,
+height:100,
+kind:"wall",
+name:""
+},
+
+
+{
+x:1050,
+y:1510,
+w:80,
+h:520,
+height:105,
+kind:"wall",
+name:""
+},
+
+
+{
+x:1940,
+y:1510,
+w:80,
+h:520,
+height:105,
+kind:"wall",
+name:""
+},
+
+
+/* КОНТЕЙНЕРЫ */
+
+{
+x:1340,
+y:1480,
+w:200,
+h:115,
+height:125,
+kind:"container",
+name:""
+},
+
+
+{
+x:1645,
+y:1560,
+w:200,
+h:115,
+height:125,
+kind:"container",
+name:""
+},
+
+
+/* ДОПОЛНИТЕЛЬНЫЕ УКРЫТИЯ */
+
+{
+x:760,
+y:1120,
+w:260,
+h:80,
+height:90,
+kind:"wall",
+name:""
+},
+
+
+{
+x:2220,
+y:1900,
+w:260,
+h:80,
+height:90,
+kind:"wall",
+name:""
+},
+
+
+{
+x:1500,
+y:2450,
+w:180,
+h:115,
+height:125,
+kind:"container",
+name:""
+}
+
+];
+
+
+/* =========================
+КОЛЛИЗИИ
+========================= */
+
+function blocked(
+x,
+y
+){
+
+const r =
+28;
+
+
+if(
+x < r ||
+y < r ||
+x > MAP_W-r ||
+y > MAP_H-r
+){
+
+return true;
+
+}
+
+
+for(
+const o
+of worldObjects
+){
+
+if(
+
+x >
+o.x -
+o.w/2 -
+r
+
+&&
+
+x <
+o.x +
+o.w/2 +
+r
+
+&&
+
+y >
+o.y -
+o.h/2 -
+r
+
+&&
+
+y <
+o.y +
+o.h/2 +
+r
+
+){
+
+return true;
+
+}
+
+}
+
+
+return false;
+
+}
+
+
+/* =========================
+СОЗДАТЬ КАРТУ
+========================= */
+
+function createWorld(){
+
+for(
+const o
+of worldObjects
+){
+
+const el =
+
+document.createElement(
+"div"
+);
+
+
+el.className =
+
+"worldObject " +
+o.kind;
+
+
+if(
+o.name
+){
+
+const sign =
+
+document.createElement(
+"div"
+);
+
+
+sign.className =
+"worldSign";
+
+
+sign.textContent =
+o.name;
+
+
+el.appendChild(
+sign
 );
 
 }
 
 
-/* REMOTE PLAYER */
+$("game").appendChild(
+el
+);
 
-function makeRemoteElement(p){
 
-const el=
+o.el =
+el;
+
+}
+
+}
+
+
+createWorld();
+
+
+/* =========================
+ОТРИСОВКА КАРТЫ
+========================= */
+
+function updateWorld(){
+
+for(
+const o
+of worldObjects
+){
+
+const dx =
+o.x -
+player.x;
+
+
+const dy =
+o.y -
+player.y;
+
+
+const d =
+
+Math.hypot(
+dx,
+dy
+);
+
+
+let rel =
+
+Math.atan2(
+dy,
+dx
+) -
+player.angle;
+
+
+rel =
+
+Math.atan2(
+Math.sin(rel),
+Math.cos(rel)
+);
+
+
+/* ПОЗАДИ */
+
+if(
+Math.abs(rel) >
+1.62
+
+||
+
+d <
+40
+
+||
+
+d >
+3300
+){
+
+o.el.style.display =
+"none";
+
+
+continue;
+
+}
+
+
+/* ГОРИЗОНТАЛЬНАЯ ПОЗИЦИЯ */
+
+const sx =
+
+innerWidth/2 +
+
+Math.tan(rel) *
+
+innerWidth *
+.55;
+
+
+/* МАСШТАБ */
+
+const perspective =
+
+72000 /
+
+Math.max(
+130,
+d
+);
+
+
+const width =
+
+Math.max(
+
+30,
+
+Math.min(
+
+innerWidth *
+.9,
+
+perspective *
+(
+o.w /
+300
+)
+
+)
+
+);
+
+
+const height =
+
+Math.max(
+
+25,
+
+Math.min(
+
+innerHeight *
+.9,
+
+perspective *
+(
+o.height /
+180
+)
+
+)
+
+);
+
+
+/* ВЫВОД */
+
+o.el.style.display =
+"block";
+
+
+o.el.style.left =
+sx +
+"px";
+
+
+o.el.style.top =
+
+(
+innerHeight *
+.58 +
+
+cameraPitch *
+4
+) +
+"px";
+
+
+o.el.style.width =
+width +
+"px";
+
+
+o.el.style.height =
+height +
+"px";
+
+
+o.el.style.zIndex =
+
+String(
+
+Math.max(
+
+10,
+
+50 -
+Math.floor(
+d /
+90
+)
+
+)
+
+);
+
+}
+
+}
+
+
+/* =========================
+REMOTE PLAYER
+========================= */
+
+function makeRemoteElement(
+p
+){
+
+const el =
+
 document.createElement(
 "div"
 );
 
-el.className=
-"remotePlayer";
 
-el.innerHTML=
+el.className =
+
+"remotePlayer " +
+(
+p.team ||
+""
+);
+
+
+el.innerHTML =
+
 '<div class="remotePlayerName">'+
 escapeHTML(
-p.nickname||"Игрок"
+p.nickname ||
+"Игрок"
 )+
 '</div>'+
+
 '<div class="remotePlayerHP">'+
-'<div class="remotePlayerHPInner"></div>'+
+'<div class="remotePlayerHPInner">'+
 '</div>'+
-'<div class="remotePlayerHelmet"></div>'+
-'<div class="remotePlayerHead"></div>'+
-'<div class="remotePlayerBody"></div>'+
-'<div class="remotePlayerGun"></div>'+
-'<div class="remotePlayerWeapon">🔫</div>';
+'</div>'+
+
+'<div class="remotePlayerHelmet">'+
+'</div>'+
+
+'<div class="remotePlayerHead">'+
+'</div>'+
+
+'<div class="remotePlayerBody">'+
+'</div>'+
+
+'<div class="remotePlayerGun">'+
+'</div>'+
+
+'<div class="remotePlayerWeapon">'+
+'🔫'+
+'</div>';
+
 
 $("game").appendChild(
 el
 );
+
 
 return el;
 
 }
 
 
-function upsertRemotePlayer(p){
+/* =========================
+UPDATE REMOTE
+========================= */
+
+function upsertRemotePlayer(
+p
+){
 
 if(
-Number(p.id)===
-Number(myOnlineID)
+Number(
+p.id
+) ===
+Number(
+myOnlineID
 )
+){
+
 return;
 
+}
 
-let r=
+
+let r =
+
 remotePlayers.get(
-Number(p.id)
+Number(
+p.id
+)
 );
 
 
-if(!r){
+if(
+!r
+){
 
-r={
-id:Number(p.id),
-nickname:p.nickname||"Игрок",
-x:Number(p.x)||1500,
-y:Number(p.y)||1500,
-angle:Number(p.angle)||0,
-hp:Number(p.hp)||100,
-weapon:p.weapon||"rifle",
-el:makeRemoteElement(p),
-shotFlash:0
+r = {
+
+id:
+Number(
+p.id
+),
+
+nickname:
+p.nickname ||
+"Игрок",
+
+x:
+Number(
+p.x
+) ||
+1500,
+
+y:
+Number(
+p.y
+) ||
+1500,
+
+angle:
+Number(
+p.angle
+) ||
+0,
+
+hp:
+Number(
+p.hp
+) ||
+100,
+
+weapon:
+p.weapon ||
+"rifle",
+
+team:
+p.team ||
+null,
+
+el:
+makeRemoteElement(
+p
+),
+
+shotFlash:
+0
+
 };
 
 
@@ -2757,50 +6546,115 @@ r
 
 }else{
 
-r.nickname=
-p.nickname||
+r.nickname =
+p.nickname ||
 r.nickname;
-
-r.x=
-Number(p.x);
-
-r.y=
-Number(p.y);
-
-r.angle=
-Number(p.angle);
 
 
 if(
 Number.isFinite(
-Number(p.hp)
+Number(
+p.x
+)
 )
 ){
 
-r.hp=
-Number(p.hp);
-
-}
-
-
-r.weapon=
-p.weapon||
-r.weapon;
-
-}
-
-}
-
-
-function removeRemotePlayer(id){
-
-const r=
-remotePlayers.get(
-Number(id)
+r.x =
+Number(
+p.x
 );
 
+}
+
+
 if(
-r&&
+Number.isFinite(
+Number(
+p.y
+)
+)
+){
+
+r.y =
+Number(
+p.y
+);
+
+}
+
+
+if(
+Number.isFinite(
+Number(
+p.angle
+)
+)
+){
+
+r.angle =
+Number(
+p.angle
+);
+
+}
+
+
+if(
+Number.isFinite(
+Number(
+p.hp
+)
+)
+){
+
+r.hp =
+Number(
+p.hp
+);
+
+}
+
+
+r.weapon =
+p.weapon ||
+r.weapon;
+
+
+r.team =
+p.team ||
+r.team;
+
+
+r.el.className =
+
+"remotePlayer " +
+(
+r.team ||
+""
+);
+
+}
+
+}
+
+
+/* REMOVE REMOTE */
+
+function removeRemotePlayer(
+id
+){
+
+const r =
+
+remotePlayers.get(
+Number(
+id
+)
+);
+
+
+if(
+r &&
 r.el
 ){
 
@@ -2808,12 +6662,17 @@ r.el.remove();
 
 }
 
+
 remotePlayers.delete(
-Number(id)
+Number(
+id
+)
 );
 
 }
 
+
+/* CLEAR */
 
 function clearRemotePlayers(){
 
@@ -2822,7 +6681,9 @@ const r
 of remotePlayers.values()
 ){
 
-if(r.el){
+if(
+r.el
+){
 
 r.el.remove();
 
@@ -2830,29 +6691,47 @@ r.el.remove();
 
 }
 
+
 remotePlayers.clear();
 
 }
 
 
-function remoteShotEffect(id){
+/* SHOT EFFECT */
 
-const r=
+function remoteShotEffect(
+id
+){
+
+const r =
+
 remotePlayers.get(
-Number(id)
+Number(
+id
+)
 );
 
-if(!r)
+
+if(
+!r
+){
+
 return;
 
-r.shotFlash=
-performance.now()+
+}
+
+
+r.shotFlash =
+
+performance.now() +
 120;
 
 }
 
 
-/* DISPLAY REMOTE */
+/* =========================
+ОТОБРАЖЕНИЕ REMOTE
+========================= */
 
 function updateRemotePlayers(){
 
@@ -2861,28 +6740,37 @@ const r
 of remotePlayers.values()
 ){
 
-const dx=
-r.x-player.x;
+const dx =
 
-const dy=
-r.y-player.y;
+r.x -
+player.x;
 
-const d=
+
+const dy =
+
+r.y -
+player.y;
+
+
+const d =
+
 Math.hypot(
 dx,
 dy
 );
 
 
-let rel=
+let rel =
+
 Math.atan2(
 dy,
 dx
-)-
+) -
 player.angle;
 
 
-rel=
+rel =
+
 Math.atan2(
 Math.sin(rel),
 Math.cos(rel)
@@ -2890,195 +6778,357 @@ Math.cos(rel)
 
 
 if(
-Math.abs(rel)>
-Math.PI/2||
-d<25
+Math.abs(rel) >
+Math.PI/2
+
+||
+
+d <
+25
 ){
 
-r.el.style.display=
+r.el.style.display =
 "none";
+
 
 continue;
 
 }
 
 
-const sx=
-innerWidth/2+
-Math.tan(rel)*
-innerWidth*.55;
+const sx =
+
+innerWidth/2 +
+
+Math.tan(rel) *
+
+innerWidth *
+.55;
 
 
-const size=
+const size =
+
 Math.max(
+
 28,
+
 Math.min(
+
 190,
-70000/d
+
+70000 /
+d
+
 )
+
 );
 
 
-r.el.style.display=
+r.el.style.display =
 "block";
 
-r.el.style.left=
-sx+"px";
 
-r.el.style.top=
-(
-innerHeight*.57+
-cameraPitch*4
-)+"px";
-
-r.el.style.width=
-size+"px";
-
-r.el.style.height=
-size*2+
+r.el.style.left =
+sx +
 "px";
 
 
-r.el.querySelector(
+r.el.style.top =
+
+(
+innerHeight *
+.57 +
+
+cameraPitch *
+4
+) +
+"px";
+
+
+r.el.style.width =
+size +
+"px";
+
+
+r.el.style.height =
+
+size *
+2 +
+"px";
+
+
+r.el
+
+.querySelector(
 ".remotePlayerName"
-).textContent=
+)
+
+.textContent =
 r.nickname;
 
 
-r.el.querySelector(
+r.el
+
+.querySelector(
 ".remotePlayerHPInner"
-).style.width=
+)
+
+.style.width =
+
 Math.max(
 0,
 r.hp
-)+"%";
+) +
+"%";
 
 
-r.el.querySelector(
+r.el
+
+.querySelector(
 ".remotePlayerWeapon"
-).textContent=
-r.weapon==="knife"
-?"🔪"
-:"🔫";
+)
+
+.textContent =
+
+r.weapon ===
+"knife"
+
+?
+
+"🔪"
+
+:
+
+"🔫";
 
 
-r.el.style.filter=
-performance.now()<
+r.el.style.filter =
+
+performance.now() <
 r.shotFlash
-?"brightness(1.8)"
-:"none";
+
+?
+
+"brightness(1.8)"
+
+:
+
+"none";
 
 }
 
 }
 
 
-/* SEND PLAYER */
+/* =========================
+SEND PLAYER STATE
+========================= */
 
-function sendPlayerState(now){
+function sendPlayerState(
+now
+){
 
 if(
-!multiplayerMatch||
-!gameStarted||
-now-lastStateSend<50
-)
+!multiplayerMatch ||
+!gameStarted ||
+now -
+lastStateSend <
+50
+){
+
 return;
 
+}
 
-lastStateSend=
+
+lastStateSend =
 now;
 
 
 sendOnline({
-type:"playerState",
-x:player.x,
-y:player.y,
-angle:player.angle,
-hp:player.hp,
-weapon:currentWeapon
+
+type:
+"playerState",
+
+x:
+player.x,
+
+y:
+player.y,
+
+angle:
+player.angle,
+
+hp:
+player.hp,
+
+weapon:
+currentWeapon
+
 });
 
 }
 
 
-/* JOYSTICK */
+/* =========================
+JOYSTICK
+========================= */
 
-const joystick=$("joystick");
-const stick=$("stick");
-
-let joyX=0;
-let joyY=0;
-let joyID=null;
+const joystick =
+$("joystick");
 
 
-function setJoy(x,y){
+const stick =
+$("stick");
 
-const r=
+
+let joyX =
+0;
+
+
+let joyY =
+0;
+
+
+let joyID =
+null;
+
+
+function setJoy(
+x,
+y
+){
+
+const r =
+
 joystick.getBoundingClientRect();
 
-const cx=
-r.left+r.width/2;
 
-const cy=
-r.top+r.height/2;
+const cx =
 
-let dx=x-cx;
-let dy=y-cy;
-
-const max=40;
-
-const dist=
-Math.hypot(dx,dy);
+r.left +
+r.width/2;
 
 
-if(dist>max){
+const cy =
 
-dx=
-dx/dist*max;
+r.top +
+r.height/2;
 
-dy=
-dy/dist*max;
+
+let dx =
+x -
+cx;
+
+
+let dy =
+y -
+cy;
+
+
+const max =
+40;
+
+
+const dist =
+
+Math.hypot(
+dx,
+dy
+);
+
+
+if(
+dist >
+max
+){
+
+dx =
+dx/dist *
+max;
+
+
+dy =
+dy/dist *
+max;
 
 }
 
-joyX=dx/max;
-joyY=dy/max;
 
-stick.style.left=
-40+dx+"px";
+joyX =
+dx/max;
 
-stick.style.top=
-40+dy+"px";
+
+joyY =
+dy/max;
+
+
+stick.style.left =
+
+40 +
+dx +
+"px";
+
+
+stick.style.top =
+
+40 +
+dy +
+"px";
 
 }
 
 
 function resetJoy(){
 
-joyX=0;
-joyY=0;
-joyID=null;
+joyX =
+0;
 
-stick.style.left="40px";
-stick.style.top="40px";
+
+joyY =
+0;
+
+
+joyID =
+null;
+
+
+stick.style.left =
+"40px";
+
+
+stick.style.top =
+"40px";
 
 }
 
 
 joystick.addEventListener(
+
 "touchstart",
+
 e=>{
 
 e.preventDefault();
 
-if(joyID!==null)
+
+if(
+joyID !==
+null
+){
+
 return;
 
-const t=
+}
+
+
+const t =
 e.changedTouches[0];
 
-joyID=
+
+joyID =
 t.identifier;
+
 
 setJoy(
 t.clientX,
@@ -3086,20 +7136,30 @@ t.clientY
 );
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
 joystick.addEventListener(
+
 "touchmove",
+
 e=>{
 
 e.preventDefault();
 
-for(const t of e.changedTouches){
+
+for(
+const t
+of e.changedTouches
+){
 
 if(
-t.identifier===
+t.identifier ===
 joyID
 ){
 
@@ -3113,18 +7173,27 @@ t.clientY
 }
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
 joystick.addEventListener(
+
 "touchend",
+
 e=>{
 
-for(const t of e.changedTouches){
+for(
+const t
+of e.changedTouches
+){
 
 if(
-t.identifier===
+t.identifier ===
 joyID
 ){
 
@@ -3135,210 +7204,369 @@ resetJoy();
 }
 
 }
+
 );
 
 
 joystick.addEventListener(
+
 "touchcancel",
+
 resetJoy
+
 );
 
 
-/* CAMERA */
+/* =========================
+CAMERA
+========================= */
 
-let lookID=null;
-let lastLookX=0;
-let lastLookY=0;
+let lookID =
+null;
+
+
+let lastLookX =
+0;
+
+
+let lastLookY =
+0;
 
 
 document.addEventListener(
+
 "touchstart",
+
 e=>{
 
-for(const t of e.changedTouches){
-
-if(
-t.clientX>
-innerWidth*.42 &&
-!t.target.closest(
-"#fire,#reload,#joystick,#weaponSwitch,#menu"
-)
+for(
+const t
+of e.changedTouches
 ){
 
-lookID=t.identifier;
-lastLookX=t.clientX;
-lastLookY=t.clientY;
+if(
+
+t.clientX >
+innerWidth *
+.42
+
+&&
+
+!t.target.closest(
+
+"#fire,#reload,#joystick,#weaponSwitch,#menu"
+
+)
+
+){
+
+lookID =
+t.identifier;
+
+
+lastLookX =
+t.clientX;
+
+
+lastLookY =
+t.clientY;
 
 }
 
 }
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
 document.addEventListener(
+
 "touchmove",
+
 e=>{
 
-if(lookID===null)
+if(
+lookID ===
+null
+){
+
 return;
 
-for(const t of e.changedTouches){
+}
+
+
+for(
+const t
+of e.changedTouches
+){
 
 if(
-t.identifier===
+t.identifier ===
 lookID
 ){
 
 e.preventDefault();
 
-player.angle+=
+
+player.angle +=
+
 (
-t.clientX-
+t.clientX -
 lastLookX
-)*.008;
+) *
+.008;
 
 
-cameraPitch-=
+cameraPitch -=
+
 (
-t.clientY-
+t.clientY -
 lastLookY
-)*.35;
+) *
+.35;
 
 
-cameraPitch=
+cameraPitch =
+
 Math.max(
+
 -MAX_PITCH,
+
 Math.min(
+
 MAX_PITCH,
+
 cameraPitch
+
 )
+
 );
 
 
-lastLookX=t.clientX;
-lastLookY=t.clientY;
+lastLookX =
+t.clientX;
+
+
+lastLookY =
+t.clientY;
 
 }
 
 }
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
 document.addEventListener(
+
 "touchend",
+
 e=>{
 
-for(const t of e.changedTouches){
+for(
+const t
+of e.changedTouches
+){
 
 if(
-t.identifier===
+t.identifier ===
 lookID
 ){
 
-lookID=null;
+lookID =
+null;
 
 }
 
 }
 
 }
+
 );
 
 
-/* ==========================
+/* =========================
 WEAPONS
-========================== */
+========================= */
 
-let currentWeapon=
+let currentWeapon =
 "rifle";
 
-let ammo=30;
-let reserve=90;
-let kills=0;
+
+let ammo =
+30;
 
 
-function showWeapon(type){
+let reserve =
+90;
 
-$("gun").style.display=
-type==="rifle"
-?"block"
-:"none";
 
-$("barrel").style.display=
-type==="rifle"
-?"block"
-:"none";
+let kills =
+0;
 
-$("pistol").style.display=
-type==="pistol"
-?"block"
-:"none";
 
-$("knife").style.display=
-type==="knife"
-?"block"
-:"none";
+function showWeapon(
+type
+){
 
-$("ammo").style.display=
-type==="knife"
-?"none"
-:"block";
+$("gun").style.display =
 
-$("reload").style.display=
-type==="knife"
-?"none"
-:"block";
+type ===
+"rifle"
 
-$("fire").textContent=
-type==="knife"
-?"ATTACK"
-:"FIRE";
+?
 
-$("weaponSwipeIcon").textContent=
-type==="knife"
-?"🔪"
-:"🔫";
+"block"
+
+:
+
+"none";
+
+
+$("barrel").style.display =
+
+type ===
+"rifle"
+
+?
+
+"block"
+
+:
+
+"none";
+
+
+$("pistol").style.display =
+
+type ===
+"pistol"
+
+?
+
+"block"
+
+:
+
+"none";
+
+
+$("knife").style.display =
+
+type ===
+"knife"
+
+?
+
+"block"
+
+:
+
+"none";
+
+
+$("ammo").style.display =
+
+type ===
+"knife"
+
+?
+
+"none"
+
+:
+
+"block";
+
+
+$("reload").style.display =
+
+type ===
+"knife"
+
+?
+
+"none"
+
+:
+
+"block";
+
+
+$("fire").textContent =
+
+type ===
+"knife"
+
+?
+
+"ATTACK"
+
+:
+
+"FIRE";
+
+
+$("weaponSwipeIcon").textContent =
+
+type ===
+"knife"
+
+?
+
+"🔪"
+
+:
+
+"🔫";
 
 }
 
 
-/* ==========================
-АНИМИРОВАННОЕ ПЕРЕКЛЮЧЕНИЕ
-========================== */
+/* =========================
+АНИМАЦИЯ ОРУЖИЯ
+========================= */
 
-function switchWeapon(type){
+function switchWeapon(
+type
+){
 
 if(
-type===
+type ===
 currentWeapon
-)
+){
+
 return;
 
+}
 
-currentWeapon=
+
+currentWeapon =
 type;
 
 
-const weapon=
+const weapon =
 $("weapon");
 
 
 weapon.classList.remove(
-"weaponSwitching"
-);
 
-weapon.classList.remove(
+"weaponSwitching",
 "knifeDraw"
+
 );
 
-
-/* ПЕРЕЗАПУСК АНИМАЦИИ */
 
 void weapon.offsetWidth;
 
@@ -3348,10 +7576,9 @@ type
 );
 
 
-/* НОЖ */
-
 if(
-type==="knife"
+type ===
+"knife"
 ){
 
 weapon.classList.add(
@@ -3360,8 +7587,6 @@ weapon.classList.add(
 
 }else{
 
-/* АВТОМАТ + ПИСТОЛЕТ */
-
 weapon.classList.add(
 "weaponSwitching"
 );
@@ -3369,7 +7594,7 @@ weapon.classList.add(
 }
 
 
-/* СРАЗУ СООБЩАЕМ СЕРВЕРУ НОВОЕ ОРУЖИЕ */
+/* СРАЗУ СИНХРОНИЗИРУЕМ */
 
 if(
 multiplayerMatch &&
@@ -3377,30 +7602,45 @@ gameStarted
 ){
 
 sendOnline({
-type:"playerState",
-x:player.x,
-y:player.y,
-angle:player.angle,
-hp:player.hp,
-weapon:currentWeapon
+
+type:
+"playerState",
+
+x:
+player.x,
+
+y:
+player.y,
+
+angle:
+player.angle,
+
+hp:
+player.hp,
+
+weapon:
+currentWeapon
+
 });
 
 }
 
 
 setTimeout(
+
 ()=>{
 
 weapon.classList.remove(
-"weaponSwitching"
-);
 
-weapon.classList.remove(
+"weaponSwitching",
 "knifeDraw"
+
 );
 
 },
+
 900
+
 );
 
 }
@@ -3411,83 +7651,126 @@ showWeapon(
 );
 
 
-/* SWIPE WEAPON */
+/* =========================
+SWIPE WEAPON
+========================= */
 
-const weaponSwitch=
+const weaponSwitch =
 $("weaponSwitch");
 
-let weaponSwipeID=null;
-let sx0=0;
-let sy0=0;
+
+let weaponSwipeID =
+null;
+
+
+let sx0 =
+0;
+
+
+let sy0 =
+0;
 
 
 weaponSwitch.addEventListener(
+
 "touchstart",
+
 e=>{
 
 e.preventDefault();
 
-const t=
+
+const t =
 e.changedTouches[0];
 
-weaponSwipeID=
+
+weaponSwipeID =
 t.identifier;
 
-sx0=
+
+sx0 =
 t.clientX;
 
-sy0=
+
+sy0 =
 t.clientY;
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
 weaponSwitch.addEventListener(
+
 "touchend",
+
 e=>{
 
 e.preventDefault();
 
-for(const t of e.changedTouches){
+
+for(
+const t
+of e.changedTouches
+){
 
 if(
-t.identifier!==
+t.identifier !==
 weaponSwipeID
-)
+){
+
 continue;
 
+}
 
-const dx=
-t.clientX-
+
+const dx =
+t.clientX -
 sx0;
 
-const dy=
-t.clientY-
+
+const dy =
+t.clientY -
 sy0;
 
 
 if(
+
 Math.max(
+
 Math.abs(dx),
 Math.abs(dy)
-)>=25
+
+) >=
+25
+
 ){
 
 if(
-Math.abs(dx)>
+Math.abs(dx) >
 Math.abs(dy)
 ){
 
 switchWeapon(
-dx<0
-?"knife"
-:"pistol"
+
+dx < 0
+
+?
+
+"knife"
+
+:
+
+"pistol"
+
 );
 
 }else if(
-dy>0
+dy > 0
 ){
 
 switchWeapon(
@@ -3499,50 +7782,109 @@ switchWeapon(
 }
 
 
-weaponSwipeID=null;
+weaponSwipeID =
+null;
 
 }
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
-/* MOVE */
+/* =========================
+MOVE
+========================= */
 
-function updatePlayer(dt){
+function updatePlayer(
+dt
+){
 
-if(player.hp<=0)
+if(
+player.hp <=
+0
+){
+
 return;
 
-const speed=270;
+}
 
-const forward=-joyY;
-const strafe=joyX;
 
-const dx=
+const speed =
+270;
+
+
+const forward =
+-joyY;
+
+
+const strafe =
+joyX;
+
+
+const dx =
+
 (
-Math.cos(player.angle)*forward-
-Math.sin(player.angle)*strafe
-)*
-speed*
+
+Math.cos(
+player.angle
+) *
+forward
+
+-
+
+Math.sin(
+player.angle
+) *
+strafe
+
+)
+
+*
+
+speed *
 dt;
 
-const dy=
+
+const dy =
+
 (
-Math.sin(player.angle)*forward+
-Math.cos(player.angle)*strafe
-)*
-speed*
+
+Math.sin(
+player.angle
+) *
+forward
+
++
+
+Math.cos(
+player.angle
+) *
+strafe
+
+)
+
+*
+
+speed *
 dt;
 
 
-const nx=
-player.x+dx;
+const nx =
+player.x +
+dx;
 
-const ny=
-player.y+dy;
 
+const ny =
+player.y +
+dy;
+
+
+/* X */
 
 if(
 !blocked(
@@ -3551,10 +7893,13 @@ player.y
 )
 ){
 
-player.x=nx;
+player.x =
+nx;
 
 }
 
+
+/* Y */
 
 if(
 !blocked(
@@ -3563,50 +7908,116 @@ ny
 )
 ){
 
-player.y=ny;
+player.y =
+ny;
 
 }
 
 }
 
 
-/* BOTS */
+/* =========================
+BOTS
+========================= */
 
-const enemies=[
-{x:500,y:700,hp:100,el:null,attack:0,type:"normal"},
-{x:2500,y:700,hp:100,el:null,attack:0,type:"normal"},
-{x:500,y:2400,hp:100,el:null,attack:0,type:"fast"},
-{x:2500,y:2400,hp:100,el:null,attack:0,type:"fast"},
-{x:1500,y:2500,hp:100,el:null,attack:0,type:"normal"}
+const enemies = [
+
+{
+x:800,
+y:900,
+hp:100,
+el:null,
+attack:0,
+type:"normal"
+},
+
+{
+x:2200,
+y:900,
+hp:100,
+el:null,
+attack:0,
+type:"normal"
+},
+
+{
+x:700,
+y:2050,
+hp:100,
+el:null,
+attack:0,
+type:"fast"
+},
+
+{
+x:2300,
+y:2050,
+hp:100,
+el:null,
+attack:0,
+type:"fast"
+},
+
+{
+x:1500,
+y:2200,
+hp:100,
+el:null,
+attack:0,
+type:"normal"
+}
+
 ];
 
 
+/* =========================
+CREATE ENEMIES
+========================= */
+
 function createEnemies(){
 
-for(const e of enemies){
+for(
+const e
+of enemies
+){
 
-const el=
+const el =
+
 document.createElement(
 "div"
 );
 
-el.className=
-"enemy "+
+
+el.className =
+
+"enemy " +
 e.type;
 
-el.innerHTML=
+
+el.innerHTML =
+
 '<div class="enemyHP">'+
-'<div class="enemyHPInner"></div>'+
+'<div class="enemyHPInner">'+
 '</div>'+
-'<div class="enemyHead"></div>'+
-'<div class="enemyBody"></div>'+
-'<div class="enemyGun"></div>';
+'</div>'+
+
+'<div class="enemyHead">'+
+'</div>'+
+
+'<div class="enemyBody">'+
+'</div>'+
+
+'<div class="enemyGun">'+
+'</div>';
+
 
 $("game").appendChild(
 el
 );
 
-e.el=el;
+
+e.el =
+el;
 
 }
 
@@ -3616,84 +8027,196 @@ e.el=el;
 createEnemies();
 
 
-function respawnEnemy(e){
+/* =========================
+RESET BOTS
+========================= */
 
-e.x=
-150+
-Math.random()*
-(MAP_W-300);
+function resetEnemiesForMatch(){
 
-e.y=
-150+
-Math.random()*
-(MAP_H-300);
+for(
+const e
+of enemies
+){
 
-e.hp=100;
-e.attack=0;
+if(
+botsEnabled
+){
 
-e.type=
-Math.random()<.5
-?"normal"
-:"fast";
+respawnEnemy(
+e
+);
 
-e.el.className=
-"enemy "+
+}else{
+
+e.hp =
+0;
+
+
+e.el.style.display =
+"none";
+
+}
+
+}
+
+}
+
+
+/* =========================
+RESPAWN
+========================= */
+
+function respawnEnemy(
+e
+){
+
+let x;
+let y;
+
+
+let attempts =
+0;
+
+
+do{
+
+x =
+
+150 +
+
+Math.random() *
+
+(
+MAP_W -
+300
+);
+
+
+y =
+
+150 +
+
+Math.random() *
+
+(
+MAP_H -
+300
+);
+
+
+attempts++;
+
+}while(
+
+blocked(
+x,
+y
+)
+
+&&
+
+attempts <
+100
+
+);
+
+
+e.x =
+x;
+
+
+e.y =
+y;
+
+
+e.hp =
+100;
+
+
+e.attack =
+0;
+
+
+e.type =
+
+Math.random() <
+.5
+
+?
+
+"normal"
+
+:
+
+"fast";
+
+
+e.el.className =
+
+"enemy " +
 e.type;
 
-e.el.style.display=
+
+e.el.style.display =
 "block";
 
 }
 
 
+/* =========================
+WAVE
+========================= */
+
 function checkWave(){
 
 if(
-enemies.every(
-e=>
-e.hp<=0
-)
+!botsEnabled
 ){
 
-for(const e of enemies){
-
-respawnEnemy(e);
+return;
 
 }
-
-}
-
-}
-
-
-function showEnemy(e){
-
-const dx=
-e.x-player.x;
-
-const dy=
-e.y-player.y;
-
-const d=
-Math.hypot(dx,dy);
-
-let rel=
-Math.atan2(dy,dx)-
-player.angle;
-
-rel=
-Math.atan2(
-Math.sin(rel),
-Math.cos(rel)
-);
 
 
 if(
-Math.abs(rel)>
-Math.PI/2
+
+enemies.every(
+e =>
+e.hp <=
+0
+)
+
 ){
 
-e.el.style.display=
+for(
+const e
+of enemies
+){
+
+respawnEnemy(
+e
+);
+
+}
+
+}
+
+}
+
+
+/* =========================
+SHOW ENEMY
+========================= */
+
+function showEnemy(
+e
+){
+
+if(
+!botsEnabled
+){
+
+e.el.style.display =
 "none";
 
 return;
@@ -3701,155 +8224,358 @@ return;
 }
 
 
-const x=
-innerWidth/2+
-Math.tan(rel)*
-innerWidth*.55;
+const dx =
+e.x -
+player.x;
 
 
-const size=
-Math.max(
-25,
-Math.min(
-190,
-70000/d
-)
+const dy =
+e.y -
+player.y;
+
+
+const d =
+
+Math.hypot(
+dx,
+dy
 );
 
 
-e.el.style.display=
+let rel =
+
+Math.atan2(
+dy,
+dx
+) -
+player.angle;
+
+
+rel =
+
+Math.atan2(
+Math.sin(rel),
+Math.cos(rel)
+);
+
+
+if(
+Math.abs(rel) >
+Math.PI/2
+){
+
+e.el.style.display =
+"none";
+
+
+return;
+
+}
+
+
+const x =
+
+innerWidth/2 +
+
+Math.tan(rel) *
+
+innerWidth *
+.55;
+
+
+const size =
+
+Math.max(
+
+25,
+
+Math.min(
+
+190,
+
+70000 /
+d
+
+)
+
+);
+
+
+e.el.style.display =
 "block";
 
-e.el.style.left=
-x+"px";
 
-e.el.style.top=
-(
-innerHeight*.57+
-cameraPitch*4
-)+"px";
-
-e.el.style.width=
-size+"px";
-
-e.el.style.height=
-size*2+
+e.el.style.left =
+x +
 "px";
 
 
-e.el.querySelector(
+e.el.style.top =
+
+(
+innerHeight *
+.57 +
+
+cameraPitch *
+4
+) +
+"px";
+
+
+e.el.style.width =
+size +
+"px";
+
+
+e.el.style.height =
+
+size *
+2 +
+"px";
+
+
+e.el
+
+.querySelector(
 ".enemyHPInner"
-).style.width=
+)
+
+.style.width =
+
 Math.max(
 0,
 e.hp
-)+"%";
+) +
+"%";
 
 }
 
 
+/* =========================
+DAMAGE EFFECT
+========================= */
+
 function damageEffect(){
 
-$("damage").style.opacity=
+$("damage").style.opacity =
 .32;
 
+
 setTimeout(
+
 ()=>{
 
-$("damage").style.opacity=0;
+$("damage").style.opacity =
+0;
 
 },
+
 120
+
 );
 
 }
 
 
-function updateEnemies(dt){
+/* =========================
+UPDATE ENEMIES
+========================= */
 
-for(const e of enemies){
+function updateEnemies(
+dt
+){
 
-if(e.hp<=0){
+if(
+!botsEnabled
+){
 
-e.el.style.display="none";
+for(
+const e
+of enemies
+){
+
+e.el.style.display =
+"none";
+
+}
+
+
+return;
+
+}
+
+
+for(
+const e
+of enemies
+){
+
+if(
+e.hp <=
+0
+){
+
+e.el.style.display =
+"none";
+
 
 continue;
 
 }
 
 
-const dx=
-player.x-e.x;
+const dx =
+player.x -
+e.x;
 
-const dy=
-player.y-e.y;
 
-const d=
-Math.hypot(dx,dy);
+const dy =
+player.y -
+e.y;
 
+
+const d =
+
+Math.hypot(
+dx,
+dy
+);
+
+
+/* ДВИЖЕНИЕ */
 
 if(
-d>120 &&
-d<2400
+d >
+120
+
+&&
+
+d <
+2400
 ){
 
-const sp=
-e.type==="fast"
-?105
-:65;
+const sp =
+
+e.type ===
+"fast"
+
+?
+
+105
+
+:
+
+65;
 
 
-const nx=
-e.x+
-dx/d*
-sp*
+const nx =
+
+e.x +
+
+dx/d *
+sp *
 dt;
 
-const ny=
-e.y+
-dy/d*
-sp*
+
+const ny =
+
+e.y +
+
+dy/d *
+sp *
 dt;
 
 
-if(!blocked(nx,e.y)){
-e.x=nx;
-}
-
-if(!blocked(e.x,ny)){
-e.y=ny;
-}
-
-}
-
-
 if(
-d<750
-){
-
-e.attack-=dt;
-
-if(
-e.attack<=0
-){
-
-e.attack=
-e.type==="fast"
-?.65
-:1.15;
-
-
-player.hp=
-Math.max(
-0,
-player.hp-
-(
-d<300
-?9
-:d<500
-?6
-:4
+!blocked(
+nx,
+e.y
 )
+){
+
+e.x =
+nx;
+
+}
+
+
+if(
+!blocked(
+e.x,
+ny
+)
+){
+
+e.y =
+ny;
+
+}
+
+}
+
+
+/* АТАКА */
+
+if(
+d <
+750
+){
+
+e.attack -=
+dt;
+
+
+if(
+e.attack <=
+0
+){
+
+e.attack =
+
+e.type ===
+"fast"
+
+?
+
+.65
+
+:
+
+1.15;
+
+
+player.hp =
+
+Math.max(
+
+0,
+
+player.hp -
+
+(
+
+d <
+300
+
+?
+
+9
+
+:
+
+d <
+500
+
+?
+
+6
+
+:
+
+4
+
+)
+
 );
 
 
@@ -3860,60 +8586,124 @@ damageEffect();
 }
 
 
-showEnemy(e);
+showEnemy(
+e
+);
 
 }
 
 }
 
+
+/* =========================
+HIT MARK
+========================= */
 
 function showHit(){
 
-$("hitmark").style.opacity=
+$("hitmark").style.opacity =
 1;
 
+
 setTimeout(
+
 ()=>{
 
-$("hitmark").style.opacity=
+$("hitmark").style.opacity =
 0;
 
 },
+
 120
+
 );
 
 }
 
 
-/* KNIFE */
+/* =========================
+KNIFE
+========================= */
 
 function knifeAttack(){
 
-let t=null;
-let c=Infinity;
+/* ONLINE PVP */
+
+if(
+multiplayerMatch
+){
+
+sendOnline({
+type:
+"playerShot"
+});
+
+}
 
 
-for(const e of enemies){
+/* BOTS */
 
-if(e.hp<=0)
+if(
+!botsEnabled
+){
+
+return;
+
+}
+
+
+let t =
+null;
+
+
+let c =
+Infinity;
+
+
+for(
+const e
+of enemies
+){
+
+if(
+e.hp <=
+0
+){
+
 continue;
 
-
-const dx=
-e.x-player.x;
-
-const dy=
-e.y-player.y;
-
-const d=
-Math.hypot(dx,dy);
+}
 
 
-let a=
-Math.atan2(dy,dx)-
+const dx =
+e.x -
+player.x;
+
+
+const dy =
+e.y -
+player.y;
+
+
+const d =
+
+Math.hypot(
+dx,
+dy
+);
+
+
+let a =
+
+Math.atan2(
+dy,
+dx
+) -
 player.angle;
 
-a=
+
+a =
+
 Math.atan2(
 Math.sin(a),
 Math.cos(a)
@@ -3921,13 +8711,28 @@ Math.cos(a)
 
 
 if(
-Math.abs(a)<.25 &&
-d<180 &&
-d<c
+
+Math.abs(a) <
+.25
+
+&&
+
+d <
+180
+
+&&
+
+d <
+c
+
 ){
 
-t=e;
-c=d;
+t =
+e;
+
+
+c =
+d;
 
 }
 
@@ -3936,20 +8741,29 @@ c=d;
 
 if(t){
 
-t.hp-=100;
+t.hp -=
+100;
+
 
 showHit();
 
 
-if(t.hp<=0){
+if(
+t.hp <=
+0
+){
 
 kills++;
 
-player.hp=
+
+player.hp =
+
 Math.min(
 100,
-player.hp+7
+player.hp +
+7
 );
+
 
 checkWave();
 
@@ -3960,38 +8774,46 @@ checkWave();
 }
 
 
-/* SHOOT */
+/* =========================
+SHOOT
+========================= */
 
 function shoot(){
 
-if(player.hp<=0)
+if(
+player.hp <=
+0
+){
+
 return;
 
+}
+
+
+/* KNIFE */
 
 if(
-currentWeapon===
+currentWeapon ===
 "knife"
 ){
 
 knifeAttack();
 
 
-if(multiplayerMatch){
-
-sendOnline({
-type:"playerShot"
-});
-
-}
-
 return;
 
 }
 
 
-if(ammo<=0){
+/* EMPTY */
+
+if(
+ammo <=
+0
+){
 
 reload();
+
 
 return;
 
@@ -4001,54 +8823,103 @@ return;
 ammo--;
 
 
-$("muzzle").style.display=
+/* MUZZLE */
+
+$("muzzle").style.display =
 "block";
 
+
 setTimeout(
+
 ()=>{
 
-$("muzzle").style.display=
+$("muzzle").style.display =
 "none";
 
 },
+
 70
+
 );
 
 
-if(multiplayerMatch){
+/* ONLINE SHOT */
+
+if(
+multiplayerMatch
+){
 
 sendOnline({
-type:"playerShot"
+type:
+"playerShot"
 });
 
 }
 
 
-let t=null;
-let c=Infinity;
+/* BOT HIT */
+
+if(
+!botsEnabled
+){
+
+return;
+
+}
 
 
-for(const e of enemies){
+let t =
+null;
 
-if(e.hp<=0)
+
+let c =
+Infinity;
+
+
+for(
+const e
+of enemies
+){
+
+if(
+e.hp <=
+0
+){
+
 continue;
 
-
-const dx=
-e.x-player.x;
-
-const dy=
-e.y-player.y;
-
-const d=
-Math.hypot(dx,dy);
+}
 
 
-let a=
-Math.atan2(dy,dx)-
+const dx =
+e.x -
+player.x;
+
+
+const dy =
+e.y -
+player.y;
+
+
+const d =
+
+Math.hypot(
+dx,
+dy
+);
+
+
+let a =
+
+Math.atan2(
+dy,
+dx
+) -
 player.angle;
 
-a=
+
+a =
+
 Math.atan2(
 Math.sin(a),
 Math.cos(a)
@@ -4056,13 +8927,28 @@ Math.cos(a)
 
 
 if(
-Math.abs(a)<.12 &&
-d<3000 &&
-d<c
+
+Math.abs(a) <
+.12
+
+&&
+
+d <
+3000
+
+&&
+
+d <
+c
+
 ){
 
-t=e;
-c=d;
+t =
+e;
+
+
+c =
+d;
 
 }
 
@@ -4071,20 +8957,29 @@ c=d;
 
 if(t){
 
-t.hp-=50;
+t.hp -=
+50;
+
 
 showHit();
 
 
-if(t.hp<=0){
+if(
+t.hp <=
+0
+){
 
 kills++;
 
-player.hp=
+
+player.hp =
+
 Math.min(
 100,
-player.hp+7
+player.hp +
+7
 );
+
 
 checkWave();
 
@@ -4095,262 +8990,521 @@ checkWave();
 }
 
 
-/* RELOAD */
+/* =========================
+RELOAD
+========================= */
 
 function reload(){
 
 if(
-currentWeapon==="knife"||
-ammo>=30||
-reserve<=0
-)
+
+currentWeapon ===
+"knife"
+
+||
+
+ammo >=
+30
+
+||
+
+reserve <=
+0
+
+){
+
 return;
-
-
-const a=
-Math.min(
-30-ammo,
-reserve
-);
-
-ammo+=a;
-reserve-=a;
 
 }
 
 
-let fireHeld=false;
-let fireTimer=null;
+const a =
+
+Math.min(
+
+30 -
+ammo,
+
+reserve
+
+);
+
+
+ammo +=
+a;
+
+
+reserve -=
+a;
+
+}
+
+
+/* =========================
+FIRE BUTTON
+========================= */
+
+let fireHeld =
+false;
+
+
+let fireTimer =
+null;
 
 
 $("fire").addEventListener(
+
 "touchstart",
+
 e=>{
 
 e.preventDefault();
 
-if(fireHeld)
+
+if(
+fireHeld
+){
+
 return;
 
-fireHeld=true;
+}
+
+
+fireHeld =
+true;
+
 
 shoot();
 
 
-fireTimer=
+fireTimer =
+
 setInterval(
+
 ()=>{
 
-if(fireHeld){
+if(
+fireHeld
+){
+
 shoot();
+
 }
 
 },
+
 120
+
 );
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
 $("fire").addEventListener(
+
 "touchend",
+
 ()=>{
 
-fireHeld=false;
+fireHeld =
+false;
+
 
 clearInterval(
 fireTimer
 );
 
-fireTimer=null;
+
+fireTimer =
+null;
 
 }
+
 );
 
 
 $("fire").addEventListener(
+
 "touchcancel",
+
 ()=>{
 
-fireHeld=false;
+fireHeld =
+false;
+
 
 clearInterval(
 fireTimer
 );
 
-fireTimer=null;
+
+fireTimer =
+null;
 
 }
+
 );
 
 
 $("reload").addEventListener(
+
 "touchstart",
+
 e=>{
 
 e.preventDefault();
 
+
 reload();
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
-/* MINIMAP */
+/* =========================
+MINIMAP
+========================= */
 
 function updateMinimap(){
 
-const map=
+const map =
 $("minimap");
 
-const w=
+
+const w =
 map.clientWidth;
 
-const h=
+
+const h =
 map.clientHeight;
 
 
-$("playerDot").style.left=
-player.x/MAP_W*w+
+/* PLAYER */
+
+$("playerDot").style.left =
+
+player.x /
+MAP_W *
+w +
 "px";
 
-$("playerDot").style.top=
-player.y/MAP_H*h+
+
+$("playerDot").style.top =
+
+player.y /
+MAP_H *
+h +
 "px";
 
+
+/* CLEAR */
 
 document
+
 .querySelectorAll(
-".enemyDot,.remotePlayerDot"
+
+".enemyDot,.remotePlayerDot,.mapBuilding"
+
 )
+
 .forEach(
-x=>x.remove()
+x =>
+x.remove()
 );
 
 
-for(const e of enemies){
+/* BUILDINGS */
 
-if(e.hp<=0)
+for(
+const o
+of worldObjects
+){
+
+const block =
+
+document.createElement(
+"div"
+);
+
+
+block.className =
+"mapBuilding";
+
+
+block.style.left =
+
+(
+o.x -
+o.w/2
+) /
+MAP_W *
+w +
+"px";
+
+
+block.style.top =
+
+(
+o.y -
+o.h/2
+) /
+MAP_H *
+h +
+"px";
+
+
+block.style.width =
+
+o.w /
+MAP_W *
+w +
+"px";
+
+
+block.style.height =
+
+o.h /
+MAP_H *
+h +
+"px";
+
+
+map.appendChild(
+block
+);
+
+}
+
+
+/* BOTS */
+
+if(
+botsEnabled
+){
+
+for(
+const e
+of enemies
+){
+
+if(
+e.hp <=
+0
+){
+
 continue;
 
-const d=
+}
+
+
+const d =
+
 document.createElement(
 "div"
 );
 
-d.className=
+
+d.className =
 "enemyDot";
 
-d.style.left=
-e.x/MAP_W*w+
+
+d.style.left =
+
+e.x /
+MAP_W *
+w +
 "px";
 
-d.style.top=
-e.y/MAP_H*h+
+
+d.style.top =
+
+e.y /
+MAP_H *
+h +
 "px";
 
-map.appendChild(d);
+
+map.appendChild(
+d
+);
+
+}
 
 }
 
 
-for(const r of remotePlayers.values()){
+/* REMOTE PLAYER */
 
-const d=
+for(
+const r
+of remotePlayers.values()
+){
+
+const d =
+
 document.createElement(
 "div"
 );
 
-d.className=
+
+d.className =
 "remotePlayerDot";
 
-d.style.left=
-r.x/MAP_W*w+
+
+d.style.left =
+
+r.x /
+MAP_W *
+w +
 "px";
 
-d.style.top=
-r.y/MAP_H*h+
+
+d.style.top =
+
+r.y /
+MAP_H *
+h +
 "px";
 
-map.appendChild(d);
+
+map.appendChild(
+d
+);
 
 }
 
 }
 
 
-/* HUD */
+/* =========================
+HUD
+========================= */
 
 function updateHUD(){
 
-let a=
+let a =
+
 (
-player.angle*
-180/
-Math.PI%
-360+
+
+player.angle *
+180 /
+Math.PI %
+360 +
 360
-)%
+
+) %
 360;
 
 
-$("info").innerHTML=
-"POS: "+
-Math.round(player.x)+
-" / "+
-Math.round(player.y)+
-" &nbsp;&nbsp; ANGLE: "+
-Math.round(a)+
+$("info").innerHTML =
+
+"POS: " +
+Math.round(
+player.x
+) +
+" / " +
+Math.round(
+player.y
+) +
+" &nbsp;&nbsp; ANGLE: " +
+Math.round(
+a
+) +
 "°";
 
 
-$("score").textContent=
-"KILLS: "+
+$("score").textContent =
+
+"KILLS: " +
 kills;
 
 
-$("healthBar").style.width=
+$("healthBar").style.width =
+
 Math.max(
 0,
 player.hp
-)+"%";
+) +
+"%";
 
 
-$("healthText").textContent=
-"HP "+
+$("healthText").textContent =
+
+"HP " +
+
 Math.max(
+
 0,
-Math.round(player.hp)
+
+Math.round(
+player.hp
+)
+
 );
 
 
-$("ammo").textContent=
-ammo+
-" / "+
+$("ammo").textContent =
+
+ammo +
+" / " +
 reserve;
 
 }
 
 
-/* TABS */
+/* =========================
+TABS
+========================= */
 
-const gameTab=$("gameTab");
-const lobbyTab=$("lobbyTab");
-const friendsTab=$("friendsTab");
+const gameTab =
+$("gameTab");
 
-const friendsPage=$("friendsPage");
-const lobbyPage=$("lobbyPage");
 
-const lobby=$("lobby");
+const lobbyTab =
+$("lobbyTab");
 
-const menuTitle=$("menuTitle");
-const menuSubtitle=$("menuSubtitle");
 
-const profileBox=$("profileBox");
-const playButton=$("playButton");
+const friendsTab =
+$("friendsTab");
+
+
+const friendsPage =
+$("friendsPage");
+
+
+const lobbyPage =
+$("lobbyPage");
+
+
+const lobby =
+$("lobby");
+
+
+const menuTitle =
+$("menuTitle");
+
+
+const menuSubtitle =
+$("menuSubtitle");
+
+
+const profileBox =
+$("profileBox");
+
+
+const playButton =
+$("playButton");
 
 
 function hideAllMenuPages(){
@@ -4360,72 +9514,94 @@ gameTab,
 lobbyTab,
 friendsTab
 ]
+
 .forEach(
+
 x=>
 x.classList.remove(
 "active"
 )
+
 );
+
 
 friendsPage.classList.remove(
 "active"
 );
 
+
 lobbyPage.classList.remove(
 "active"
 );
 
-lobby.style.display=
+
+lobby.style.display =
 "none";
 
-menuTitle.style.display=
+
+menuTitle.style.display =
 "none";
 
-menuSubtitle.style.display=
+
+menuSubtitle.style.display =
 "none";
 
-profileBox.style.display=
+
+profileBox.style.display =
 "none";
 
-playButton.style.display=
+
+playButton.style.display =
 "none";
 
 }
 
+
+/* GAME PAGE */
 
 function showGamePage(){
 
 hideAllMenuPages();
 
+
 gameTab.classList.add(
 "active"
 );
 
-lobby.style.display=
+
+lobby.style.display =
 "block";
 
-menuTitle.style.display=
+
+menuTitle.style.display =
 "block";
 
-menuSubtitle.style.display=
+
+menuSubtitle.style.display =
 "block";
 
-profileBox.style.display=
+
+profileBox.style.display =
 "block";
 
-playButton.style.display=
+
+playButton.style.display =
 "block";
 
 }
 
 
+/* LOBBY PAGE */
+
 function showLobbyPage(){
 
 hideAllMenuPages();
 
+
 lobbyTab.classList.add(
 "active"
 );
+
 
 lobbyPage.classList.add(
 "active"
@@ -4433,12 +9609,14 @@ lobbyPage.classList.add(
 
 
 sendOnline({
-type:"createLobby"
+type:
+"createLobby"
 });
 
 
 sendOnline({
-type:"getFriends"
+type:
+"getFriends"
 });
 
 
@@ -4446,18 +9624,23 @@ renderLobbyMembers(
 currentLobbyMembers
 );
 
-updateLobbyLeaderControls();
+
+updateLobbyControls();
 
 }
 
+
+/* FRIEND PAGE */
 
 function showFriendsPage(){
 
 hideAllMenuPages();
 
+
 friendsTab.classList.add(
 "active"
 );
+
 
 friendsPage.classList.add(
 "active"
@@ -4465,135 +9648,237 @@ friendsPage.classList.add(
 
 
 sendOnline({
-type:"getFriends"
+type:
+"getFriends"
 });
 
 }
 
 
+/* TABS TOUCH */
+
 gameTab.addEventListener(
+
 "touchstart",
+
 e=>{
 
 e.preventDefault();
+
 
 showGamePage();
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
 lobbyTab.addEventListener(
+
 "touchstart",
+
 e=>{
 
 e.preventDefault();
+
 
 showLobbyPage();
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
 friendsTab.addEventListener(
+
 "touchstart",
+
 e=>{
 
 e.preventDefault();
+
 
 showFriendsPage();
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
-/* START SOLO */
+/* =========================
+SOLO START
+========================= */
 
-const menu=$("menu");
-const countdown=$("countdown");
-const countdownText=$("countdownText");
+const menu =
+$("menu");
 
-let gameStarted=false;
+
+const countdown =
+$("countdown");
+
+
+const countdownText =
+$("countdownText");
+
+
+let gameStarted =
+false;
 
 
 function startGame(){
 
-if(gameStarted)
+if(
+gameStarted
+){
+
 return;
 
-multiplayerMatch=false;
+}
+
+
+multiplayerMatch =
+false;
+
+
+botsEnabled =
+true;
+
+
+myTeam =
+null;
+
+
+$("teamHUD").textContent =
+"СВОБОДНАЯ ИГРА";
+
 
 clearRemotePlayers();
 
-playButton.style.display=
+
+resetEnemiesForMatch();
+
+
+playButton.style.display =
 "none";
 
-countdown.style.display=
+
+countdown.style.display =
 "block";
 
-countdownText.style.display=
+
+countdownText.style.display =
 "block";
 
-let n=5;
 
-countdown.textContent=n;
+let n =
+5;
 
 
-const t=
+countdown.textContent =
+n;
+
+
+const t =
+
 setInterval(
+
 ()=>{
 
 n--;
 
-if(n>=0){
-countdown.textContent=n;
+
+if(
+n >=
+0
+){
+
+countdown.textContent =
+n;
+
 }
 
-if(n<0){
 
-clearInterval(t);
+if(
+n <
+0
+){
 
-countdown.style.display=
+clearInterval(
+t
+);
+
+
+countdown.style.display =
 "none";
 
-countdownText.style.display=
+
+countdownText.style.display =
 "none";
 
-menu.style.display=
+
+menu.style.display =
 "none";
 
-gameStarted=true;
+
+gameStarted =
+true;
 
 }
 
 },
+
 1000
+
 );
 
 }
 
 
+/* SOLO PLAY */
+
 playButton.addEventListener(
+
 "touchstart",
+
 e=>{
 
 e.preventDefault();
 
+
 startGame();
 
 },
-{passive:false}
+
+{
+passive:false
+}
+
 );
 
 
-/* LOBBY COUNTDOWN */
+/* =========================
+LOBBY COUNTDOWN
+========================= */
 
-function showLobbyCountdown(startAt){
+function showLobbyCountdown(
+startAt
+){
 
-if(lobbyCountdownTimer){
+if(
+lobbyCountdownTimer
+){
 
 clearInterval(
 lobbyCountdownTimer
@@ -4602,38 +9887,49 @@ lobbyCountdownTimer
 }
 
 
-countdown.style.display=
+countdown.style.display =
 "block";
 
-countdownText.style.display=
+
+countdownText.style.display =
 "block";
 
-countdownText.textContent=
+
+countdownText.textContent =
 "МАТЧ НАЧИНАЕТСЯ";
 
 
 function update(){
 
-let n=
+let n =
+
 Math.ceil(
+
 (
-startAt-
+startAt -
 Date.now()
-)/1000
+) /
+1000
+
 );
 
 
-n=
+n =
+
 Math.max(
+
 0,
+
 Math.min(
 5,
 n
 )
+
 );
 
 
-countdown.textContent=n;
+countdown.textContent =
+n;
 
 }
 
@@ -4641,7 +9937,8 @@ countdown.textContent=n;
 update();
 
 
-lobbyCountdownTimer=
+lobbyCountdownTimer =
+
 setInterval(
 update,
 100
@@ -4650,11 +9947,15 @@ update,
 }
 
 
-/* SERVER START */
+/* =========================
+SERVER START
+========================= */
 
 function launchLobbyGame(){
 
-if(lobbyCountdownTimer){
+if(
+lobbyCountdownTimer
+){
 
 clearInterval(
 lobbyCountdownTimer
@@ -4663,98 +9964,156 @@ lobbyCountdownTimer
 }
 
 
-countdown.textContent=
+countdown.textContent =
 "0";
 
 
 setTimeout(
+
 ()=>{
 
-countdown.style.display=
+countdown.style.display =
 "none";
 
-countdownText.style.display=
+
+countdownText.style.display =
 "none";
 
-menu.style.display=
+
+menu.style.display =
 "none";
 
-gameStarted=true;
+
+gameStarted =
+true;
 
 },
+
 120
+
 );
 
 }
 
 
-/* GAME OVER */
+/* =========================
+GAME OVER
+========================= */
 
 function gameOver(){
 
 if(
-$("gameover").style.display===
+$("gameover").style.display ===
 "flex"
-)
+){
+
 return;
 
-$("gameover").style.display=
+}
+
+
+$("gameover").style.display =
 "flex";
 
-$("finalScore").textContent=
-"KILLS: "+
+
+$("finalScore").textContent =
+
+"KILLS: " +
 kills;
 
 }
 
 
 $("restart").addEventListener(
+
 "touchstart",
+
 ()=>{
 
 location.reload();
 
 }
+
 );
 
 
-/* GAME LOOP */
+/* =========================
+GAME LOOP
+========================= */
 
-let last=
+let last =
 performance.now();
 
 
-function loop(now){
+function loop(
+now
+){
 
-const dt=
+const dt =
+
 Math.min(
+
 .05,
-(now-last)/1000
+
+(
+now -
+last
+) /
+1000
+
 );
 
-last=now;
+
+last =
+now;
 
 
 if(
-gameStarted&&
-player.hp>0
+
+gameStarted
+
+&&
+
+player.hp >
+0
+
 ){
 
-updatePlayer(dt);
+updatePlayer(
+dt
+);
 
-updateEnemies(dt);
+
+updateWorld();
+
+
+updateEnemies(
+dt
+);
+
 
 updateRemotePlayers();
 
+
 updateMinimap();
+
 
 updateHUD();
 
-sendPlayerState(now);
+
+sendPlayerState(
+now
+);
 
 }else if(
-gameStarted&&
-player.hp<=0
+
+gameStarted
+
+&&
+
+player.hp <=
+0
+
 ){
 
 gameOver();
@@ -4773,6 +10132,8 @@ requestAnimationFrame(
 loop
 );
 
+
 </script>
+
 </body>
 </html>
