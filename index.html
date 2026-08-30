@@ -18,53 +18,49 @@ html,body{
     touch-action:none;
     font-family:Arial,sans-serif;
 }
-/* =========================
-   МИР
-========================= */
 #world{
     position:absolute;
     inset:0;
     overflow:hidden;
 }
-/* НЕБО */
+/* =========================
+   НЕБО И ЗЕМЛЯ
+========================= */
 #sky{
     position:absolute;
-    left:0;
-    top:0;
-    width:100%;
-    height:55%;
+    inset:0 0 45% 0;
     background:
-        linear-gradient(
-            #397da8,
-            #82b2c9
-        );
+    linear-gradient(
+        #397da8,
+        #8bb8ca
+    );
 }
-/* ЗЕМЛЯ */
 #ground{
     position:absolute;
     left:0;
     top:55%;
     width:100%;
     height:45%;
-    background:#3b4144;
+    background:#3c4144;
 }
-/* ДОРОГА */
+/* =========================
+   ДОРОГА
+========================= */
 #road{
     position:absolute;
     left:20%;
     top:55%;
     width:60%;
-    height:45%;
+    height:1000px;
     background:#55595b;
     transform-origin:center top;
 }
-/* ЛИНИИ ДОРОГИ */
-.line{
+.roadLine{
     position:absolute;
-    width:10px;
-    height:70px;
-    background:#ddd;
     left:50%;
+    width:10px;
+    height:90px;
+    background:#ddd;
     transform:translateX(-50%);
 }
 /* =========================
@@ -72,20 +68,19 @@ html,body{
 ========================= */
 .building{
     position:absolute;
-    width:180px;
-    height:140px;
+    width:190px;
+    height:145px;
     background:#76563c;
     border:5px solid #3e2d20;
     box-shadow:
-        inset 0 0 0 4px #8d6a4b,
-        0 8px 15px #0008;
+    inset 0 0 0 4px #98704f,
+    0 8px 15px #0008;
 }
-/* ОКНА */
 .window{
     position:absolute;
-    width:35px;
-    height:40px;
-    background:#182b35;
+    width:38px;
+    height:42px;
+    background:#182c36;
     border:3px solid #222;
 }
 /* =========================
@@ -93,45 +88,41 @@ html,body{
 ========================= */
 .container{
     position:absolute;
-    width:150px;
-    height:75px;
+    width:160px;
+    height:78px;
     background:#536b55;
     border:4px solid #29382b;
-    box-shadow:0 6px 12px #0008;
+    box-shadow:0 7px 12px #0008;
 }
 /* =========================
    ВРАГ
 ========================= */
 .enemy{
     position:absolute;
-    width:45px;
-    height:85px;
-    background:#bd2931;
-    border:3px solid #64171b;
+    width:46px;
+    height:86px;
+    background:#c52b33;
+    border:3px solid #65171b;
     box-shadow:0 5px 10px #0009;
-    transition:
-        transform .05s linear;
 }
 .enemy:before{
     content:"";
     position:absolute;
     left:7px;
     top:-34px;
-    width:25px;
-    height:25px;
+    width:26px;
+    height:26px;
     border-radius:50%;
     background:#d7a07b;
     border:3px solid #55382a;
 }
-/* HP ВРАГА */
 .enemyHP{
     position:absolute;
     left:-5px;
     top:-48px;
-    width:55px;
+    width:56px;
     height:6px;
     background:#111;
-    border:1px solid #000;
 }
 .enemyHP div{
     width:100%;
@@ -148,10 +139,9 @@ html,body{
     left:50%;
     transform:translateX(-50%);
     color:white;
-    font-size:22px;
+    font-size:23px;
     font-weight:bold;
-    text-shadow:
-        0 2px 5px #000;
+    text-shadow:0 2px 5px #000;
 }
 #info{
     position:fixed;
@@ -161,8 +151,7 @@ html,body{
     color:white;
     font-size:16px;
     font-weight:bold;
-    text-shadow:
-        0 2px 4px #000;
+    text-shadow:0 2px 4px #000;
 }
 #hp{
     position:fixed;
@@ -172,8 +161,7 @@ html,body{
     color:white;
     font-size:22px;
     font-weight:bold;
-    text-shadow:
-        0 2px 4px #000;
+    text-shadow:0 2px 4px #000;
 }
 #ammo{
     position:fixed;
@@ -183,8 +171,7 @@ html,body{
     color:white;
     font-size:22px;
     font-weight:bold;
-    text-shadow:
-        0 2px 4px #000;
+    text-shadow:0 2px 4px #000;
 }
 /* =========================
    ПРИЦЕЛ
@@ -197,7 +184,7 @@ html,body{
     width:30px;
     height:30px;
     transform:
-        translate(-50%,-50%);
+    translate(-50%,-50%);
 }
 #crosshair:before{
     content:"";
@@ -230,12 +217,11 @@ html,body{
     width:120px;
     height:105px;
     transform:
-        translateX(-50%);
+    translateX(-50%);
     background:#151515;
     border-radius:
-        25px 25px 0 0;
-    box-shadow:
-        0 -5px 15px #0008;
+    25px 25px 0 0;
+    box-shadow:0 -5px 15px #0008;
 }
 #barrel{
     position:absolute;
@@ -243,8 +229,7 @@ html,body{
     top:-55px;
     width:22px;
     height:65px;
-    transform:
-        translateX(-50%);
+    transform:translateX(-50%);
     background:#555;
     border:3px solid #222;
 }
@@ -260,9 +245,9 @@ html,body{
     height:140px;
     border-radius:50%;
     background:
-        rgba(255,255,255,.13);
+    rgba(255,255,255,.13);
     border:
-        3px solid rgba(255,255,255,.45);
+    3px solid rgba(255,255,255,.45);
     touch-action:none;
 }
 #stick{
@@ -273,13 +258,12 @@ html,body{
     height:60px;
     border-radius:50%;
     background:
-        rgba(255,255,255,.5);
-    border:
-        2px solid white;
+    rgba(255,255,255,.5);
+    border:2px solid white;
     pointer-events:none;
 }
 /* =========================
-   FIRE
+   КНОПКИ
 ========================= */
 #fire{
     position:fixed;
@@ -289,18 +273,13 @@ html,body{
     width:85px;
     height:85px;
     border-radius:50%;
-    border:
-        2px solid #ffffff88;
+    border:2px solid #ffffff88;
     background:
-        rgba(170,35,35,.8);
+    rgba(170,35,35,.8);
     color:white;
     font-weight:bold;
-    font-size:15px;
     touch-action:none;
 }
-/* =========================
-   RELOAD
-========================= */
 #reload{
     position:fixed;
     z-index:600;
@@ -309,30 +288,15 @@ html,body{
     width:100px;
     height:45px;
     border-radius:12px;
-    border:
-        1px solid #ffffff66;
+    border:1px solid #ffffff66;
     background:
-        rgba(30,30,30,.8);
+    rgba(30,30,30,.8);
     color:white;
     font-weight:bold;
     touch-action:none;
 }
 /* =========================
-   DAMAGE
-========================= */
-#damage{
-    position:fixed;
-    z-index:450;
-    inset:0;
-    background:
-        rgba(255,0,0,.35);
-    opacity:0;
-    pointer-events:none;
-    transition:
-        opacity .1s;
-}
-/* =========================
-   ROTATE
+   ПОВОРОТ ТЕЛЕФОНА
 ========================= */
 #rotate{
     display:none;
@@ -353,53 +317,56 @@ html,body{
 <div id="sky"></div>
 <div id="ground"></div>
 <div id="road">
-    <div class="line"
-    style="top:30px"></div>
-    <div class="line"
-    style="top:150px"></div>
-    <div class="line"
-    style="top:270px"></div>
-    <div class="line"
-    style="top:390px"></div>
+    <div class="roadLine" style="top:50px"></div>
+    <div class="roadLine" style="top:190px"></div>
+    <div class="roadLine" style="top:330px"></div>
+    <div class="roadLine" style="top:470px"></div>
+    <div class="roadLine" style="top:610px"></div>
 </div>
 <!-- ЗДАНИЯ -->
 <div class="building"
-id="building1"
-style="left:8%;top:32%;">
+     id="building1"
+     style="left:8%;top:32%;">
     <div class="window"
-    style="left:25px;top:25px"></div>
+         style="left:25px;top:25px">
+    </div>
     <div class="window"
-    style="right:25px;top:25px"></div>
+         style="right:25px;top:25px">
+    </div>
 </div>
 <div class="building"
-id="building2"
-style="right:8%;top:36%;">
+     id="building2"
+     style="right:8%;top:36%;">
     <div class="window"
-    style="left:25px;top:25px"></div>
+         style="left:25px;top:25px">
+    </div>
     <div class="window"
-    style="right:25px;top:25px"></div>
+         style="right:25px;top:25px">
+    </div>
 </div>
 <div class="building"
-id="building3"
-style="left:42%;top:27%;">
+     id="building3"
+     style="left:42%;top:27%;">
     <div class="window"
-    style="left:25px;top:25px"></div>
+         style="left:25px;top:25px">
+    </div>
     <div class="window"
-    style="right:25px;top:25px"></div>
+         style="right:25px;top:25px">
+    </div>
 </div>
 <!-- КОНТЕЙНЕРЫ -->
 <div class="container"
-id="container1"
-style="left:20%;top:55%">
+     id="container1"
+     style="left:20%;top:55%">
 </div>
 <div class="container"
-id="container2"
-style="right:18%;top:60%">
+     id="container2"
+     style="right:18%;top:60%">
 </div>
 <!-- ВРАГ -->
 <div class="enemy"
-id="enemy"
-style="left:70%;top:45%;">
+     id="enemy"
+     style="left:70%;top:45%;">
     <div class="enemyHP">
         <div></div>
     </div>
@@ -410,7 +377,7 @@ style="left:70%;top:45%;">
     RAHL1K FPS
 </div>
 <div id="info">
-    X: 0&nbsp;&nbsp; Y: 0
+    POS: 0 / 0 &nbsp; ANGLE: 0°
 </div>
 <div id="hp">
     HP 100
@@ -421,7 +388,7 @@ style="left:70%;top:45%;">
 <div id="crosshair"></div>
 <!-- ОРУЖИЕ -->
 <div id="gun">
-<div id="barrel"></div>
+    <div id="barrel"></div>
 </div>
 <!-- ДЖОЙСТИК -->
 <div id="joystick">
@@ -433,7 +400,6 @@ style="left:70%;top:45%;">
 <button id="reload">
     RELOAD
 </button>
-<div id="damage"></div>
 <div id="rotate">
     ↔️
     <br><br>
@@ -449,136 +415,105 @@ const stick =
 document.getElementById("stick");
 const info =
 document.getElementById("info");
-const hpText =
-document.getElementById("hp");
-const ammoText =
-document.getElementById("ammo");
 const enemy =
 document.getElementById("enemy");
-const damage =
-document.getElementById("damage");
+const road =
+document.getElementById("road");
 const buildings =
 document.querySelectorAll(".building");
 const containers =
 document.querySelectorAll(".container");
-const road =
-document.getElementById("road");
 /* =========================
    ИГРОК
 ========================= */
 let playerX=0;
 let playerY=0;
-let cameraX=0;
-/* =========================
-   ОРУЖИЕ
-========================= */
-let ammo=30;
-let reserve=90;
-let enemyHP=100;
+/*
+   Угол камеры.
+   0 = смотрим вперёд
+*/
+let angle=0;
 /* =========================
    ДЖОЙСТИК
 ========================= */
 let joyX=0;
 let joyY=0;
 let joyActive=false;
-let joyTouchID=null;
-function updateJoystick(
-    clientX,
-    clientY
-){
+let joyID=null;
+function updateJoystick(x,y){
     const rect =
-        joystick.getBoundingClientRect();
+    joystick.getBoundingClientRect();
     const centerX =
-        rect.left +
-        rect.width/2;
+    rect.left+rect.width/2;
     const centerY =
-        rect.top +
-        rect.height/2;
-    let dx =
-        clientX-centerX;
-    let dy =
-        clientY-centerY;
+    rect.top+rect.height/2;
+    let dx=x-centerX;
+    let dy=y-centerY;
     const max=40;
-    const distance =
-        Math.hypot(dx,dy);
+    const distance=
+    Math.hypot(dx,dy);
     if(distance>max){
-        dx=
-            dx/distance*max;
-        dy=
-            dy/distance*max;
+        dx=dx/distance*max;
+        dy=dy/distance*max;
     }
     joyX=dx/max;
     joyY=dy/max;
-    stick.style.left =
-        (40+dx)+"px";
-    stick.style.top =
-        (40+dy)+"px";
+    stick.style.left=
+    (40+dx)+"px";
+    stick.style.top=
+    (40+dy)+"px";
 }
 function resetJoystick(){
     joyActive=false;
-    joyTouchID=null;
+    joyID=null;
     joyX=0;
     joyY=0;
     stick.style.left="40px";
     stick.style.top="40px";
 }
 joystick.addEventListener(
-    "touchstart",
-    function(e){
-        e.preventDefault();
-        if(joyActive)
-            return;
-        const t=e.changedTouches[0];
-        joyActive=true;
-        joyTouchID=t.identifier;
-        updateJoystick(
-            t.clientX,
-            t.clientY
-        );
-    },
-    {passive:false}
+"touchstart",
+function(e){
+    e.preventDefault();
+    if(joyActive)
+        return;
+    const t=e.changedTouches[0];
+    joyActive=true;
+    joyID=t.identifier;
+    updateJoystick(
+        t.clientX,
+        t.clientY
+    );
+},
+{passive:false}
 );
 joystick.addEventListener(
-    "touchmove",
-    function(e){
-        e.preventDefault();
-        if(!joyActive)
-            return;
-        for(
-            const t of e.changedTouches
-        ){
-            if(
-                t.identifier ===
-                joyTouchID
-            ){
-                updateJoystick(
-                    t.clientX,
-                    t.clientY
-                );
-            }
+"touchmove",
+function(e){
+    e.preventDefault();
+    if(!joyActive)
+        return;
+    for(const t of e.changedTouches){
+        if(t.identifier===joyID){
+            updateJoystick(
+                t.clientX,
+                t.clientY
+            );
         }
-    },
-    {passive:false}
+    }
+},
+{passive:false}
 );
 joystick.addEventListener(
-    "touchend",
-    function(e){
-        for(
-            const t of e.changedTouches
-        ){
-            if(
-                t.identifier ===
-                joyTouchID
-            ){
-                resetJoystick();
-            }
+"touchend",
+function(e){
+    for(const t of e.changedTouches){
+        if(t.identifier===joyID){
+            resetJoystick();
         }
-    },
-    {passive:false}
-);
-joystick.addEventListener(
-    "touchcancel",
-    resetJoystick
+    }
+},
+{passive:false}
 );
 /* =========================
    СВАЙП КАМЕРЫ
@@ -587,182 +522,241 @@ let lookActive=false;
 let lookID=null;
 let lastLookX=0;
 document.addEventListener(
-    "touchstart",
-    function(e){
-        for(
-            const t of e.changedTouches
+"touchstart",
+function(e){
+    for(const t of e.changedTouches){
+        /*
+           Правая часть экрана
+        */
+        if(
+            t.clientX >
+            window.innerWidth*0.45
+            &&
+            t.target!==joystick
+            &&
+            t.target!==document.getElementById("fire")
+            &&
+            t.target!==document.getElementById("reload")
         ){
-            if(
-                t.clientX >
-                window.innerWidth*0.45
-                &&
-                t.target !== joystick
-                &&
-                t.target !== stick
-                &&
-                t.target.id !== "fire"
-                &&
-                t.target.id !== "reload"
-            ){
-                lookActive=true;
-                lookID=t.identifier;
-                lastLookX=t.clientX;
-            }
-        }
-    },
-    {passive:false}
-);
-document.addEventListener(
-    "touchmove",
-    function(e){
-        if(!lookActive)
-            return;
-        for(
-            const t of e.changedTouches
-        ){
-            if(
-                t.identifier===
-                lookID
-            ){
-                e.preventDefault();
-                const dx=
-                    t.clientX-
-                    lastLookX;
-                cameraX+=dx;
-                lastLookX=
-                    t.clientX;
-                updateWorld();
-            }
-        }
-    },
-    {passive:false}
-);
-document.addEventListener(
-    "touchend",
-    function(e){
-        for(
-            const t of e.changedTouches
-        ){
-            if(
-                t.identifier===
-                lookID
-            ){
-                lookActive=false;
-                lookID=null;
-            }
+            lookActive=true;
+            lookID=t.identifier;
+            lastLookX=t.clientX;
         }
     }
+},
+{passive:false}
 );
-/* =========================
-   ДВИЖЕНИЕ МИРА
-========================= */
-function updateWorld(){
-    const moveX=
-        -playerX+
-        cameraX;
-    const moveY=
-        -playerY;
-    buildings.forEach(
-        function(el){
-            const baseX=
-                parseFloat(
-                    el.dataset.x ||
-                    el.style.left
-                );
-            const baseY=
-                parseFloat(
-                    el.dataset.y ||
-                    el.style.top
-                );
-            if(!el.dataset.x){
-                el.dataset.x=
-                    el.offsetLeft;
-                el.dataset.y=
-                    el.offsetTop;
-            }
-            el.style.transform=
-                "translate("+
-                (moveX*.7)+
-                "px,"+
-                (moveY*.7)+
-                "px)";
+document.addEventListener(
+"touchmove",
+function(e){
+    if(!lookActive)
+        return;
+    for(const t of e.changedTouches){
+        if(t.identifier===lookID){
+            e.preventDefault();
+            const dx=
+            t.clientX-lastLookX;
+            /*
+               Плавность поворота
+            */
+            angle +=
+            dx*0.006;
+            /*
+               Не даём углу
+               бесконечно расти
+            */
+            if(angle>Math.PI*2)
+                angle-=Math.PI*2;
+            if(angle<-Math.PI*2)
+                angle+=Math.PI*2;
+            lastLookX=
+            t.clientX;
         }
-    );
-    containers.forEach(
-        function(el){
-            el.style.transform=
-                "translate("+
-                (moveX*.9)+
-                "px,"+
-                (moveY*.9)+
-                "px)";
+    }
+},
+{passive:false}
+);
+document.addEventListener(
+"touchend",
+function(e){
+    for(const t of e.changedTouches){
+        if(t.identifier===lookID){
+            lookActive=false;
+            lookID=null;
         }
-    );
-    enemy.style.transform=
-        "translate("+
-        moveX+
-        "px,"+
-        moveY+
-        "px)";
-    road.style.transform=
-        "translate("+
-        (moveX*.3)+
-        "px,"+
-        (moveY*.3)+
-        "px)";
-    info.innerHTML=
-        "X: "+
-        Math.round(playerX)+
-        "&nbsp;&nbsp; Y: "+
-        Math.round(playerY);
+    }
 }
+);
 /* =========================
    ДВИЖЕНИЕ
 ========================= */
 let lastTime=
-    performance.now();
+performance.now();
 function gameLoop(now){
     const dt=
-        Math.min(
-            .05,
-            (now-lastTime)/1000
-        );
+    Math.min(
+        0.05,
+        (now-lastTime)/1000
+    );
     lastTime=now;
-    const speed=250;
+    const speed=220;
     /*
-       Вперёд / назад
+       Вперёд/назад
     */
-    playerY +=
-        joyY*
-        speed*
-        dt;
+    const forward=
+    -joyY;
     /*
-       Влево / вправо
+       Влево/вправо
     */
-    playerX +=
-        joyX*
-        speed*
-        dt;
+    const strafe=
+    joyX;
+    /*
+       Движение зависит
+       от направления камеры
+    */
+    const moveX=
+    (
+        Math.cos(angle)*forward
+        -
+        Math.sin(angle)*strafe
+    )
+    *
+    speed*
+    dt;
+    const moveY=
+    (
+        Math.sin(angle)*forward
+        +
+        Math.cos(angle)*strafe
+    )
+    *
+    speed*
+    dt;
+    playerX+=moveX;
+    playerY+=moveY;
     updateWorld();
     requestAnimationFrame(
         gameLoop
     );
 }
 requestAnimationFrame(
-    gameLoop
+gameLoop
 );
+/* =========================
+   ОТОБРАЖЕНИЕ МИРА
+========================= */
+function updateWorld(){
+    /*
+       Основное смещение
+    */
+    const worldX=
+    -playerX;
+    const worldY=
+    -playerY;
+    /*
+       Поворот камеры
+    */
+    const lookX=
+    angle*180/Math.PI;
+    /*
+       Здания
+    */
+    buildings.forEach(
+    function(el){
+        const baseX=
+        el.dataset.baseX ||
+        el.offsetLeft;
+        const baseY=
+        el.dataset.baseY ||
+        el.offsetTop;
+        el.dataset.baseX=baseX;
+        el.dataset.baseY=baseY;
+        /*
+           Поворот имитируем
+           горизонтальным смещением
+        */
+        const rotationOffset=
+        -lookX*2;
+        el.style.transform=
+        "translate("+
+        (
+            worldX*.7+
+            rotationOffset
+        )+
+        "px,"+
+        worldY*.7+
+        "px)";
+    });
+    /*
+       Контейнеры
+    */
+    containers.forEach(
+    function(el){
+        el.style.transform=
+        "translate("+
+        (
+            worldX+
+            -lookX*3
+        )+
+        "px,"+
+        worldY+
+        "px)";
+    });
+    /*
+       Враг
+    */
+    enemy.style.transform=
+    "translate("+
+    (
+        worldX+
+        -lookX*3
+    )+
+    "px,"+
+    worldY+
+    "px)";
+    /*
+       Дорога
+    */
+    road.style.transform=
+    "translate("+
+    (
+        worldX*.25+
+        -lookX
+    )+
+    "px,"+
+    worldY*.25+
+    "px)";
+    /*
+       HUD
+    */
+    let degrees=
+    angle*180/Math.PI;
+    degrees=
+    ((degrees%360)+360)%360;
+    info.innerHTML=
+    "POS: "+
+    Math.round(playerX)+
+    " / "+
+    Math.round(playerY)+
+    "&nbsp;&nbsp; ANGLE: "+
+    Math.round(degrees)+
+    "°";
+}
 /* =========================
    СТРЕЛЬБА
 ========================= */
+let ammo=30;
+let reserve=90;
+let enemyHP=100;
 document
 .getElementById("fire")
 .addEventListener(
-    "touchstart",
-    function(e){
-        e.preventDefault();
-        shoot();
-    },
-    {passive:false}
+"touchstart",
+function(e){
+    e.preventDefault();
+    shoot();
+},
+{passive:false}
 );
 function shoot(){
     if(ammo<=0){
@@ -770,19 +764,20 @@ function shoot(){
         return;
     }
     ammo--;
-    ammoText.textContent=
-        ammo+" / "+reserve;
+    document.getElementById("ammo")
+    .textContent=
+    ammo+" / "+reserve;
     /*
-       Пока враг находится
-       по центру/в зоне прицела —
-       выстрел попадает.
+       Простая проверка:
+       враг находится около
+       центра экрана
     */
     const rect=
-        enemy.getBoundingClientRect();
+    enemy.getBoundingClientRect();
     const centerX=
-        window.innerWidth/2;
+    window.innerWidth/2;
     const centerY=
-        window.innerHeight/2;
+    window.innerHeight/2;
     if(
         centerX>rect.left &&
         centerX<rect.right &&
@@ -790,33 +785,30 @@ function shoot(){
         centerY<rect.bottom
     ){
         enemyHP-=50;
-        const bar=
-            enemy.querySelector(
-                ".enemyHP div"
-            );
-        bar.style.width=
-            Math.max(
-                0,
-                enemyHP
-            )+"%";
+        enemy
+        .querySelector(".enemyHP div")
+        .style.width=
+        Math.max(
+            0,
+            enemyHP
+        )+"%";
         if(enemyHP<=0){
-            enemy.style.display=
-                "none";
+            enemy.style.display="none";
         }
     }
 }
 /* =========================
-   ПЕРЕЗАРЯДКА
+   RELOAD
 ========================= */
 document
 .getElementById("reload")
 .addEventListener(
-    "touchstart",
-    function(e){
-        e.preventDefault();
-        reload();
-    },
-    {passive:false}
+"touchstart",
+function(e){
+    e.preventDefault();
+    reload();
+},
+{passive:false}
 );
 function reload(){
     if(
@@ -825,69 +817,39 @@ function reload(){
     )
         return;
     const need=
-        30-ammo;
+    30-ammo;
     const amount=
-        Math.min(
-            need,
-            reserve
-        );
+    Math.min(
+        need,
+        reserve
+    );
     ammo+=amount;
     reserve-=amount;
-    ammoText.textContent=
-        ammo+
-        " / "+
-        reserve;
+    document.getElementById("ammo")
+    .textContent=
+    ammo+" / "+reserve;
 }
 /* =========================
-   ПОВОРОТ ЭКРАНА
+   ПОВОРОТ ТЕЛЕФОНА
 ========================= */
-function checkOrientation(){
+function orientation(){
     document.getElementById(
         "rotate"
     ).style.display=
-        window.innerHeight >
-        window.innerWidth
-        ? "flex"
-        : "none";
+    window.innerHeight>
+    window.innerWidth
+    ? "flex"
+    : "none";
 }
 window.addEventListener(
-    "resize",
-    checkOrientation
+"resize",
+orientation
 );
-checkOrientation();
+orientation();
 /* =========================
-   HP
+   ПЕРВОНАЧАЛЬНОЕ СОСТОЯНИЕ
 ========================= */
-setInterval(
-    function(){
-        if(enemyHP<=0)
-            return;
-        const rect=
-            enemy.getBoundingClientRect();
-        const dx=
-            rect.left+
-            rect.width/2-
-            window.innerWidth/2;
-        const dy=
-            rect.top+
-            rect.height/2-
-            window.innerHeight/2;
-        const distance=
-            Math.hypot(dx,dy);
-        if(distance<100){
-            hpText.textContent=
-                "HP 93";
-            damage.style.opacity="1";
-            setTimeout(
-                function(){
-                    damage.style.opacity="0";
-                },
-                100
-            );
-        }
-    },
-    1000
-);
+updateWorld();
 </script>
 </body>
 </html>
