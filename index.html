@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>RAHL1K FPS v6</title>
+<title>RAHL1K FPS v5.1</title>
 <style>
 *{
 box-sizing:border-box;
 user-select:none;
 -webkit-user-select:none;
--webkit-touch-callout:none;
 }
 html,body{
 margin:0;
@@ -90,7 +89,6 @@ border:3px solid #73797b;
 box-shadow:inset 0 0 20px #0008;
 z-index:10;
 }
-/* HUD */
 #title{
 position:fixed;
 z-index:100;
@@ -122,7 +120,6 @@ font-size:16px;
 font-weight:bold;
 text-shadow:0 2px 4px #000;
 }
-/* HP */
 #healthBox{
 position:fixed;
 z-index:100;
@@ -139,7 +136,6 @@ overflow:hidden;
 height:100%;
 width:100%;
 background:#36c968;
-transition:width .15s;
 }
 #healthText{
 position:absolute;
@@ -152,7 +148,6 @@ font-weight:bold;
 font-size:16px;
 text-shadow:0 1px 3px #000;
 }
-/* AMMO */
 #ammo{
 position:fixed;
 z-index:100;
@@ -163,7 +158,6 @@ font-size:22px;
 font-weight:bold;
 text-shadow:0 2px 4px #000;
 }
-/* CROSSHAIR */
 #crosshair{
 position:fixed;
 z-index:100;
@@ -172,7 +166,6 @@ top:50%;
 width:32px;
 height:32px;
 transform:translate(-50%,-50%);
-transition:transform .06s;
 }
 #crosshair:before{
 content:"";
@@ -192,7 +185,6 @@ width:2px;
 height:32px;
 background:white;
 }
-/* JOYSTICK */
 #joystick{
 position:fixed;
 z-index:200;
@@ -216,10 +208,9 @@ background:#ffffff70;
 border:2px solid white;
 pointer-events:none;
 }
-/* BUTTONS */
 #fire{
 position:fixed;
-z-index:200;
+z-index:300;
 right:30px;
 bottom:95px;
 width:85px;
@@ -229,12 +220,13 @@ border:2px solid white;
 background:#a52c2ccc;
 color:white;
 font-weight:bold;
-font-size:15px;
+font-size:16px;
 touch-action:none;
+-webkit-user-select:none;
 }
 #reload{
 position:fixed;
-z-index:200;
+z-index:300;
 right:135px;
 bottom:35px;
 width:100px;
@@ -246,21 +238,6 @@ color:white;
 font-weight:bold;
 touch-action:none;
 }
-#sprint{
-position:fixed;
-z-index:200;
-left:180px;
-bottom:78px;
-width:85px;
-height:48px;
-border-radius:12px;
-border:1px solid white;
-background:#222c;
-color:white;
-font-weight:bold;
-touch-action:none;
-}
-/* WEAPON */
 #weapon{
 position:fixed;
 z-index:80;
@@ -269,7 +246,7 @@ bottom:-15px;
 width:170px;
 height:130px;
 transform:translateX(-50%);
-transition:transform .06s;
+transition:transform .07s;
 }
 #gun{
 position:absolute;
@@ -310,14 +287,12 @@ clip-path:polygon(
 );
 filter:drop-shadow(0 0 12px #ff9d00);
 }
-/* ENEMIES */
 .enemy{
 position:absolute;
 z-index:30;
 width:60px;
 height:120px;
 transform:translate(-50%,-50%);
-transform-origin:center center;
 }
 .enemyBody{
 position:absolute;
@@ -365,7 +340,6 @@ background:#a92f38;
 .enemy.fast .enemyBody{
 background:#8b35b8;
 }
-/* DAMAGE */
 #damage{
 position:fixed;
 z-index:120;
@@ -375,7 +349,6 @@ background:#d00;
 opacity:0;
 transition:opacity .08s;
 }
-/* HIT */
 #hitmark{
 position:fixed;
 z-index:150;
@@ -388,20 +361,6 @@ font-weight:bold;
 opacity:0;
 pointer-events:none;
 }
-/* RELOAD TEXT */
-#reloadText{
-position:fixed;
-z-index:160;
-left:50%;
-top:58%;
-transform:translate(-50%,-50%);
-color:white;
-font-size:22px;
-font-weight:bold;
-text-shadow:0 2px 5px #000;
-opacity:0;
-}
-/* MINIMAP */
 #minimap{
 position:fixed;
 z-index:150;
@@ -435,7 +394,6 @@ background:#e33;
 border-radius:50%;
 transform:translate(-50%,-50%);
 }
-/* GAME OVER */
 #gameover{
 display:none;
 position:fixed;
@@ -459,7 +417,6 @@ border:2px solid white;
 background:#333;
 color:white;
 }
-/* ROTATE */
 #rotate{
 display:none;
 position:fixed;
@@ -496,7 +453,7 @@ display:flex;
 <div class="building" id="b5"></div>
 <div class="building" id="b6"></div>
 </div>
-<div id="title">RAHL1K FPS v6</div>
+<div id="title">RAHL1K FPS v5.1</div>
 <div id="info">
 POS: 1500 / 1100 &nbsp;&nbsp; ANGLE: 0°
 </div>
@@ -508,7 +465,6 @@ POS: 1500 / 1100 &nbsp;&nbsp; ANGLE: 0°
 <div id="ammo">30 / 90</div>
 <div id="crosshair"></div>
 <div id="hitmark">×</div>
-<div id="reloadText">ПЕРЕЗАРЯДКА...</div>
 <div id="minimap">
 <div class="mapBuilding"
 style="left:10px;top:10px;width:35px;height:25px"></div>
@@ -523,8 +479,6 @@ style="right:10px;bottom:10px;width:35px;height:30px"></div>
 <div id="joystick">
 <div id="stick"></div>
 </div>
-
-SPRINT
 
 FIRE
 
@@ -553,9 +507,6 @@ GAME OVER
 
 </div>
 <script>
-/* ==========================
-PLAYER
-========================== */
 const player={
 x:1500,
 y:1100,
@@ -564,9 +515,7 @@ hp:100
 };
 const MAP_W=4000;
 const MAP_H=3000;
-/* ==========================
-BUILDINGS
-========================== */
+/* BUILDINGS */
 const buildings=[
 {x:300,y:300,w:800,h:350},
 {x:2750,y:300,w:800,h:350},
@@ -580,40 +529,35 @@ const cx=window.innerWidth/2;
 const cy=window.innerHeight*.60;
 for(let i=0;i<buildings.length;i++){
 const b=buildings[i];
-const el=
-document.getElementById("b"+(i+1));
+const el=document.getElementById("b"+(i+1));
 const dx=b.x-player.x;
 const dy=b.y-player.y;
 const cos=Math.cos(player.angle);
 const sin=Math.sin(player.angle);
-const forward=
-dx*cos+dy*sin;
-const side=
--dx*sin+dy*cos;
+const forward=dx*cos+dy*sin;
+const side=-dx*sin+dy*cos;
 if(forward<-50){
 el.style.display="none";
 continue;
 }
 const f=Math.max(100,forward);
-const sx=cx+side*.55;
-const sy=cy-12000/f;
+el.style.display="block";
+el.style.left=
+(cx+side*.55)+"px";
+el.style.top=
+(cy-12000/f)+"px";
 const scale=
 Math.min(
 2.5,
 Math.max(.15,900/f)
 );
-el.style.display="block";
-el.style.left=sx+"px";
-el.style.top=sy+"px";
 el.style.width=
 (b.w*.55*scale)+"px";
 el.style.height=
 (b.h*.55*scale)+"px";
 }
 }
-/* ==========================
-COLLISION
-========================== */
+/* COLLISION */
 function blocked(x,y){
 const r=28;
 if(
@@ -634,19 +578,14 @@ return true;
 }
 return false;
 }
-/* ==========================
-JOYSTICK
-========================== */
-const joystick=
-document.getElementById("joystick");
-const stick=
-document.getElementById("stick");
+/* JOYSTICK */
+const joystick=document.getElementById("joystick");
+const stick=document.getElementById("stick");
 let joyX=0;
 let joyY=0;
 let joyID=null;
 function setJoy(x,y){
-const r=
-joystick.getBoundingClientRect();
+const r=joystick.getBoundingClientRect();
 const cx=r.left+r.width/2;
 const cy=r.top+r.height/2;
 let dx=x-cx;
@@ -676,10 +615,7 @@ e.preventDefault();
 if(joyID!==null)return;
 const t=e.changedTouches[0];
 joyID=t.identifier;
-setJoy(
-t.clientX,
-t.clientY
-);
+setJoy(t.clientX,t.clientY);
 },
 {passive:false}
 );
@@ -689,10 +625,7 @@ e=>{
 e.preventDefault();
 for(const t of e.changedTouches){
 if(t.identifier===joyID){
-setJoy(
-t.clientX,
-t.clientY
-);
+setJoy(t.clientX,t.clientY);
 }
 }
 },
@@ -712,9 +645,7 @@ joystick.addEventListener(
 "touchcancel",
 resetJoy
 );
-/* ==========================
-360 CAMERA
-========================== */
+/* 360 CAMERA */
 let lookID=null;
 let lastLookX=0;
 document.addEventListener(
@@ -725,7 +656,7 @@ if(
 t.clientX>
 window.innerWidth*.42&&
 !t.target.closest(
-"#fire,#reload,#sprint,#joystick"
+"#fire,#reload,#joystick"
 )
 ){
 lookID=t.identifier;
@@ -742,8 +673,7 @@ if(lookID===null)return;
 for(const t of e.changedTouches){
 if(t.identifier===lookID){
 e.preventDefault();
-const dx=
-t.clientX-lastLookX;
+const dx=t.clientX-lastLookX;
 player.angle+=dx*.008;
 lastLookX=t.clientX;
 }
@@ -761,43 +691,10 @@ lookID=null;
 }
 }
 );
-/* ==========================
-SPRINT
-========================== */
-let sprint=false;
-const sprintButton=
-document.getElementById("sprint");
-function startSprint(e){
-e.preventDefault();
-sprint=true;
-sprintButton.style.background="#555";
-}
-function stopSprint(e){
-e.preventDefault();
-sprint=false;
-sprintButton.style.background="#222c";
-}
-sprintButton.addEventListener(
-"touchstart",
-startSprint,
-{passive:false}
-);
-sprintButton.addEventListener(
-"touchend",
-stopSprint,
-{passive:false}
-);
-sprintButton.addEventListener(
-"touchcancel",
-stopSprint,
-{passive:false}
-);
-/* ==========================
-PLAYER MOVEMENT
-========================== */
+/* MOVEMENT */
 function updatePlayer(dt){
 if(player.hp<=0)return;
-let speed=sprint?470:270;
+const speed=270;
 const forward=-joyY;
 const strafe=joyX;
 const dx=
@@ -821,57 +718,18 @@ player.x=nx;
 if(!blocked(player.x,ny))
 player.y=ny;
 }
-/* ==========================
-ENEMIES
-========================== */
+/* ENEMIES */
 const enemies=[
-{
-x:700,
-y:900,
-hp:100,
-el:null,
-attack:0,
-type:"normal"
-},
-{
-x:3300,
-y:900,
-hp:100,
-el:null,
-attack:0,
-type:"normal"
-},
-{
-x:700,
-y:2500,
-hp:100,
-el:null,
-attack:0,
-type:"fast"
-},
-{
-x:3300,
-y:2500,
-hp:100,
-el:null,
-attack:0,
-type:"fast"
-},
-{
-x:1800,
-y:2200,
-hp:100,
-el:null,
-attack:0,
-type:"normal"
-}
+{x:700,y:900,hp:100,el:null,attack:0,type:"normal"},
+{x:3300,y:900,hp:100,el:null,attack:0,type:"normal"},
+{x:700,y:2500,hp:100,el:null,attack:0,type:"fast"},
+{x:3300,y:2500,hp:100,el:null,attack:0,type:"fast"},
+{x:1800,y:2200,hp:100,el:null,attack:0,type:"normal"}
 ];
 function createEnemies(){
 for(const enemy of enemies){
-const el=
-document.createElement("div");
-el.className=
-"enemy "+enemy.type;
+const el=document.createElement("div");
+el.className="enemy "+enemy.type;
 el.innerHTML=`
 <div class="enemyHP">
 <div class="enemyHPInner"></div>
@@ -880,40 +738,28 @@ el.innerHTML=`
 <div class="enemyBody"></div>
 <div class="enemyGun"></div>
 `;
-document
-.getElementById("game")
-.appendChild(el);
+document.getElementById("game").appendChild(el);
 enemy.el=el;
 }
 }
 createEnemies();
-/* ==========================
-ENEMY UPDATE
-========================== */
 function updateEnemies(dt){
 for(const enemy of enemies){
 if(enemy.hp<=0){
 enemy.el.style.display="none";
 continue;
 }
-const dx=
-player.x-enemy.x;
-const dy=
-player.y-enemy.y;
-const distance=
-Math.hypot(dx,dy);
+const dx=player.x-enemy.x;
+const dy=player.y-enemy.y;
+const distance=Math.hypot(dx,dy);
 if(
 distance>120&&
 distance<2400
 ){
 const speed=
-enemy.type==="fast"
-?105
-:65;
-const ex=
-dx/distance*speed*dt;
-const ey=
-dy/distance*speed*dt;
+enemy.type==="fast"?105:65;
+const ex=dx/distance*speed*dt;
+const ey=dy/distance*speed*dt;
 const nx=enemy.x+ex;
 const ny=enemy.y+ey;
 if(!blocked(nx,enemy.y))
@@ -934,37 +780,26 @@ enemyShoot(enemy);
 showEnemy(enemy);
 }
 }
-/* ==========================
-ENEMY SHOOT
-========================== */
 function enemyShoot(enemy){
 if(player.hp<=0)return;
 const dx=player.x-enemy.x;
 const dy=player.y-enemy.y;
-const distance=
-Math.hypot(dx,dy);
+const distance=Math.hypot(dx,dy);
 let damage=4;
 if(distance<300)
 damage=9;
 else if(distance<500)
 damage=6;
-player.hp=
-Math.max(
+player.hp=Math.max(
 0,
 player.hp-damage
 );
 damageEffect();
 }
-/* ==========================
-ENEMY DISPLAY
-========================== */
 function showEnemy(enemy){
-const dx=
-enemy.x-player.x;
-const dy=
-enemy.y-player.y;
-const distance=
-Math.hypot(dx,dy);
+const dx=enemy.x-player.x;
+const dy=enemy.y-player.y;
+const distance=Math.hypot(dx,dy);
 let relative=
 Math.atan2(dy,dx)-player.angle;
 relative=
@@ -992,10 +827,8 @@ enemy.el.style.display="block";
 enemy.el.style.left=sx+"px";
 enemy.el.style.top=
 window.innerHeight*.57+"px";
-enemy.el.style.width=
-size+"px";
-enemy.el.style.height=
-(size*2)+"px";
+enemy.el.style.width=size+"px";
+enemy.el.style.height=(size*2)+"px";
 enemy.el.style.transform=
 "translate(-50%,-50%)";
 enemy.el
@@ -1003,121 +836,41 @@ enemy.el
 .style.width=
 Math.max(0,enemy.hp)+"%";
 }
-/* ==========================
-SHOOTING
-========================== */
+/* FIRE */
 let ammo=30;
 let reserve=90;
 let kills=0;
-let firing=false;
-let reloadBusy=false;
-let fireTimer=null;
-const FIRE_RATE=115;
 const fireButton=
 document.getElementById("fire");
 fireButton.addEventListener(
 "touchstart",
 e=>{
 e.preventDefault();
-firing=true;
-shoot();
-if(fireTimer===null){
-fireTimer=
-setInterval(
-()=>{
-if(firing)
 shoot();
 },
-FIRE_RATE
-);
-}
-},
 {passive:false}
 );
-function stopFiring(e){
-e.preventDefault();
-firing=false;
-}
-fireButton.addEventListener(
-"touchend",
-stopFiring,
-{passive:false}
-);
-fireButton.addEventListener(
-"touchcancel",
-stopFiring,
-{passive:false}
-);
-/* ==========================
-SHOOT
-========================== */
 function shoot(){
-if(
-player.hp<=0||
-reloadBusy
-)
-return;
+if(player.hp<=0)return;
 if(ammo<=0){
 reload();
 return;
 }
 ammo--;
-gunSound();
-muzzleFlash();
-recoil();
-hitTarget();
-updateHUD();
-}
-/* ==========================
-MUZZLE
-========================== */
-function muzzleFlash(){
 const muzzle=
 document.getElementById("muzzle");
 muzzle.style.display="block";
 setTimeout(
-()=>{
-muzzle.style.display="none";
-},
-55
+()=>muzzle.style.display="none",
+70
 );
-}
-/* ==========================
-RECOIL
-========================== */
-function recoil(){
-const weapon=
-document.getElementById("weapon");
-const crosshair=
-document.getElementById("crosshair");
-weapon.style.transform=
-"translateX(-50%) translateY(16px) rotate(-1deg)";
-crosshair.style.transform=
-"translate(-50%,-50%) scale(1.25)";
-setTimeout(
-()=>{
-weapon.style.transform=
-"translateX(-50%)";
-crosshair.style.transform=
-"translate(-50%,-50%)";
-},
-75
-);
-}
-/* ==========================
-HIT TARGET
-========================== */
-function hitTarget(){
 let target=null;
 let closest=Infinity;
 for(const enemy of enemies){
 if(enemy.hp<=0)continue;
-const dx=
-enemy.x-player.x;
-const dy=
-enemy.y-player.y;
-const distance=
-Math.hypot(dx,dy);
+const dx=enemy.x-player.x;
+const dy=enemy.y-player.y;
+const distance=Math.hypot(dx,dy);
 let a=
 Math.atan2(dy,dx)-player.angle;
 a=
@@ -1137,86 +890,40 @@ closest=distance;
 if(target){
 target.hp-=50;
 showHit();
-if(target.hp<=0){
+if(target.hp<=0)
 kills++;
 }
+/* RECOIL */
+const weapon=
+document.getElementById("weapon");
+weapon.style.transform=
+"translateX(-50%) translateY(15px)";
+setTimeout(
+()=>{
+weapon.style.transform=
+"translateX(-50%)";
+},
+70
+);
+updateHUD();
 }
-}
-/* ==========================
-HIT MARK
-========================== */
+/* HIT */
 function showHit(){
 const hit=
 document.getElementById("hitmark");
 hit.style.opacity=1;
 setTimeout(
-()=>{
-hit.style.opacity=0;
-},
+()=>hit.style.opacity=0,
 120
 );
 }
-/* ==========================
-SOUND
-========================== */
-let audioCtx=null;
-function gunSound(){
-try{
-const AudioContext=
-window.AudioContext||
-window.webkitAudioContext;
-if(!audioCtx){
-audioCtx=
-new AudioContext();
-}
-if(audioCtx.state==="suspended")
-audioCtx.resume();
-const osc=
-audioCtx.createOscillator();
-const gain=
-audioCtx.createGain();
-osc.type="square";
-osc.frequency.setValueAtTime(
-120,
-audioCtx.currentTime
-);
-osc.frequency.exponentialRampToValueAtTime(
-55,
-audioCtx.currentTime+.07
-);
-gain.gain.setValueAtTime(
-.09,
-audioCtx.currentTime
-);
-gain.gain.exponentialRampToValueAtTime(
-.001,
-audioCtx.currentTime+.07
-);
-osc.connect(gain);
-gain.connect(audioCtx.destination);
-osc.start();
-osc.stop(
-audioCtx.currentTime+.07
-);
-}catch(e){}
-}
-/* ==========================
-RELOAD
-========================== */
+/* RELOAD */
 function reload(){
 if(
-reloadBusy||
 ammo>=30||
 reserve<=0
 )
 return;
-reloadBusy=true;
-firing=false;
-const text=
-document.getElementById("reloadText");
-text.style.opacity=1;
-setTimeout(
-()=>{
 const amount=
 Math.min(
 30-ammo,
@@ -1224,12 +931,7 @@ reserve
 );
 ammo+=amount;
 reserve-=amount;
-reloadBusy=false;
-text.style.opacity=0;
 updateHUD();
-},
-900
-);
 }
 document
 .getElementById("reload")
@@ -1241,23 +943,17 @@ reload();
 },
 {passive:false}
 );
-/* ==========================
-DAMAGE
-========================== */
+/* DAMAGE */
 function damageEffect(){
 const damage=
 document.getElementById("damage");
 damage.style.opacity=.32;
 setTimeout(
-()=>{
-damage.style.opacity=0;
-},
+()=>damage.style.opacity=0,
 120
 );
 }
-/* ==========================
-MINIMAP
-========================== */
+/* MINIMAP */
 function updateMinimap(){
 const map=
 document.getElementById("minimap");
@@ -1286,9 +982,7 @@ dot.style.top=
 map.appendChild(dot);
 }
 }
-/* ==========================
-HUD
-========================== */
+/* HUD */
 function updateHUD(){
 let angle=
 player.angle*
@@ -1317,10 +1011,7 @@ kills;
 document
 .getElementById("healthBar")
 .style.width=
-Math.max(
-0,
-player.hp
-)+"%";
+Math.max(0,player.hp)+"%";
 document
 .getElementById("healthText")
 .textContent=
@@ -1336,9 +1027,7 @@ ammo+
 " / "+
 reserve;
 }
-/* ==========================
-GAME OVER
-========================== */
+/* GAME OVER */
 function gameOver(){
 const screen=
 document.getElementById("gameover");
@@ -1359,11 +1048,8 @@ document
 location.reload();
 }
 );
-/* ==========================
-GAME LOOP
-========================== */
-let last=
-performance.now();
+/* LOOP */
+let last=performance.now();
 function loop(now){
 const dt=
 Math.min(
