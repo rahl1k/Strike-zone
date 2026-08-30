@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Strike Zone</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>rahl1k FPS</title>
 <style>
 *{
     box-sizing:border-box;
@@ -11,50 +12,51 @@
 }
 html,body{
     margin:0;
+    padding:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#111;
+    background:#333;
     touch-action:none;
 }
 #game{
     position:fixed;
-    inset:0;
+    left:0;
+    top:0;
     width:100%;
     height:100%;
-    display:block;
 }
 #title{
     position:fixed;
-    z-index:20;
+    z-index:10;
     top:12px;
     left:50%;
     transform:translateX(-50%);
     color:white;
-    font:bold 21px Arial;
-    text-shadow:0 2px 5px #000;
+    font:bold 22px Arial;
+    text-shadow:0 2px 5px black;
 }
 #hp{
     position:fixed;
-    z-index:20;
-    left:22px;
+    z-index:10;
+    left:20px;
     top:15px;
     color:white;
     font:bold 18px Arial;
-    text-shadow:0 2px 5px #000;
+    text-shadow:0 2px 4px black;
 }
 #ammo{
     position:fixed;
-    z-index:20;
-    right:22px;
-    bottom:22px;
+    z-index:10;
+    right:20px;
+    bottom:20px;
     color:white;
     font:bold 20px Arial;
-    text-shadow:0 2px 5px #000;
+    text-shadow:0 2px 4px black;
 }
 #crosshair{
     position:fixed;
-    z-index:20;
+    z-index:10;
     left:50%;
     top:50%;
     width:24px;
@@ -81,14 +83,14 @@ html,body{
 }
 #joystick{
     position:fixed;
-    z-index:100;
+    z-index:50;
     left:25px;
     bottom:25px;
     width:140px;
     height:140px;
     border-radius:50%;
-    background:#ffffff22;
-    border:3px solid #ffffff66;
+    background:rgba(255,255,255,.12);
+    border:3px solid rgba(255,255,255,.35);
     touch-action:none;
 }
 #stick{
@@ -98,63 +100,37 @@ html,body{
     width:60px;
     height:60px;
     border-radius:50%;
-    background:#ffffff77;
-    border:2px solid #ffffffaa;
+    background:rgba(255,255,255,.45);
+    border:2px solid rgba(255,255,255,.7);
     pointer-events:none;
 }
 #fire{
     position:fixed;
-    z-index:100;
-    right:28px;
+    z-index:50;
+    right:25px;
     bottom:85px;
-    width:82px;
-    height:82px;
+    width:85px;
+    height:85px;
     border-radius:50%;
-    border:2px solid #ffffff77;
-    background:#a52222cc;
-    color:white;
-    font:bold 15px Arial;
-    touch-action:none;
-}
-#reload{
-    position:fixed;
-    z-index:100;
-    right:125px;
-    bottom:25px;
-    width:105px;
-    height:45px;
-    border-radius:12px;
-    border:1px solid #ffffff66;
-    background:#222c;
+    border:2px solid rgba(255,255,255,.5);
+    background:rgba(170,30,30,.8);
     color:white;
     font:bold 14px Arial;
     touch-action:none;
 }
-#message{
-    display:none;
+#reload{
     position:fixed;
-    z-index:200;
-    left:50%;
-    top:55%;
-    transform:translate(-50%,-50%);
+    z-index:50;
+    right:125px;
+    bottom:25px;
+    width:100px;
+    height:45px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.4);
+    background:rgba(30,30,30,.8);
     color:white;
-    font:bold 30px Arial;
-    text-shadow:0 3px 6px #000;
-}
-#restart{
-    display:none;
-    position:fixed;
-    z-index:200;
-    left:50%;
-    top:68%;
-    transform:translate(-50%,-50%);
-    width:180px;
-    height:55px;
-    border-radius:14px;
-    border:1px solid white;
-    background:#222d;
-    color:white;
-    font:bold 16px Arial;
+    font:bold 14px Arial;
+    touch-action:none;
 }
 </style>
 </head>
@@ -168,583 +144,242 @@ html,body{
 </div>
 
 FIRE
-
 RELOAD
 
-<div id="message"></div>
-
-PLAY AGAIN
-
 <script>
-/* =====================================================
+/* =========================================
    CANVAS
-===================================================== */
-const canvas =
-    document.getElementById("game");
-const ctx =
-    canvas.getContext("2d");
-let W=window.innerWidth;
-let H=window.innerHeight;
+========================================= */
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+let W=0;
+let H=0;
 function resize(){
     W=window.innerWidth;
     H=window.innerHeight;
     canvas.width=W;
     canvas.height=H;
 }
-window.addEventListener(
-    "resize",
-    resize
-);
+window.addEventListener("resize",resize);
 resize();
-/* =====================================================
+/* =========================================
    ИГРОК
-===================================================== */
-const player={
-    x:650,
+========================================= */
+let player={
+    x:700,
     y:600,
     angle:0,
     hp:100
 };
-/* =====================================================
-   ОРУЖИЕ
-===================================================== */
-let ammo=30;
-let reserve=90;
-let reloading=false;
-let muzzleFlash=0;
-/* =====================================================
+/* =========================================
    КАРТА
-===================================================== */
+========================================= */
 const walls=[
-    /* внешняя граница */
-    {x:100,y:100,w:2800,h:100},
-    {x:100,y:2000,w:2800,h:100},
-    {x:100,y:100,w:100,h:2000},
-    {x:2800,y:100,w:100,h:2000},
-    /* левое здание */
-    {x:350,y:350,w:600,h:100},
-    {x:350,y:350,w:100,h:650},
-    {x:850,y:350,w:100,h:650},
-    /* центр */
-    {x:1150,y:250,w:700,h:100},
-    {x:1150,y:250,w:100,h:600},
-    {x:1750,y:250,w:100,h:600},
-    {x:1150,y:750,w:300,h:100},
-    {x:1550,y:750,w:300,h:100},
-    /* правое здание */
-    {x:2050,y:400,w:550,h:100},
-    {x:2050,y:400,w:100,h:700},
-    {x:2500,y:400,w:100,h:700},
-    /* нижнее левое */
-    {x:350,y:1250,w:650,h:100},
-    {x:350,y:1250,w:100,h:550},
-    {x:900,y:1250,w:100,h:550},
-    {x:350,y:1700,w:650,h:100},
-    /* нижний центр */
-    {x:1200,y:1150,w:700,h:100},
-    {x:1200,y:1150,w:100,h:650},
-    {x:1800,y:1150,w:100,h:650},
-    {x:1200,y:1700,w:700,h:100},
-    /* укрытия */
-    {x:1050,y:450,w:100,h:100},
-    {x:1900,y:700,w:120,h:120},
-    {x:1000,y:1500,w:120,h:120},
-    {x:2000,y:1400,w:120,h:120},
-    {x:2200,y:1550,w:150,h:100}
+    {x:100,y:100,w:2600,h:80},
+    {x:100,y:1900,w:2600,h:80},
+    {x:100,y:100,w:80,h:1880},
+    {x:2620,y:100,w:80,h:1880},
+    {x:350,y:350,w:500,h:80},
+    {x:350,y:350,w:80,h:500},
+    {x:770,y:350,w:80,h:500},
+    {x:1100,y:250,w:600,h:80},
+    {x:1100,y:250,w:80,h:500},
+    {x:1620,y:250,w:80,h:500},
+    {x:1050,y:950,w:650,h:80},
+    {x:1950,y:400,w:500,h:80},
+    {x:1950,y:400,w:80,h:600},
+    {x:2370,y:400,w:80,h:600},
+    {x:350,y:1200,w:550,h:80},
+    {x:350,y:1200,w:80,h:550},
+    {x:820,y:1200,w:80,h:550},
+    {x:350,y:1670,w:550,h:80},
+    {x:1100,y:1200,w:650,h:80},
+    {x:1100,y:1200,w:80,h:550},
+    {x:1670,y:1200,w:80,h:550},
+    {x:1100,y:1670,w:650,h:80},
+    {x:950,y:500,w:100,h:100},
+    {x:1800,y:650,w:120,h:120},
+    {x:950,y:1450,w:120,h:120},
+    {x:1850,y:1400,w:120,h:120}
 ];
-/* =====================================================
+/* =========================================
    ВРАГИ
-===================================================== */
+========================================= */
 const enemies=[
-    {
-        x:2400,
-        y:300,
-        hp:100,
-        dead:false,
-        cooldown:1
-    },
-    {
-        x:2200,
-        y:1200,
-        hp:100,
-        dead:false,
-        cooldown:2
-    },
-    {
-        x:1450,
-        y:500,
-        hp:100,
-        dead:false,
-        cooldown:1.5
-    },
-    {
-        x:650,
-        y:1150,
-        hp:100,
-        dead:false,
-        cooldown:2
-    },
-    {
-        x:1500,
-        y:1850,
-        hp:100,
-        dead:false,
-        cooldown:1
-    }
+    {x:2200,y:250,hp:100,dead:false},
+    {x:2150,y:1100,hp:100,dead:false},
+    {x:1400,y:500,hp:100,dead:false},
+    {x:600,y:1050,hp:100,dead:false},
+    {x:1450,y:1800,hp:100,dead:false}
 ];
-/* =====================================================
-   СТОЛКНОВЕНИЕ
-===================================================== */
-function collides(x,y){
-    const radius=22;
-    for(const wall of walls){
+/* =========================================
+   СТОЛКНОВЕНИЯ
+========================================= */
+function collision(x,y){
+    const r=20;
+    for(let i=0;i<walls.length;i++){
+        const w=walls[i];
         if(
-            x+radius > wall.x &&
-            x-radius <
-            wall.x+wall.w &&
-            y+radius > wall.y &&
-            y-radius <
-            wall.y+wall.h
+            x+r>w.x &&
+            x-r<w.x+w.w &&
+            y+r>w.y &&
+            y-r<w.y+w.h
         ){
             return true;
         }
     }
     return false;
 }
-/* =====================================================
+/* =========================================
    ДЖОЙСТИК
-===================================================== */
-const joystick =
-    document.getElementById("joystick");
-const stick =
-    document.getElementById("stick");
+========================================= */
+const joystick=document.getElementById("joystick");
+const stick=document.getElementById("stick");
 let joyX=0;
 let joyY=0;
-let joyActive=false;
-let joyId=null;
-function setJoystick(x,y){
-    const rect =
-        joystick.getBoundingClientRect();
-    let dx =
-        x -
-        (rect.left + rect.width/2);
-    let dy =
-        y -
-        (rect.top + rect.height/2);
+let joyId=-1;
+function joystickMove(x,y){
+    const rect=joystick.getBoundingClientRect();
+    let dx=x-(rect.left+70);
+    let dy=y-(rect.top+70);
     const max=42;
-    const distance =
-        Math.hypot(dx,dy);
-    if(distance>max){
-        dx =
-            dx/distance*max;
-        dy =
-            dy/distance*max;
+    const len=Math.sqrt(dx*dx+dy*dy);
+    if(len>max){
+        dx=dx/len*max;
+        dy=dy/len*max;
     }
     joyX=dx/max;
     joyY=dy/max;
-    stick.style.left =
-        (40+dx)+"px";
-    stick.style.top =
-        (40+dy)+"px";
+    stick.style.left=(40+dx)+"px";
+    stick.style.top=(40+dy)+"px";
 }
-function resetJoystick(){
+function joystickReset(){
     joyX=0;
     joyY=0;
-    joyActive=false;
-    joyId=null;
+    joyId=-1;
     stick.style.left="40px";
     stick.style.top="40px";
 }
-joystick.addEventListener(
-    "touchstart",
-    function(e){
-        e.preventDefault();
-        const t =
-            e.changedTouches[0];
-        joyActive=true;
-        joyId=t.identifier;
-        setJoystick(
-            t.clientX,
-            t.clientY
-        );
-    },
-    {passive:false}
-);
-joystick.addEventListener(
-    "touchmove",
-    function(e){
-        e.preventDefault();
-        if(!joyActive)
-            return;
-        for(const t of e.changedTouches){
-            if(t.identifier === joyId){
-                setJoystick(
-                    t.clientX,
-                    t.clientY
-                );
-            }
-        }
-    },
-    {passive:false}
-);
-joystick.addEventListener(
-    "touchend",
-    function(e){
-        e.preventDefault();
-        resetJoystick();
-    },
-    {passive:false}
-);
-joystick.addEventListener(
-    "touchcancel",
-    function(){
-        resetJoystick();
-    }
-);
-/* =====================================================
-   СВАЙП
-===================================================== */
-let lookId=null;
-let lastLookX=0;
-canvas.addEventListener(
-    "touchstart",
-    function(e){
-        for(const t of e.changedTouches){
-            if(
-                t.clientX >
-                W*0.45
-            ){
-                lookId=t.identifier;
-                lastLookX=
-                    t.clientX;
-            }
-        }
-    },
-    {passive:false}
-);
-canvas.addEventListener(
-    "touchmove",
-    function(e){
-        if(lookId === null)
-            return;
-        e.preventDefault();
-        for(const t of e.changedTouches){
-            if(t.identifier === lookId){
-                const dx =
-                    t.clientX -
-                    lastLookX;
-                player.angle +=
-                    dx*0.008;
-                lastLookX =
-                    t.clientX;
-            }
-        }
-    },
-    {passive:false}
-);
-canvas.addEventListener(
-    "touchend",
-    function(e){
-        for(const t of e.changedTouches){
-            if(t.identifier === lookId){
-                lookId=null;
-            }
+joystick.addEventListener("touchstart",function(e){
+    e.preventDefault();
+    const t=e.changedTouches[0];
+    joyId=t.identifier;
+    joystickMove(
+        t.clientX,
+        t.clientY
+    );
+},{passive:false});
+joystick.addEventListener("touchmove",function(e){
+    e.preventDefault();
+    for(let i=0;i<e.changedTouches.length;i++){
+        const t=e.changedTouches[i];
+        if(t.identifier===joyId){
+            joystickMove(
+                t.clientX,
+                t.clientY
+            );
         }
     }
-);
-/* =====================================================
+},{passive:false});
+joystick.addEventListener("touchend",function(e){
+    e.preventDefault();
+    joystickReset();
+},{passive:false});
+joystick.addEventListener("touchcancel",function(){
+    joystickReset();
+});
+/* =========================================
+   СВАЙП КАМЕРЫ
+========================================= */
+let lookId=-1;
+let lookX=0;
+canvas.addEventListener("touchstart",function(e){
+    for(let i=0;i<e.changedTouches.length;i++){
+        const t=e.changedTouches[i];
+        if(t.clientX>W*0.45){
+            lookId=t.identifier;
+            lookX=t.clientX;
+        }
+    }
+},{passive:false});
+canvas.addEventListener("touchmove",function(e){
+    if(lookId===-1)
+        return;
+    e.preventDefault();
+    for(let i=0;i<e.changedTouches.length;i++){
+        const t=e.changedTouches[i];
+        if(t.identifier===lookId){
+            const dx=t.clientX-lookX;
+            player.angle+=dx*0.008;
+            lookX=t.clientX;
+        }
+    }
+},{passive:false});
+canvas.addEventListener("touchend",function(e){
+    for(let i=0;i<e.changedTouches.length;i++){
+        if(
+            e.changedTouches[i].identifier===
+            lookId
+        ){
+            lookId=-1;
+        }
+    }
+});
+/* =========================================
    ДВИЖЕНИЕ
-===================================================== */
+========================================= */
 function updatePlayer(dt){
     const speed=220;
-    const forward =
-        -joyY;
-    const side =
-        joyX;
-    const dx =
-        (
-            Math.cos(player.angle)*
-            forward
-            -
-            Math.sin(player.angle)*
-            side
-        )*
-        speed*
-        dt;
-    const dy =
-        (
-            Math.sin(player.angle)*
-            forward
-            +
-            Math.cos(player.angle)*
-            side
-        )*
-        speed*
-        dt;
-    const nx =
-        player.x+dx;
-    const ny =
-        player.y+dy;
-    if(
-        !collides(
-            nx,
-            player.y
-        )
-    ){
+    const forward=-joyY;
+    const side=joyX;
+    const dx=(
+        Math.cos(player.angle)*forward-
+        Math.sin(player.angle)*side
+    )*speed*dt;
+    const dy=(
+        Math.sin(player.angle)*forward+
+        Math.cos(player.angle)*side
+    )*speed*dt;
+    const nx=player.x+dx;
+    const ny=player.y+dy;
+    if(!collision(nx,player.y))
         player.x=nx;
-    }
-    if(
-        !collides(
-            player.x,
-            ny
-        )
-    ){
+    if(!collision(player.x,ny))
         player.y=ny;
-    }
 }
-/* =====================================================
-   ВИДИМОСТЬ СТЕН
-===================================================== */
-function raycast(angle){
-    const maxDistance=1800;
-    const step=7;
+/* =========================================
+   ЛУЧ
+========================================= */
+function ray(angle){
+    const max=1600;
     for(
-        let d=1;
-        d<maxDistance;
-        d+=step
+        let d=5;
+        d<max;
+        d+=8
     ){
-        const x =
-            player.x +
+        const x=
+            player.x+
             Math.cos(angle)*d;
-        const y =
-            player.y +
+        const y=
+            player.y+
             Math.sin(angle)*d;
-        for(const wall of walls){
+        for(let i=0;i<walls.length;i++){
+            const w=walls[i];
             if(
-                x>=wall.x &&
-                x<=wall.x+wall.w &&
-                y>=wall.y &&
-                y<=wall.y+wall.h
+                x>=w.x &&
+                x<=w.x+w.w &&
+                y>=w.y &&
+                y<=w.y+w.h
             ){
                 return d;
             }
         }
     }
-    return maxDistance;
+    return max;
 }
-/* =====================================================
-   ПРОВЕРКА ЛИНИИ ДО ВРАГА
-===================================================== */
-function hasLineOfSight(enemy){
-    const dx =
-        enemy.x-player.x;
-    const dy =
-        enemy.y-player.y;
-    const distance =
-        Math.hypot(dx,dy);
-    const steps =
-        Math.ceil(distance/15);
-    for(let i=1;i<steps;i++){
-        const x =
-            player.x+
-            dx*(i/steps);
-        const y =
-            player.y+
-            dy*(i/steps);
-        for(const wall of walls){
-            if(
-                x>=wall.x &&
-                x<=wall.x+wall.w &&
-                y>=wall.y &&
-                y<=wall.y+wall.h
-            ){
-                return false;
-            }
-        }
-    }
-    return true;
-}
-/* =====================================================
-   СТРЕЛЬБА
-===================================================== */
-const fire =
-    document.getElementById("fire");
-fire.addEventListener(
-    "touchstart",
-    function(e){
-        e.preventDefault();
-        shoot();
-    },
-    {passive:false}
-);
-function shoot(){
-    if(
-        reloading ||
-        ammo<=0
-    ){
-        if(ammo<=0)
-            reload();
-        return;
-    }
-    ammo--;
-    muzzleFlash=0.08;
-    let best=null;
-    let bestDistance=Infinity;
-    for(const enemy of enemies){
-        if(enemy.dead)
-            continue;
-        const dx =
-            enemy.x-player.x;
-        const dy =
-            enemy.y-player.y;
-        const distance =
-            Math.hypot(dx,dy);
-        if(distance>1000)
-            continue;
-        let angle =
-            Math.atan2(dy,dx) -
-            player.angle;
-        angle =
-            Math.atan2(
-                Math.sin(angle),
-                Math.cos(angle)
-            );
-        if(
-            Math.abs(angle)<0.10 &&
-            distance<bestDistance &&
-            hasLineOfSight(enemy)
-        ){
-            best=enemy;
-            bestDistance=distance;
-        }
-    }
-    if(best){
-        best.hp-=50;
-        if(best.hp<=0){
-            best.hp=0;
-            best.dead=true;
-        }
-    }
-}
-/* =====================================================
-   ПЕРЕЗАРЯДКА
-===================================================== */
-const reloadButton =
-    document.getElementById("reload");
-reloadButton.addEventListener(
-    "touchstart",
-    function(e){
-        e.preventDefault();
-        reload();
-    },
-    {passive:false}
-);
-function reload(){
-    if(
-        reloading ||
-        ammo>=30 ||
-        reserve<=0
-    )
-        return;
-    reloading=true;
-    setTimeout(
-        function(){
-            const need =
-                30-ammo;
-            const amount =
-                Math.min(
-                    need,
-                    reserve
-                );
-            ammo+=amount;
-            reserve-=amount;
-            reloading=false;
-        },
-        900
-    );
-}
-/* =====================================================
-   ИИ ВРАГОВ
-===================================================== */
-function updateEnemies(dt){
-    for(const enemy of enemies){
-        if(enemy.dead)
-            continue;
-        const dx =
-            player.x-enemy.x;
-        const dy =
-            player.y-enemy.y;
-        const distance =
-            Math.hypot(dx,dy);
-        /* движение к игроку */
-        if(
-            distance>180 &&
-            distance<1000
-        ){
-            const speed=35;
-            const nx =
-                enemy.x+
-                dx/distance*
-                speed*
-                dt;
-            const ny =
-                enemy.y+
-                dy/distance*
-                speed*
-                dt;
-            if(
-                !collides(
-                    nx,
-                    enemy.y
-                )
-            ){
-                enemy.x=nx;
-            }
-            if(
-                !collides(
-                    enemy.x,
-                    ny
-                )
-            ){
-                enemy.y=ny;
-            }
-        }
-        /* атака */
-        enemy.cooldown-=dt;
-        if(
-            distance<650 &&
-            enemy.cooldown<=0 &&
-            hasLineOfSight(enemy)
-        ){
-            player.hp-=7;
-            enemy.cooldown=1.2;
-        }
-    }
-}
-/* =====================================================
-   HUD
-===================================================== */
-function updateHUD(){
-    document.getElementById(
-        "hp"
-    ).textContent =
-        "HP "+
-        Math.max(
-            0,
-            Math.floor(player.hp)
-        );
-    document.getElementById(
-        "ammo"
-    ).textContent =
-        reloading
-        ? "RELOADING..."
-        : ammo+
-          " / "+
-          reserve;
-}
-/* =====================================================
-   ОТРИСОВКА
-===================================================== */
+/* =========================================
+   РИСОВАНИЕ
+========================================= */
 function draw(){
     /* небо */
     ctx.fillStyle="#718991";
@@ -762,300 +397,272 @@ function draw(){
         W,
         H/2
     );
-    /* линии пола */
-    ctx.strokeStyle="#4c5659";
-    ctx.lineWidth=1;
-    for(
-        let i=1;
-        i<14;
-        i++
-    ){
-        const y =
+    /* пол */
+    ctx.strokeStyle="#4c5558";
+    for(let i=1;i<14;i++){
+        const y=
             H/2+
             i*(H/2)/14;
         ctx.beginPath();
-        ctx.moveTo(
-            0,
-            y
-        );
-        ctx.lineTo(
-            W,
-            y
-        );
+        ctx.moveTo(0,y);
+        ctx.lineTo(W,y);
         ctx.stroke();
     }
-    /* =================================================
-       FPS СТЕНЫ
-    ================================================= */
-    const fov =
-        Math.PI/3;
-    const rays =
-        Math.min(
-            300,
-            Math.max(
-                120,
-                Math.floor(W/4)
-            )
-        );
-    const projection =
+    /* FPS стены */
+    const fov=Math.PI/3;
+    const rays=180;
+    const projection=
         (W/2)/
         Math.tan(fov/2);
-    for(
-        let i=0;
-        i<rays;
-        i++
-    ){
-        const screenX =
+    for(let i=0;i<rays;i++){
+        const screenX=
             i*W/rays;
-        const rayAngle =
+        const angle=
             player.angle-
             fov/2+
-            (i/rays)*fov;
-        let distance =
-            raycast(
-                rayAngle
-            );
-        distance *=
+            i/rays*fov;
+        let distance=ray(angle);
+        distance*=
             Math.cos(
-                rayAngle-
-                player.angle
+                angle-player.angle
             );
-        distance =
-            Math.max(
-                1,
-                distance
-            );
-        const wallHeight =
+        if(distance<1)
+            distance=1;
+        const height=
             projection/
             distance*
             100;
-        const top =
-            H/2-
-            wallHeight/2;
-        const brightness =
+        const top=
+            H/2-height/2;
+        const light=
             Math.max(
-                35,
-                185-distance/9
+                40,
+                180-distance/9
             );
-        ctx.fillStyle =
+        ctx.fillStyle=
             "rgb("+
-            brightness+","+
-            brightness+","+
-            brightness+
+            light+","+
+            light+","+
+            light+
             ")";
         ctx.fillRect(
             screenX,
             top,
             W/rays+1,
-            wallHeight
+            height
         );
     }
-    /* =================================================
+    /* =================================
        ВРАГИ
-    ================================================= */
-    for(const enemy of enemies){
+    ================================= */
+    for(let i=0;i<enemies.length;i++){
+        const enemy=enemies[i];
         if(enemy.dead)
             continue;
-        const dx =
+        const dx=
             enemy.x-player.x;
-        const dy =
+        const dy=
             enemy.y-player.y;
-        const distance =
-            Math.hypot(dx,dy);
-        let relative =
-            Math.atan2(
-                dy,
-                dx
-            )-
-            player.angle;
-        relative =
-            Math.atan2(
-                Math.sin(relative),
-                Math.cos(relative)
+        const distance=
+            Math.sqrt(
+                dx*dx+dy*dy
             );
+        let relative=
+            Math.atan2(dy,dx)-
+            player.angle;
+        while(relative>Math.PI)
+            relative-=Math.PI*2;
+        while(relative<-Math.PI)
+            relative+=Math.PI*2;
         if(
             Math.abs(relative)<
             fov/2
         ){
-            /*
-               Проверяем стену
-            */
-            const visible =
-                hasLineOfSight(enemy);
-            if(!visible)
-                continue;
-            const screenX =
+            const screenX=
                 W/2+
                 relative/
                 (fov/2)*
                 (W/2);
-            const size =
+            const size=
                 Math.max(
-                    28,
-                    52000/
-                    (distance+120)
+                    30,
+                    50000/
+                    (distance+100)
                 );
             /* тело */
-            ctx.fillStyle="#bd3038";
+            ctx.fillStyle="#c52f38";
             ctx.fillRect(
-                screenX-
-                size*.30,
-                H/2-
-                size*.42,
-                size*.60,
-                size*.85
+                screenX-size*.3,
+                H/2-size*.4,
+                size*.6,
+                size*.8
             );
             /* голова */
-            ctx.fillStyle="#d9a27f";
+            ctx.fillStyle="#d9a17d";
             ctx.beginPath();
             ctx.arc(
                 screenX,
-                H/2-
-                size*.55,
-                size*.20,
+                H/2-size*.57,
+                size*.2,
                 0,
                 Math.PI*2
             );
             ctx.fill();
-            /* HP фон */
+            /* здоровье */
             ctx.fillStyle="#111";
             ctx.fillRect(
-                screenX-
-                size*.45,
-                H/2-
-                size*.82,
-                size*.90,
-                6
+                screenX-size*.45,
+                H/2-size*.85,
+                size*.9,
+                5
             );
-            /* HP */
-            ctx.fillStyle="#35d36b";
+            ctx.fillStyle="#32d16b";
             ctx.fillRect(
-                screenX-
-                size*.45,
-                H/2-
-                size*.82,
-                size*.90*
-                (enemy.hp/100),
-                6
+                screenX-size*.45,
+                H/2-size*.85,
+                size*.9*
+                enemy.hp/100,
+                5
             );
         }
     }
-    /* =================================================
+    /* =================================
        ОРУЖИЕ
-    ================================================= */
+    ================================= */
     ctx.fillStyle="#111";
     ctx.fillRect(
-        W/2-58,
-        H-92,
-        116,
-        72
+        W/2-55,
+        H-90,
+        110,
+        70
     );
     ctx.fillStyle="#555";
     ctx.fillRect(
-        W/2-11,
+        W/2-10,
         H-135,
-        22,
-        58
+        20,
+        55
     );
-    /* вспышка */
-    if(muzzleFlash>0){
-        ctx.fillStyle=
-            "rgba(255,220,70,.9)";
-        ctx.beginPath();
-        ctx.arc(
-            W/2,
-            H-140,
-            25,
-            0,
-            Math.PI*2
-        );
-        ctx.fill();
-        muzzleFlash-=0.016;
-    }
 }
-/* =====================================================
-   СОСТОЯНИЕ ИГРЫ
-===================================================== */
-let gameEnded=false;
-function checkGame(){
-    if(
-        player.hp<=0 &&
-        !gameEnded
-    ){
-        player.hp=0;
-        gameEnded=true;
-        document.getElementById(
-            "message"
-        ).textContent=
-            "YOU DIED";
-        document.getElementById(
-            "message"
-        ).style.display="block";
-        document.getElementById(
-            "restart"
-        ).style.display="block";
+/* =========================================
+   СТРЕЛЬБА
+========================================= */
+function shoot(){
+    if(ammo<=0){
+        reload();
         return;
     }
-    const alive =
-        enemies.filter(
-            enemy=>!enemy.dead
-        ).length;
-    if(
-        alive===0 &&
-        !gameEnded
-    ){
-        gameEnded=true;
-        document.getElementById(
-            "message"
-        ).textContent=
-            "ROUND WON!";
-        document.getElementById(
-            "message"
-        ).style.display="block";
-        document.getElementById(
-            "restart"
-        ).style.display="block";
+    ammo--;
+    let target=null;
+    let closest=999999;
+    for(let i=0;i<enemies.length;i++){
+        const enemy=enemies[i];
+        if(enemy.dead)
+            continue;
+        const dx=
+            enemy.x-player.x;
+        const dy=
+            enemy.y-player.y;
+        const distance=
+            Math.sqrt(
+                dx*dx+dy*dy
+            );
+        let a=
+            Math.atan2(dy,dx)-
+            player.angle;
+        while(a>Math.PI)
+            a-=Math.PI*2;
+        while(a<-Math.PI)
+            a+=Math.PI*2;
+        if(
+            Math.abs(a)<0.12 &&
+            distance<1000 &&
+            distance<closest
+        ){
+            target=enemy;
+            closest=distance;
+        }
+    }
+    if(target){
+        target.hp-=50;
+        if(target.hp<=0){
+            target.hp=0;
+            target.dead=true;
+        }
     }
 }
-/* =====================================================
-   ПЕРЕЗАПУСК
-===================================================== */
 document
-.getElementById("restart")
+.getElementById("fire")
 .addEventListener(
     "touchstart",
     function(e){
         e.preventDefault();
-        location.reload();
+        shoot();
     },
     {passive:false}
 );
-/* =====================================================
-   GAME LOOP
-===================================================== */
-let last =
-    performance.now();
+/* =========================================
+   ПЕРЕЗАРЯДКА
+========================================= */
+function reload(){
+    if(
+        ammo>=30 ||
+        reserve<=0
+    )
+        return;
+    const need=30-ammo;
+    const amount=
+        Math.min(
+            need,
+            reserve
+        );
+    ammo+=amount;
+    reserve-=amount;
+}
+document
+.getElementById("reload")
+.addEventListener(
+    "touchstart",
+    function(e){
+        e.preventDefault();
+        reload();
+    },
+    {passive:false}
+);
+/* =========================================
+   HUD
+========================================= */
+function updateHUD(){
+    document.getElementById("hp")
+        .textContent=
+        "HP "+
+        Math.max(
+            0,
+            Math.floor(player.hp)
+        );
+    document.getElementById("ammo")
+        .textContent=
+        ammo+
+        " / "+
+        reserve;
+}
+/* =========================================
+   ИГРОВОЙ ЦИКЛ
+========================================= */
+let last=performance.now();
 function loop(now){
-    const dt =
+    const dt=
         Math.min(
             0.05,
             (now-last)/1000
         );
     last=now;
-    if(!gameEnded){
-        updatePlayer(dt);
-        updateEnemies(dt);
-    }
-    checkGame();
+    updatePlayer(dt);
     updateHUD();
     draw();
-    requestAnimationFrame(
-        loop
-    );
+    requestAnimationFrame(loop);
 }
-requestAnimationFrame(
-    loop
-);
+requestAnimationFrame(loop);
 </script>
 </body>
 </html>
