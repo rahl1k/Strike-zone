@@ -251,6 +251,7 @@ background:#a52c2ccc;
 color:white;
 font-weight:bold;
 }
+
 #reload{
 position:fixed;
 z-index:200;
@@ -265,12 +266,12 @@ color:white;
 font-weight:bold;
 }
 
-/* ДОБАВЛЕНО: ПЕРЕКЛЮЧАТЕЛЬ ОРУЖИЯ */
-#switchWeapon{
+/* НОВАЯ КНОПКА ОРУЖИЯ */
+#weaponSwitch{
 position:fixed;
 z-index:200;
-right:135px;
-bottom:90px;
+right:250px;
+bottom:35px;
 width:100px;
 height:45px;
 border-radius:12px;
@@ -293,6 +294,7 @@ height:130px;
 transform:translateX(-50%);
 transition:transform .07s;
 }
+
 #gun{
 position:absolute;
 left:30px;
@@ -303,6 +305,7 @@ background:#151718;
 border-radius:15px 15px 5px 5px;
 box-shadow:0 0 10px #000;
 }
+
 #barrel{
 position:absolute;
 left:72px;
@@ -311,6 +314,73 @@ width:25px;
 height:70px;
 background:#303537;
 border-radius:5px;
+}
+
+/* ПИСТОЛЕТ */
+#pistol{
+display:none;
+position:absolute;
+left:45px;
+bottom:0;
+width:80px;
+height:55px;
+background:#17191a;
+border-radius:8px 8px 5px 5px;
+box-shadow:0 0 10px #000;
+}
+
+#pistolBarrel{
+display:none;
+position:absolute;
+left:72px;
+bottom:45px;
+width:18px;
+height:65px;
+background:#303537;
+border-radius:4px;
+}
+
+/* НОЖ */
+#knife{
+display:none;
+position:absolute;
+left:70px;
+bottom:5px;
+width:25px;
+height:100px;
+transform:rotate(18deg);
+transform-origin:bottom center;
+}
+
+#knifeHandle{
+position:absolute;
+left:4px;
+bottom:0;
+width:17px;
+height:40px;
+background:#151515;
+border-radius:5px;
+}
+
+#knifeBlade{
+position:absolute;
+left:5px;
+bottom:35px;
+width:15px;
+height:65px;
+background:linear-gradient(
+90deg,
+#777,
+#eee,
+#777
+);
+clip-path:polygon(
+0 100%,
+0 15%,
+50% 0,
+100% 15%,
+100% 100%
+);
 }
 
 /* ВСПЫШКА */
@@ -514,6 +584,7 @@ display:flex;
 <body>
 
 <div id="game">
+
 <div id="sky"></div>
 <div id="ground"></div>
 <div class="roadV"></div>
@@ -530,6 +601,7 @@ display:flex;
 <div class="building" id="b4"></div>
 <div class="building" id="b5"></div>
 <div class="building" id="b6"></div>
+
 </div>
 
 <div id="title">
@@ -560,6 +632,7 @@ KILLS: 0
 </div>
 
 <div id="minimap">
+
 <div class="mapBuilding"
 style="left:10px;top:10px;width:35px;height:25px"></div>
 
@@ -573,6 +646,7 @@ style="left:10px;bottom:10px;width:35px;height:30px"></div>
 style="right:10px;bottom:10px;width:35px;height:30px"></div>
 
 <div id="playerDot"></div>
+
 </div>
 
 <div id="joystick">
@@ -587,15 +661,26 @@ FIRE
 RELOAD
 </button>
 
-<!-- ДОБАВЛЕНО -->
-<button id="switchWeapon">
-WEAPON
+<!-- НОВАЯ КНОПКА -->
+<button id="weaponSwitch">
+AUTO
 </button>
 
 <div id="weapon">
+
 <div id="muzzle"></div>
+
 <div id="barrel"></div>
 <div id="gun"></div>
+
+<div id="pistolBarrel"></div>
+<div id="pistol"></div>
+
+<div id="knife">
+<div id="knifeHandle"></div>
+<div id="knifeBlade"></div>
+</div>
+
 </div>
 
 <div id="damage"></div>
@@ -635,6 +720,7 @@ hp:100
 
 const MAP_W=4000;
 const MAP_H=3000;
+
 
 /* ==========================
 ЗДАНИЯ
@@ -678,6 +764,7 @@ if(forward<-50){
 el.style.display="none";
 
 continue;
+
 }
 
 const f=Math.max(100,forward);
@@ -700,6 +787,7 @@ Math.max(
 el.style.display="block";
 
 el.style.left=sx+"px";
+
 el.style.top=sy+"px";
 
 el.style.width=
@@ -709,7 +797,9 @@ el.style.height=
 (b.h*.55*scale)+"px";
 
 }
+
 }
+
 
 /* ==========================
 СТОЛКНОВЕНИЯ
@@ -740,7 +830,9 @@ return true;
 }
 
 return false;
+
 }
+
 
 /* ==========================
 ДЖОЙСТИК
@@ -870,6 +962,7 @@ joystick.addEventListener(
 resetJoy
 );
 
+
 /* ==========================
 КАМЕРА 360°
 ========================== */
@@ -887,11 +980,12 @@ if(
 t.clientX>
 window.innerWidth*.42&&
 !t.target.closest(
-"#fire,#reload,#joystick,#switchWeapon"
+"#fire,#reload,#weaponSwitch,#joystick"
 )
 ){
 
 lookID=t.identifier;
+
 lastLookX=t.clientX;
 
 }
@@ -946,6 +1040,7 @@ lookID=null;
 }
 );
 
+
 /* ==========================
 ДВИЖЕНИЕ
 ========================== */
@@ -985,6 +1080,7 @@ if(!blocked(player.x,ny))
 player.y=ny;
 
 }
+
 
 /* ==========================
 ВРАГИ
@@ -1053,9 +1149,7 @@ enemy.type;
 el.innerHTML=`
 
 <div class="enemyHP">
-
 <div class="enemyHPInner"></div>
-
 </div>
 
 <div class="enemyHead"></div>
@@ -1077,6 +1171,7 @@ enemy.el=el;
 }
 
 createEnemies();
+
 
 /* ==========================
 ВРАГИ
@@ -1102,6 +1197,7 @@ player.y-enemy.y;
 
 const distance=
 Math.hypot(dx,dy);
+
 
 /* движение */
 
@@ -1139,6 +1235,7 @@ enemy.y=ny;
 
 }
 
+
 /* атака */
 
 if(distance<750){
@@ -1164,6 +1261,7 @@ showEnemy(enemy);
 
 }
 
+
 /* ==========================
 ВРАГ СТРЕЛЯЕТ
 ========================== */
@@ -1180,10 +1278,6 @@ player.y-enemy.y;
 
 const distance=
 Math.hypot(dx,dy);
-
-/*
-урон зависит от расстояния
-*/
 
 let damage=4;
 
@@ -1202,6 +1296,7 @@ player.hp-damage
 damageEffect();
 
 }
+
 
 /* ==========================
 ОТОБРАЖЕНИЕ ВРАГА
@@ -1280,13 +1375,148 @@ enemy.hp
 
 }
 
+
 /* ==========================
-СТРЕЛЬБА
+ОРУЖИЯ
 ========================== */
+
+let currentWeapon="auto";
+
+const weapons={
+
+auto:{
+name:"AUTO",
+ammo:30,
+reserve:90,
+maxAmmo:30,
+damage:50,
+range:1500
+},
+
+pistol:{
+name:"PISTOL",
+ammo:12,
+reserve:36,
+maxAmmo:12,
+damage:70,
+range:1200
+},
+
+knife:{
+name:"KNIFE",
+ammo:0,
+reserve:0,
+maxAmmo:0,
+damage:100,
+range:130
+}
+
+};
 
 let ammo=30;
 let reserve=90;
 let kills=0;
+
+
+/* ==========================
+ПЕРЕКЛЮЧЕНИЕ ОРУЖИЯ
+========================== */
+
+const weaponSwitch=
+document.getElementById("weaponSwitch");
+
+function updateWeaponVisual(){
+
+const gun=
+document.getElementById("gun");
+
+const barrel=
+document.getElementById("barrel");
+
+const pistol=
+document.getElementById("pistol");
+
+const pistolBarrel=
+document.getElementById("pistolBarrel");
+
+const knife=
+document.getElementById("knife");
+
+gun.style.display="none";
+barrel.style.display="none";
+
+pistol.style.display="none";
+pistolBarrel.style.display="none";
+
+knife.style.display="none";
+
+if(currentWeapon==="auto"){
+
+gun.style.display="block";
+barrel.style.display="block";
+
+weaponSwitch.textContent="AUTO";
+
+}else if(currentWeapon==="pistol"){
+
+pistol.style.display="block";
+pistolBarrel.style.display="block";
+
+weaponSwitch.textContent="PISTOL";
+
+}else{
+
+knife.style.display="block";
+
+weaponSwitch.textContent="KNIFE";
+
+}
+
+}
+
+function switchWeapon(){
+
+if(currentWeapon==="auto"){
+
+currentWeapon="pistol";
+
+}else if(currentWeapon==="pistol"){
+
+currentWeapon="knife";
+
+}else{
+
+currentWeapon="auto";
+
+}
+
+const weapon=
+weapons[currentWeapon];
+
+ammo=weapon.ammo;
+reserve=weapon.reserve;
+
+updateWeaponVisual();
+updateHUD();
+
+}
+
+weaponSwitch.addEventListener(
+"touchstart",
+e=>{
+
+e.preventDefault();
+
+switchWeapon();
+
+},
+{passive:false}
+);
+
+
+/* ==========================
+СТРЕЛЬБА
+========================== */
 
 document
 .getElementById("fire")
@@ -1302,33 +1532,15 @@ shoot();
 {passive:false}
 );
 
+
 function shoot(){
 
 if(player.hp<=0)return;
 
-if(ammo<=0){
 
-reload();
+/* НОЖ */
 
-return;
-
-}
-
-ammo--;
-
-const muzzle=
-document.getElementById("muzzle");
-
-muzzle.style.display="block";
-
-setTimeout(
-()=>{
-
-muzzle.style.display="none";
-
-},
-70
-);
+if(currentWeapon==="knife"){
 
 let target=null;
 let closest=Infinity;
@@ -1359,8 +1571,8 @@ Math.cos(a)
 );
 
 if(
-Math.abs(a)<.12&&
-distance<1500&&
+Math.abs(a)<.45&&
+distance<130&&
 distance<closest
 ){
 
@@ -1373,7 +1585,113 @@ closest=distance;
 
 if(target){
 
-target.hp-=50;
+target.hp-=100;
+
+showHit();
+
+if(target.hp<=0){
+
+kills++;
+
+}
+
+}
+
+const weapon=
+document.getElementById("weapon");
+
+weapon.style.transform=
+"translateX(-50%) translateY(25px)";
+
+setTimeout(
+()=>{
+
+weapon.style.transform=
+"translateX(-50%)";
+
+},
+100
+);
+
+return;
+
+}
+
+
+/* ОГНЕСТРЕЛЬНОЕ ОРУЖИЕ */
+
+if(ammo<=0){
+
+reload();
+
+return;
+
+}
+
+ammo--;
+
+const muzzle=
+document.getElementById("muzzle");
+
+muzzle.style.display="block";
+
+setTimeout(
+()=>{
+
+muzzle.style.display="none";
+
+},
+70
+);
+
+let target=null;
+
+let closest=Infinity;
+
+for(const enemy of enemies){
+
+if(enemy.hp<=0)continue;
+
+const dx=
+enemy.x-player.x;
+
+const dy=
+enemy.y-player.y;
+
+const distance=
+Math.hypot(dx,dy);
+
+let a=
+Math.atan2(
+dy,
+dx
+)-player.angle;
+
+a=
+Math.atan2(
+Math.sin(a),
+Math.cos(a)
+);
+
+if(
+Math.abs(a)<.12&&
+distance<
+weapons[currentWeapon].range&&
+distance<closest
+){
+
+target=enemy;
+
+closest=distance;
+
+}
+
+}
+
+if(target){
+
+target.hp-=
+weapons[currentWeapon].damage;
 
 showHit();
 
@@ -1403,6 +1721,7 @@ weapon.style.transform=
 
 }
 
+
 /* ==========================
 ПОПАДАНИЕ
 ========================== */
@@ -1424,6 +1743,7 @@ hit.style.opacity=0;
 );
 
 }
+
 
 /* ==========================
 ЗВУК
@@ -1474,25 +1794,30 @@ ctx.currentTime+.08
 
 }
 
+
 /* ==========================
 ПЕРЕЗАРЯДКА
 ========================== */
 
 function reload(){
 
+if(currentWeapon==="knife")
+return;
+
 if(
-ammo>=30||
+ammo>=weapons[currentWeapon].maxAmmo||
 reserve<=0
 )
 return;
 
 const amount=
 Math.min(
-30-ammo,
+weapons[currentWeapon].maxAmmo-ammo,
 reserve
 );
 
 ammo+=amount;
+
 reserve-=amount;
 
 }
@@ -1511,42 +1836,6 @@ reload();
 {passive:false}
 );
 
-/* ==========================
-ДОБАВЛЕНО:
-ПЕРЕКЛЮЧЕНИЕ ОРУЖИЯ
-========================== */
-
-let currentWeapon=0;
-
-const weapons=[
-"АВТОМАТ",
-"ПИСТОЛЕТ",
-"НОЖ"
-];
-
-const switchWeapon=
-document.getElementById("switchWeapon");
-
-switchWeapon.addEventListener(
-"touchstart",
-e=>{
-
-e.preventDefault();
-
-currentWeapon++;
-
-if(currentWeapon>=weapons.length){
-
-currentWeapon=0;
-
-}
-
-switchWeapon.textContent=
-weapons[currentWeapon];
-
-},
-{passive:false}
-);
 
 /* ==========================
 УРОН
@@ -1569,6 +1858,7 @@ damage.style.opacity=0;
 );
 
 }
+
 
 /* ==========================
 МИНИ-КАРТА
@@ -1617,6 +1907,7 @@ map.appendChild(dot);
 }
 
 }
+
 
 /* ==========================
 HUD
@@ -1669,6 +1960,15 @@ Math.max(
 Math.round(player.hp)
 );
 
+if(currentWeapon==="knife"){
+
+document
+.getElementById("ammo")
+.textContent=
+"—";
+
+}else{
+
 document
 .getElementById("ammo")
 .textContent=
@@ -1677,6 +1977,9 @@ ammo+
 reserve;
 
 }
+
+}
+
 
 /* ==========================
 GAME OVER
@@ -1713,6 +2016,7 @@ location.reload();
 }
 );
 
+
 /* ==========================
 GAME LOOP
 ========================== */
@@ -1733,9 +2037,13 @@ last=now;
 if(player.hp>0){
 
 updatePlayer(dt);
+
 updateEnemies(dt);
+
 updateBuildings();
+
 updateMinimap();
+
 updateHUD();
 
 }else{
@@ -1748,8 +2056,11 @@ requestAnimationFrame(loop);
 
 }
 
+updateWeaponVisual();
+
 requestAnimationFrame(loop);
 
 </script>
+
 </body>
 </html>
