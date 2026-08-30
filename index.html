@@ -1518,20 +1518,57 @@ switchWeapon();
 СТРЕЛЬБА
 ========================== */
 
-document
-.getElementById("fire")
-.addEventListener(
+let fireHeld=false;
+let fireTimer=null;
+
+const fireButton=document.getElementById("fire");
+
+fireButton.addEventListener(
 "touchstart",
 e=>{
-
 e.preventDefault();
 
+if(fireHeld)return;
+
+fireHeld=true;
 shoot();
 
+fireTimer=setInterval(()=>{
+if(fireHeld){
+shoot();
+}
+},120);
 },
 {passive:false}
 );
 
+fireButton.addEventListener(
+"touchend",
+e=>{
+e.preventDefault();
+fireHeld=false;
+
+if(fireTimer){
+clearInterval(fireTimer);
+fireTimer=null;
+}
+},
+{passive:false}
+);
+
+fireButton.addEventListener(
+"touchcancel",
+e=>{
+e.preventDefault();
+fireHeld=false;
+
+if(fireTimer){
+clearInterval(fireTimer);
+fireTimer=null;
+}
+},
+{passive:false}
+);
 
 function shoot(){
 
