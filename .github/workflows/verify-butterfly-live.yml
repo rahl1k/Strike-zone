@@ -1,0 +1,27 @@
+name: Verify Butterfly Live
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/verify-butterfly-live.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Render and verify Butterfly Legacy
+        run: |
+          for i in $(seq 1 40); do
+            echo "Attempt $i"
+            body="$(curl -fsSL --max-time 20 https://strike-zone-1.onrender.com || true)"
+            if echo "$body" | grep -q 'RAHL1K FPS v13 BUTTERFLY LEGACY' && echo "$body" | grep -q 'RAHL1K BUTTERFLY LEGACY ADDON'; then
+              echo "LIVE_OK"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "Butterfly Legacy was not observed live in time"
+          exit 1
