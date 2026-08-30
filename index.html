@@ -3,481 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>RAHL1K FPS v5</title>
+<title>RAHL1K FPS v6</title>
 <style>
-*{
-box-sizing:border-box;
-user-select:none;
--webkit-user-select:none;
-}
-html,body{
-margin:0;
-width:100%;
-height:100%;
-overflow:hidden;
-background:#222;
-touch-action:none;
-font-family:Arial,sans-serif;
-}
-#game{
+*{box-sizing:border-box;user-select:none;-webkit-user-select:none}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#222;touch-action:none;font-family:Arial,sans-serif}
+#game{position:fixed;inset:0;overflow:hidden;background:linear-gradient(to bottom,#4c8198 0%,#aac7ce 47%,#343a3d 47%,#343a3d 100%)}
+#sky{position:absolute;inset:0 0 47% 0;background:linear-gradient(#42758f,#aac8d0)}
+#ground{position:absolute;left:0;right:0;top:47%;bottom:0;background:repeating-linear-gradient(0deg,#3b4144 0px,#3b4144 44px,#454b4e 45px,#454b4e 46px)}
+.roadV{position:absolute;top:47%;bottom:0;left:30%;width:40%;background:#50575a;border-left:3px solid #666d70;border-right:3px solid #666d70}
+.roadH{position:absolute;left:0;right:0;top:63%;height:28%;background:#50575a;border-top:3px solid #666d70;border-bottom:3px solid #666d70}
+.mark{position:absolute;background:#ddd;z-index:3}
+.mark.v{width:7px;height:45px;left:calc(50% - 3px)}
+
+.building{position:absolute;background:linear-gradient(135deg,#292e30,#151718);border:3px solid #73797b;box-shadow:inset 0 0 20px #0008;z-index:10}
+
+#title{position:fixed;z-index:100;top:10px;left:50%;transform:translateX(-50%);color:white;font-size:23px;font-weight:bold;text-shadow:0 2px 5px #000}
+#info{position:fixed;z-index:100;top:44px;left:15px;color:white;font-size:14px;font-weight:bold;text-shadow:0 2px 4px #000}
+#score{position:fixed;z-index:100;top:68px;left:15px;color:#ffd84d;font-size:16px;font-weight:bold;text-shadow:0 2px 4px #000}
+
+#healthBox{position:fixed;z-index:100;left:20px;bottom:20px;width:190px;height:28px;background:#111c;border:2px solid white;border-radius:6px;overflow:hidden}
+#healthBar{height:100%;width:100%;background:#36c968;transition:width .15s}
+#healthText{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:16px;text-shadow:0 1px 3px #000}
+
+#ammo{position:fixed;z-index:100;right:20px;bottom:20px;color:white;font-size:22px;font-weight:bold;text-shadow:0 2px 4px #000}
+
+#crosshair{position:fixed;z-index:100;left:50%;top:50%;width:32px;height:32px;transform:translate(-50%,-50%)}
+#crosshair:before{content:””;position:absolute;left:0;top:15px;width:32px;height:2px;background:white}
+#crosshair:after{content:””;position:absolute;left:15px;top:0;width:2px;height:32px;background:white}
+
+#joystick{position:fixed;z-index:200;left:25px;bottom:65px;width:140px;height:140px;border-radius:50%;border:3px solid #ffffff66;background:#ffffff18;touch-action:none}
+#stick{position:absolute;left:40px;top:40px;width:60px;height:60px;border-radius:50%;background:#ffffff70;border:2px solid white;pointer-events:none}
+
+#fire{position:fixed;z-index:200;right:30px;bottom:95px;width:85px;height:85px;border-radius:50%;border:2px solid white;background:#a52c2ccc;color:white;font-weight:bold}
+#reload{position:fixed;z-index:200;right:135px;bottom:35px;width:100px;height:45px;border-radius:12px;border:1px solid white;background:#222c;color:white;font-weight:bold}
+
+#weapons{
 position:fixed;
-inset:0;
-overflow:hidden;
-background:
-linear-gradient(
-to bottom,
-#4c8198 0%,
-#aac7ce 47%,
-#343a3d 47%,
-#343a3d 100%
-);
-}
-#sky{
-position:absolute;
-inset:0 0 47% 0;
-background:linear-gradient(#42758f,#aac8d0);
-}
-#ground{
-position:absolute;
-left:0;
-right:0;
-top:47%;
-bottom:0;
-background:
-repeating-linear-gradient(
-0deg,
-#3b4144 0px,
-#3b4144 44px,
-#454b4e 45px,
-#454b4e 46px
-);
-}
-.roadV{
-position:absolute;
-top:47%;
-bottom:0;
-left:30%;
-width:40%;
-background:#50575a;
-border-left:3px solid #666d70;
-border-right:3px solid #666d70;
-}
-.roadH{
-position:absolute;
-left:0;
-right:0;
-top:63%;
-height:28%;
-background:#50575a;
-border-top:3px solid #666d70;
-border-bottom:3px solid #666d70;
-}
-.mark{
-position:absolute;
-background:#ddd;
-z-index:3;
-}
-.mark.v{
-width:7px;
-height:45px;
-left:calc(50% - 3px);
-}
-/* =====================
-ЗДАНИЯ
-===================== */
-.building{
-position:absolute;
-background:
-linear-gradient(
-135deg,
-#292e30,
-#151718
-);
-border:3px solid #73797b;
-box-shadow:inset 0 0 20px #0008;
-z-index:10;
-}
-/* =====================
-HUD
-===================== */
-#title{
-position:fixed;
-z-index:100;
-top:10px;
-left:50%;
-transform:translateX(-50%);
-color:white;
-font-size:23px;
-font-weight:bold;
-text-shadow:0 2px 5px #000;
-}
-#info{
-position:fixed;
-z-index:100;
-top:44px;
-left:15px;
-color:white;
-font-size:14px;
-font-weight:bold;
-text-shadow:0 2px 4px #000;
-}
-#score{
-position:fixed;
-z-index:100;
-top:68px;
-left:15px;
-color:#ffd84d;
-font-size:16px;
-font-weight:bold;
-text-shadow:0 2px 4px #000;
-}
-/* HP */
-#healthBox{
-position:fixed;
-z-index:100;
-left:20px;
-bottom:20px;
-width:190px;
-height:28px;
-background:#111c;
-border:2px solid white;
-border-radius:6px;
-overflow:hidden;
-}
-#healthBar{
-height:100%;
-width:100%;
-background:#36c968;
-transition:width .15s;
-}
-#healthText{
-position:absolute;
-inset:0;
+z-index:220;
+right:25px;
+top:135px;
 display:flex;
-align-items:center;
-justify-content:center;
-color:white;
-font-weight:bold;
-font-size:16px;
-text-shadow:0 1px 3px #000;
+gap:8px;
 }
-/* AMMO */
-#ammo{
-position:fixed;
-z-index:100;
-right:20px;
-bottom:20px;
-color:white;
-font-size:22px;
-font-weight:bold;
-text-shadow:0 2px 4px #000;
-}
-/* =====================
-ПРИЦЕЛ
-===================== */
-#crosshair{
-position:fixed;
-z-index:100;
-left:50%;
-top:50%;
-width:32px;
-height:32px;
-transform:translate(-50%,-50%);
-}
-#crosshair:before{
-content:"";
-position:absolute;
-left:0;
-top:15px;
-width:32px;
-height:2px;
-background:white;
-}
-#crosshair:after{
-content:"";
-position:absolute;
-left:15px;
-top:0;
-width:2px;
-height:32px;
-background:white;
-}
-/* =====================
-ДЖОЙСТИК
-===================== */
-#joystick{
-position:fixed;
-z-index:200;
-left:25px;
-bottom:65px;
-width:140px;
-height:140px;
-border-radius:50%;
-border:3px solid #ffffff66;
-background:#ffffff18;
-touch-action:none;
-}
-#stick{
-position:absolute;
-left:40px;
-top:40px;
-width:60px;
-height:60px;
-border-radius:50%;
-background:#ffffff70;
-border:2px solid white;
-pointer-events:none;
-}
-/* =====================
-КНОПКИ
-===================== */
-#fire{
-position:fixed;
-z-index:200;
-right:30px;
-bottom:95px;
-width:85px;
-height:85px;
-border-radius:50%;
-border:2px solid white;
-background:#a52c2ccc;
-color:white;
-font-weight:bold;
-}
-#reload{
-position:fixed;
-z-index:200;
-right:135px;
-bottom:35px;
-width:100px;
-height:45px;
-border-radius:12px;
-border:1px solid white;
-background:#222c;
-color:white;
-font-weight:bold;
-}
-/* =====================
-ОРУЖИЕ
-===================== */
-#weapon{
-position:fixed;
-z-index:80;
-left:50%;
-bottom:-15px;
-width:170px;
-height:130px;
-transform:translateX(-50%);
-transition:transform .07s;
-}
-#gun{
-position:absolute;
-left:30px;
-bottom:0;
-width:110px;
-height:75px;
-background:#151718;
-border-radius:15px 15px 5px 5px;
-box-shadow:0 0 10px #000;
-}
-#barrel{
-position:absolute;
-left:72px;
-bottom:65px;
-width:25px;
-height:70px;
-background:#303537;
-border-radius:5px;
-}
-/* ВСПЫШКА */
-#muzzle{
-display:none;
-position:absolute;
-left:78px;
-bottom:125px;
-width:35px;
-height:35px;
-background:#ffd34d;
-clip-path:polygon(
-50% 0%,
-65% 35%,
-100% 50%,
-65% 65%,
-50% 100%,
-35% 65%,
-0% 50%,
-35% 35%
-);
-filter:drop-shadow(0 0 12px #ff9d00);
-}
-/* =====================
-ВРАГИ
-===================== */
-.enemy{
-position:absolute;
-z-index:30;
-width:60px;
-height:120px;
-transform:translate(-50%,-50%);
-transform-origin:center center;
-}
-.enemyBody{
-position:absolute;
-left:20%;
-bottom:0;
-width:60%;
-height:63%;
-border-radius:8px 8px 2px 2px;
-}
-.enemyHead{
-position:absolute;
-left:50%;
-top:0;
-transform:translateX(-50%);
-width:46%;
-aspect-ratio:1/1;
-border-radius:50%;
-background:#d49a78;
-}
-.enemyGun{
-position:absolute;
-left:65%;
-top:47%;
-width:75%;
-height:8%;
-background:#161818;
-transform:rotate(-8deg);
-}
-.enemyHP{
-position:absolute;
-left:0;
-top:-10px;
-width:100%;
-height:5px;
-background:#111;
-}
-.enemyHPInner{
-height:100%;
-width:100%;
-background:#39d36b;
-}
-/* типы врагов */
-.enemy.normal .enemyBody{
-background:#a92f38;
-}
-.enemy.fast .enemyBody{
-background:#8b35b8;
-}
-/* =====================
-ВСПЫШКА УРОНА
-===================== */
-#damage{
-position:fixed;
-z-index:120;
-inset:0;
-pointer-events:none;
-background:#d00;
-opacity:0;
-transition:opacity .08s;
-}
-/* =====================
-HIT MARK
-===================== */
-#hitmark{
-position:fixed;
-z-index:150;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-color:#ff4444;
-font-size:35px;
-font-weight:bold;
-opacity:0;
-pointer-events:none;
-}
-/* =====================
-МИНИ-КАРТА
-===================== */
-#minimap{
-position:fixed;
-z-index:150;
-right:15px;
-top:15px;
-width:150px;
-height:110px;
-background:#111c;
+.weaponBtn{
+width:55px;
+height:48px;
 border:2px solid #ffffff99;
-border-radius:8px;
-overflow:hidden;
-}
-.mapBuilding{
-position:absolute;
-background:#555;
-}
-#playerDot{
-position:absolute;
-width:9px;
-height:9px;
-background:#21a5ff;
-border-radius:50%;
-transform:translate(-50%,-50%);
-box-shadow:0 0 5px #21a5ff;
-}
-.enemyDot{
-position:absolute;
-width:7px;
-height:7px;
-background:#e33;
-border-radius:50%;
-transform:translate(-50%,-50%);
-}
-/* =====================
-GAME OVER
-===================== */
-#gameover{
-display:none;
-position:fixed;
-z-index:500;
-inset:0;
-background:#000d;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-color:white;
-font-size:32px;
-font-weight:bold;
-text-align:center;
-}
-#restart{
-margin-top:20px;
-padding:15px 30px;
-font-size:20px;
 border-radius:10px;
-border:2px solid white;
-background:#333;
+background:#111c;
 color:white;
+font-weight:bold;
+font-size:18px;
 }
-/* =====================
-ПОВЕРНИ ТЕЛЕФОН
-===================== */
-#rotate{
-display:none;
+.weaponBtn.active{
+background:#d49a22;
+border-color:white;
+}
+
+#weaponName{
 position:fixed;
-z-index:9999;
-inset:0;
-background:#111;
+z-index:100;
+right:25px;
+bottom:70px;
 color:white;
-align-items:center;
-justify-content:center;
-text-align:center;
-font-size:24px;
+font-size:16px;
+font-weight:bold;
+text-shadow:0 2px 4px #000;
 }
+
+#weapon{position:fixed;z-index:80;left:50%;bottom:-15px;width:170px;height:130px;transform:translateX(-50%);transition:transform .07s}
+#gun{position:absolute;left:30px;bottom:0;width:110px;height:75px;background:#151718;border-radius:15px 15px 5px 5px;box-shadow:0 0 10px #000}
+#barrel{position:absolute;left:72px;bottom:65px;width:25px;height:70px;background:#303537;border-radius:5px}
+
+#muzzle{display:none;position:absolute;left:78px;bottom:125px;width:35px;height:35px;background:#ffd34d;clip-path:polygon(50% 0%,65% 35%,100% 50%,65% 65%,50% 100%,35% 65%,0% 50%,35% 35%);filter:drop-shadow(0 0 12px #ff9d00)}
+
+#knife{
+display:none;
+position:absolute;
+left:55px;
+bottom:0;
+width:25px;
+height:120px;
+background:linear-gradient(90deg,#777,#eee,#555);
+transform:rotate(25deg);
+border-radius:4px;
+box-shadow:0 0 8px #000;
+}
+#knifeHandle{
+position:absolute;
+left:48px;
+bottom:-5px;
+width:40px;
+height:55px;
+background:#17191a;
+border-radius:8px;
+}
+
+.enemy{position:absolute;z-index:30;width:60px;height:120px;transform:translate(-50%,-50%);transform-origin:center center}
+.enemyBody{position:absolute;left:20%;bottom:0;width:60%;height:63%;border-radius:8px 8px 2px 2px}
+.enemyHead{position:absolute;left:50%;top:0;transform:translateX(-50%);width:46%;aspect-ratio:1/1;border-radius:50%;background:#d49a78}
+.enemyGun{position:absolute;left:65%;top:47%;width:75%;height:8%;background:#161818;transform:rotate(-8deg)}
+.enemyHP{position:absolute;left:0;top:-10px;width:100%;height:5px;background:#111}
+.enemyHPInner{height:100%;width:100%;background:#39d36b}
+.enemy.normal .enemyBody{background:#a92f38}
+.enemy.fast .enemyBody{background:#8b35b8}
+
+#damage{position:fixed;z-index:120;inset:0;pointer-events:none;background:#d00;opacity:0;transition:opacity .08s}
+#hitmark{position:fixed;z-index:150;left:50%;top:50%;transform:translate(-50%,-50%);color:#ff4444;font-size:35px;font-weight:bold;opacity:0;pointer-events:none}
+
+#minimap{position:fixed;z-index:150;right:15px;top:15px;width:150px;height:110px;background:#111c;border:2px solid #ffffff99;border-radius:8px;overflow:hidden}
+.mapBuilding{position:absolute;background:#555}
+#playerDot{position:absolute;width:9px;height:9px;background:#21a5ff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 5px #21a5ff}
+.enemyDot{position:absolute;width:7px;height:7px;background:#e33;border-radius:50%;transform:translate(-50%,-50%)}
+
+#gameover{display:none;position:fixed;z-index:500;inset:0;background:#000d;align-items:center;justify-content:center;flex-direction:column;color:white;font-size:32px;font-weight:bold;text-align:center}
+#restart{margin-top:20px;padding:15px 30px;font-size:20px;border-radius:10px;border:2px solid white;background:#333;color:white}
+
+#rotate{display:none;position:fixed;z-index:9999;inset:0;background:#111;color:white;align-items:center;justify-content:center;text-align:center;font-size:24px}
 @media(max-width:700px) and (orientation:portrait){
-#rotate{
-display:flex;
+#rotate{display:flex}
 }
-}
-</style>
 </head>
 <body>
 <div id="game">
@@ -496,67 +141,53 @@ display:flex;
 <div class="building" id="b5"></div>
 <div class="building" id="b6"></div>
 </div>
-<div id="title">
-RAHL1K FPS v5
-</div>
-<div id="info">
-POS: 1500 / 1100 &nbsp;&nbsp; ANGLE: 0°
-</div>
-<div id="score">
-KILLS: 0
-</div>
+<div id="title">RAHL1K FPS v6</div>
+<div id="info">POS: 1500 / 1100 &nbsp;&nbsp; ANGLE: 0°</div>
+<div id="score">KILLS: 0</div>
 <div id="healthBox">
 <div id="healthBar"></div>
 <div id="healthText">HP 100</div>
 </div>
-<div id="ammo">
-30 / 90
-</div>
+<div id="ammo">30 / 90</div>
+<div id="weaponName">АВТОМАТ</div>
 <div id="crosshair"></div>
-<div id="hitmark">
-×
-</div>
+<div id="hitmark">×</div>
 <div id="minimap">
-<div class="mapBuilding"
-style="left:10px;top:10px;width:35px;height:25px"></div>
-<div class="mapBuilding"
-style="right:10px;top:10px;width:35px;height:25px"></div>
-<div class="mapBuilding"
-style="left:10px;bottom:10px;width:35px;height:30px"></div>
-<div class="mapBuilding"
-style="right:10px;bottom:10px;width:35px;height:30px"></div>
+<div class="mapBuilding" style="left:10px;top:10px;width:35px;height:25px"></div>
+<div class="mapBuilding" style="right:10px;top:10px;width:35px;height:25px"></div>
+<div class="mapBuilding" style="left:10px;bottom:10px;width:35px;height:30px"></div>
+<div class="mapBuilding" style="right:10px;bottom:10px;width:35px;height:30px"></div>
 <div id="playerDot"></div>
+</div>
+<div id="weapons">
+<button class="weaponBtn active" id="weapon1">1</button>
+<button class="weaponBtn" id="weapon2">2</button>
+<button class="weaponBtn" id="weapon3">3</button>
 </div>
 <div id="joystick">
 <div id="stick"></div>
 </div>
-<button id="fire">
+
 FIRE
-</button>
-<button id="reload">
 RELOAD
-</button>
+
 <div id="weapon">
 <div id="muzzle"></div>
 <div id="barrel"></div>
 <div id="gun"></div>
+<div id="knife"></div>
+<div id="knifeHandle"></div>
 </div>
 <div id="damage"></div>
 <div id="gameover">
-
 GAME OVER
-
 <div id="finalScore"></div>
-<button id="restart">
-ИГРАТЬ СНОВА
-</button>
+<button id="restart">ИГРАТЬ СНОВА</button>
 </div>
 <div id="rotate">
-
 ↔️
-
+<br><br>
 Поверни телефон горизонтально
-
 </div>
 <script>
 /* ==========================
@@ -586,40 +217,29 @@ const cx=window.innerWidth/2;
 const cy=window.innerHeight*.60;
 for(let i=0;i<buildings.length;i++){
 const b=buildings[i];
-const el=
-document.getElementById("b"+(i+1));
+const el=document.getElementById("b"+(i+1));
 const dx=b.x-player.x;
 const dy=b.y-player.y;
 const cos=Math.cos(player.angle);
 const sin=Math.sin(player.angle);
-const forward=
-dx*cos+dy*sin;
-const side=
--dx*sin+dy*cos;
+const forward=dx*cos+dy*sin;
+const side=-dx*sin+dy*cos;
 if(forward<-50){
 el.style.display="none";
 continue;
 }
 const f=Math.max(100,forward);
-const sx=
-cx+side*.55;
-const sy=
-cy-12000/f;
-const scale=
-Math.min(
+const sx=cx+side*.55;
+const sy=cy-12000/f;
+const scale=Math.min(
 2.5,
-Math.max(
-.15,
-900/f
-)
+Math.max(.15,900/f)
 );
 el.style.display="block";
 el.style.left=sx+"px";
 el.style.top=sy+"px";
-el.style.width=
-(b.w*.55*scale)+"px";
-el.style.height=
-(b.h*.55*scale)+"px";
+el.style.width=(b.w*.55*scale)+"px";
+el.style.height=(b.h*.55*scale)+"px";
 }
 }
 /* ==========================
@@ -627,12 +247,7 @@ el.style.height=
 ========================== */
 function blocked(x,y){
 const r=28;
-if(
-x<r||
-y<r||
-x>MAP_W-r||
-y>MAP_H-r
-)
+if(x<r||y<r||x>MAP_W-r||y>MAP_H-r)
 return true;
 for(const b of buildings){
 if(
@@ -648,35 +263,27 @@ return false;
 /* ==========================
 ДЖОЙСТИК
 ========================== */
-const joystick=
-document.getElementById("joystick");
-const stick=
-document.getElementById("stick");
+const joystick=document.getElementById("joystick");
+const stick=document.getElementById("stick");
 let joyX=0;
 let joyY=0;
 let joyID=null;
 function setJoy(x,y){
-const r=
-joystick.getBoundingClientRect();
-const cx=
-r.left+r.width/2;
-const cy=
-r.top+r.height/2;
+const r=joystick.getBoundingClientRect();
+const cx=r.left+r.width/2;
+const cy=r.top+r.height/2;
 let dx=x-cx;
 let dy=y-cy;
 const max=40;
-const dist=
-Math.hypot(dx,dy);
+const dist=Math.hypot(dx,dy);
 if(dist>max){
 dx=dx/dist*max;
 dy=dy/dist*max;
 }
 joyX=dx/max;
 joyY=dy/max;
-stick.style.left=
-(40+dx)+"px";
-stick.style.top=
-(40+dy)+"px";
+stick.style.left=(40+dx)+"px";
+stick.style.top=(40+dy)+"px";
 }
 function resetJoy(){
 joyX=0;
@@ -685,98 +292,64 @@ joyID=null;
 stick.style.left="40px";
 stick.style.top="40px";
 }
-joystick.addEventListener(
-"touchstart",
-e=>{
+joystick.addEventListener("touchstart",e=>{
 e.preventDefault();
 if(joyID!==null)return;
 const t=e.changedTouches[0];
 joyID=t.identifier;
-setJoy(
-t.clientX,
-t.clientY
-);
-},
-{passive:false}
-);
-joystick.addEventListener(
-"touchmove",
-e=>{
+setJoy(t.clientX,t.clientY);
+},{passive:false});
+joystick.addEventListener("touchmove",e=>{
 e.preventDefault();
 for(const t of e.changedTouches){
 if(t.identifier===joyID){
-setJoy(
-t.clientX,
-t.clientY
-);
+setJoy(t.clientX,t.clientY);
 }
 }
-},
-{passive:false}
-);
-joystick.addEventListener(
-"touchend",
-e=>{
+},{passive:false});
+joystick.addEventListener("touchend",e=>{
 for(const t of e.changedTouches){
 if(t.identifier===joyID){
 resetJoy();
 }
 }
-}
-);
-joystick.addEventListener(
-"touchcancel",
-resetJoy
-);
+});
+joystick.addEventListener("touchcancel",resetJoy);
 /* ==========================
 КАМЕРА 360°
 ========================== */
 let lookID=null;
 let lastLookX=0;
-document.addEventListener(
-"touchstart",
-e=>{
+document.addEventListener("touchstart",e=>{
 for(const t of e.changedTouches){
 if(
 t.clientX>
 window.innerWidth*.42&&
-!t.target.closest(
-"#fire,#reload,#joystick"
-)
+!t.target.closest("#fire,#reload,#joystick,#weapons")
 ){
 lookID=t.identifier;
 lastLookX=t.clientX;
 }
 }
-},
-{passive:false}
-);
-document.addEventListener(
-"touchmove",
-e=>{
+},{passive:false});
+document.addEventListener("touchmove",e=>{
 if(lookID===null)return;
 for(const t of e.changedTouches){
 if(t.identifier===lookID){
 e.preventDefault();
-const dx=
-t.clientX-lastLookX;
+const dx=t.clientX-lastLookX;
 player.angle+=dx*.008;
 lastLookX=t.clientX;
 }
 }
-},
-{passive:false}
-);
-document.addEventListener(
-"touchend",
-e=>{
+},{passive:false});
+document.addEventListener("touchend",e=>{
 for(const t of e.changedTouches){
 if(t.identifier===lookID){
 lookID=null;
 }
 }
-}
-);
+});
 /* ==========================
 ДВИЖЕНИЕ
 ========================== */
@@ -790,15 +363,13 @@ const dx=
 Math.cos(player.angle)*forward-
 Math.sin(player.angle)*strafe
 )*
-speed*
-dt;
+speed*dt;
 const dy=
 (
 Math.sin(player.angle)*forward+
 Math.cos(player.angle)*strafe
 )*
-speed*
-dt;
+speed*dt;
 const nx=player.x+dx;
 const ny=player.y+dy;
 if(!blocked(nx,player.y))
@@ -810,54 +381,16 @@ player.y=ny;
 ВРАГИ
 ========================== */
 const enemies=[
-{
-x:700,
-y:900,
-hp:100,
-el:null,
-attack:0,
-type:"normal"
-},
-{
-x:3300,
-y:900,
-hp:100,
-el:null,
-attack:0,
-type:"normal"
-},
-{
-x:700,
-y:2500,
-hp:100,
-el:null,
-attack:0,
-type:"fast"
-},
-{
-x:3300,
-y:2500,
-hp:100,
-el:null,
-attack:0,
-type:"fast"
-},
-{
-x:1800,
-y:2200,
-hp:100,
-el:null,
-attack:0,
-type:"normal"
-}
+{x:700,y:900,hp:100,el:null,attack:0,type:"normal"},
+{x:3300,y:900,hp:100,el:null,attack:0,type:"normal"},
+{x:700,y:2500,hp:100,el:null,attack:0,type:"fast"},
+{x:3300,y:2500,hp:100,el:null,attack:0,type:"fast"},
+{x:1800,y:2200,hp:100,el:null,attack:0,type:"normal"}
 ];
 function createEnemies(){
 for(const enemy of enemies){
-const el=
-document.createElement("div");
-el.className=
-"enemy "+
-enemy.type;
+const el=document.createElement("div");
+el.className="enemy "+enemy.type;
 el.innerHTML=`
 <div class="enemyHP">
 <div class="enemyHPInner"></div>
@@ -866,199 +399,219 @@ el.innerHTML=`
 <div class="enemyBody"></div>
 <div class="enemyGun"></div>
 `;
-document
-.getElementById("game")
-.appendChild(el);
+document.getElementById("game").appendChild(el);
 enemy.el=el;
 }
 }
 createEnemies();
-/* ==========================
-ВРАГИ
-========================== */
 function updateEnemies(dt){
 for(const enemy of enemies){
 if(enemy.hp<=0){
 enemy.el.style.display="none";
 continue;
 }
-const dx=
-player.x-enemy.x;
-const dy=
-player.y-enemy.y;
-const distance=
-Math.hypot(dx,dy);
-/* движение */
-if(
-distance>120&&
-distance<2400
-){
-const speed=
-enemy.type==="fast"
-?105
-:65;
-const ex=
-dx/distance*
-speed*
-dt;
-const ey=
-dy/distance*
-speed*
-dt;
-const nx=
-enemy.x+ex;
-const ny=
-enemy.y+ey;
+const dx=player.x-enemy.x;
+const dy=player.y-enemy.y;
+const distance=Math.hypot(dx,dy);
+if(distance>120&&distance<2400){
+const speed=enemy.type==="fast"?105:65;
+const ex=dx/distance*speed*dt;
+const ey=dy/distance*speed*dt;
+const nx=enemy.x+ex;
+const ny=enemy.y+ey;
 if(!blocked(nx,enemy.y))
 enemy.x=nx;
 if(!blocked(enemy.x,ny))
 enemy.y=ny;
 }
-/* атака */
 if(distance<750){
 enemy.attack-=dt;
 if(enemy.attack<=0){
-enemy.attack=
-enemy.type==="fast"
-?0.65
-:1.15;
+enemy.attack=enemy.type==="fast"?0.65:1.15;
 enemyShoot(enemy);
 }
 }
 showEnemy(enemy);
 }
 }
-/* ==========================
-ВРАГ СТРЕЛЯЕТ
-========================== */
 function enemyShoot(enemy){
 if(player.hp<=0)return;
-const dx=
-player.x-enemy.x;
-const dy=
-player.y-enemy.y;
-const distance=
-Math.hypot(dx,dy);
-/*
-урон зависит от расстояния
-*/
+const dx=player.x-enemy.x;
+const dy=player.y-enemy.y;
+const distance=Math.hypot(dx,dy);
 let damage=4;
-if(distance<300)
-damage=9;
-else if(distance<500)
-damage=6;
-player.hp=
-Math.max(
-0,
-player.hp-damage
-);
+if(distance<300)damage=9;
+else if(distance<500)damage=6;
+player.hp=Math.max(0,player.hp-damage);
 damageEffect();
 }
-/* ==========================
-ОТОБРАЖЕНИЕ ВРАГА
-========================== */
 function showEnemy(enemy){
-const dx=
-enemy.x-player.x;
-const dy=
-enemy.y-player.y;
-const distance=
-Math.hypot(dx,dy);
-let relative=
-Math.atan2(dy,dx)-player.angle;
-relative=
-Math.atan2(
+const dx=enemy.x-player.x;
+const dy=enemy.y-player.y;
+const distance=Math.hypot(dx,dy);
+let relative=Math.atan2(dy,dx)-player.angle;
+relative=Math.atan2(
 Math.sin(relative),
 Math.cos(relative)
 );
-if(
-Math.abs(relative)>
-Math.PI/2
-){
+if(Math.abs(relative)>Math.PI/2){
 enemy.el.style.display="none";
 return;
 }
 const sx=
 window.innerWidth/2+
-Math.tan(relative)*
-window.innerWidth*.55;
-const size=
-Math.max(
+Math.tan(relative)*window.innerWidth*.55;
+const size=Math.max(
 25,
-Math.min(
-190,
-70000/distance
-)
+Math.min(190,70000/distance)
 );
 enemy.el.style.display="block";
 enemy.el.style.left=sx+"px";
-enemy.el.style.top=
-window.innerHeight*.57+"px";
-enemy.el.style.width=
-size+"px";
-enemy.el.style.height=
-(size*2)+"px";
-enemy.el.style.transform=
-"translate(-50%,-50%)";
-enemy.el
-.querySelector(
-".enemyHPInner"
-)
-.style.width=
-Math.max(
-0,
-enemy.hp
-)+"%";
+enemy.el.style.top=window.innerHeight*.57+"px";
+enemy.el.style.width=size+"px";
+enemy.el.style.height=(size*2)+"px";
+enemy.el.style.transform="translate(-50%,-50%)";
+enemy.el.querySelector(".enemyHPInner").style.width=
+Math.max(0,enemy.hp)+"%";
 }
+/* ==========================
+ОРУЖИЯ
+========================== */
+let currentWeapon=1;
+const weapons={
+1:{
+name:"АВТОМАТ",
+ammo:30,
+reserve:90,
+damage:50,
+fireDelay:120
+},
+2:{
+name:"ПИСТОЛЕТ",
+ammo:12,
+reserve:48,
+damage:65,
+fireDelay:300
+},
+3:{
+name:"НОЖ",
+ammo:Infinity,
+reserve:Infinity,
+damage:100,
+fireDelay:500
+}
+};
+function selectWeapon(id){
+currentWeapon=id;
+document.querySelectorAll(".weaponBtn").forEach(
+b=>b.classList.remove("active")
+);
+document.getElementById("weapon"+id)
+.classList.add("active");
+const weapon=weapons[id];
+document.getElementById("weaponName")
+.textContent=weapon.name;
+const gun=document.getElementById("gun");
+const barrel=document.getElementById("barrel");
+const knife=document.getElementById("knife");
+const knifeHandle=document.getElementById("knifeHandle");
+if(id===3){
+gun.style.display="none";
+barrel.style.display="none";
+knife.style.display="block";
+knifeHandle.style.display="block";
+document.getElementById("ammo").textContent="∞";
+}else{
+gun.style.display="block";
+barrel.style.display="block";
+knife.style.display="none";
+knifeHandle.style.display="none";
+updateAmmo();
+}
+}
+function updateAmmo(){
+const weapon=weapons[currentWeapon];
+if(currentWeapon===3){
+document.getElementById("ammo").textContent="∞";
+return;
+}
+document.getElementById("ammo").textContent=
+weapon.ammo+" / "+weapon.reserve;
+}
+function reload(){
+const weapon=weapons[currentWeapon];
+if(currentWeapon===3)return;
+if(weapon.ammo>=
+(currentWeapon===1?30:12)||
+weapon.reserve<=0)
+return;
+const max=currentWeapon===1?30:12;
+const amount=Math.min(
+max-weapon.ammo,
+weapon.reserve
+);
+weapon.ammo+=amount;
+weapon.reserve-=amount;
+updateAmmo();
+}
+document.getElementById("weapon1")
+.addEventListener("touchstart",e=>{
+e.preventDefault();
+selectWeapon(1);
+},{passive:false});
+document.getElementById("weapon2")
+.addEventListener("touchstart",e=>{
+e.preventDefault();
+selectWeapon(2);
+},{passive:false});
+document.getElementById("weapon3")
+.addEventListener("touchstart",e=>{
+e.preventDefault();
+selectWeapon(3);
+},{passive:false});
 /* ==========================
 СТРЕЛЬБА
 ========================== */
-let ammo=30;
-let reserve=90;
-let kills=0;
-document
-.getElementById("fire")
-.addEventListener(
-"touchstart",
-e=>{
+let canShoot=true;
+document.getElementById("fire")
+.addEventListener("touchstart",e=>{
 e.preventDefault();
 shoot();
-},
-{passive:false}
-);
+},{passive:false});
 function shoot(){
 if(player.hp<=0)return;
-if(ammo<=0){
+const weapon=weapons[currentWeapon];
+if(!canShoot)return;
+if(currentWeapon!==3&&weapon.ammo<=0){
 reload();
 return;
 }
-ammo--;
-const muzzle=
-document.getElementById("muzzle");
+canShoot=false;
+if(currentWeapon!==3)
+weapon.ammo--;
+updateAmmo();
+if(currentWeapon===3){
+knifeAttack();
+setTimeout(()=>{
+canShoot=true;
+},weapon.fireDelay);
+return;
+}
+const muzzle=document.getElementById("muzzle");
 muzzle.style.display="block";
-setTimeout(
-()=>{
+setTimeout(()=>{
 muzzle.style.display="none";
-},
-70
-);
+},70);
 let target=null;
 let closest=Infinity;
 for(const enemy of enemies){
 if(enemy.hp<=0)continue;
-const dx=
-enemy.x-player.x;
-const dy=
-enemy.y-player.y;
-const distance=
-Math.hypot(dx,dy);
+const dx=enemy.x-player.x;
+const dy=enemy.y-player.y;
+const distance=Math.hypot(dx,dy);
 let a=
-Math.atan2(
-dy,
-dx
-)-player.angle;
-a=
-Math.atan2(
+Math.atan2(dy,dx)-player.angle;
+a=Math.atan2(
 Math.sin(a),
 Math.cos(a)
 );
@@ -1072,139 +625,105 @@ closest=distance;
 }
 }
 if(target){
-target.hp-=50;
+target.hp-=weapon.damage;
 showHit();
-if(target.hp<=0){
+if(target.hp<=0)
 kills++;
 }
-}
-const weapon=
-document.getElementById("weapon");
-weapon.style.transform=
+const weaponEl=document.getElementById("weapon");
+weaponEl.style.transform=
 "translateX(-50%) translateY(15px)";
-setTimeout(
-()=>{
-weapon.style.transform=
+setTimeout(()=>{
+weaponEl.style.transform=
 "translateX(-50%)";
-},
-70
+},70);
+setTimeout(()=>{
+canShoot=true;
+},weapon.fireDelay);
+}
+function knifeAttack(){
+let target=null;
+let closest=Infinity;
+for(const enemy of enemies){
+if(enemy.hp<=0)continue;
+const dx=enemy.x-player.x;
+const dy=enemy.y-player.y;
+const distance=Math.hypot(dx,dy);
+let a=
+Math.atan2(dy,dx)-player.angle;
+a=Math.atan2(
+Math.sin(a),
+Math.cos(a)
 );
+if(
+Math.abs(a)<.45&&
+distance<180&&
+distance<closest
+){
+target=enemy;
+closest=distance;
+}
+}
+if(target){
+target.hp-=100;
+showHit();
+if(target.hp<=0)
+kills++;
+}
+const weaponEl=document.getElementById("weapon");
+weaponEl.style.transform=
+"translateX(-50%) translateY(35px) rotate(-12deg)";
+setTimeout(()=>{
+weaponEl.style.transform=
+"translateX(-50%)";
+},160);
 }
 /* ==========================
 ПОПАДАНИЕ
 ========================== */
 function showHit(){
-const hit=
-document.getElementById("hitmark");
+const hit=document.getElementById("hitmark");
 hit.style.opacity=1;
-setTimeout(
-()=>{
+setTimeout(()=>{
 hit.style.opacity=0;
-},
-120
-);
-}
-/* ==========================
-ЗВУК
-========================== */
-function gunSound(){
-try{
-const AudioContext=
-window.AudioContext||
-window.webkitAudioContext;
-const ctx=
-new AudioContext();
-const osc=
-ctx.createOscillator();
-const gain=
-ctx.createGain();
-osc.type="square";
-osc.frequency.value=90;
-gain.gain.setValueAtTime(
-.12,
-ctx.currentTime
-);
-gain.gain.exponentialRampToValueAtTime(
-.001,
-ctx.currentTime+.08
-);
-osc.connect(gain);
-gain.connect(ctx.destination);
-osc.start();
-osc.stop(
-ctx.currentTime+.08
-);
-}catch(e){}
+},120);
 }
 /* ==========================
 ПЕРЕЗАРЯДКА
 ========================== */
-function reload(){
-if(
-ammo>=30||
-reserve<=0
-)
-return;
-const amount=
-Math.min(
-30-ammo,
-reserve
-);
-ammo+=amount;
-reserve-=amount;
-}
-document
-.getElementById("reload")
-.addEventListener(
-"touchstart",
-e=>{
+document.getElementById("reload")
+.addEventListener("touchstart",e=>{
 e.preventDefault();
 reload();
-},
-{passive:false}
-);
+},{passive:false});
 /* ==========================
 УРОН
 ========================== */
 function damageEffect(){
-const damage=
-document.getElementById("damage");
+const damage=document.getElementById("damage");
 damage.style.opacity=.32;
-setTimeout(
-()=>{
+setTimeout(()=>{
 damage.style.opacity=0;
-},
-120
-);
+},120);
 }
 /* ==========================
 МИНИ-КАРТА
 ========================== */
 function updateMinimap(){
-const map=
-document.getElementById("minimap");
+const map=document.getElementById("minimap");
 const w=map.clientWidth;
 const h=map.clientHeight;
-const dot=
-document.getElementById("playerDot");
-dot.style.left=
-(player.x/MAP_W*w)+"px";
-dot.style.top=
-(player.y/MAP_H*h)+"px";
-document
-.querySelectorAll(".enemyDot")
-.forEach(
-e=>e.remove()
-);
+const dot=document.getElementById("playerDot");
+dot.style.left=(player.x/MAP_W*w)+"px";
+dot.style.top=(player.y/MAP_H*h)+"px";
+document.querySelectorAll(".enemyDot")
+.forEach(e=>e.remove());
 for(const enemy of enemies){
 if(enemy.hp<=0)continue;
-const dot=
-document.createElement("div");
+const dot=document.createElement("div");
 dot.className="enemyDot";
-dot.style.left=
-(enemy.x/MAP_W*w)+"px";
-dot.style.top=
-(enemy.y/MAP_H*h)+"px";
+dot.style.left=(enemy.x/MAP_W*w)+"px";
+dot.style.top=(enemy.y/MAP_H*h)+"px";
 map.appendChild(dot);
 }
 }
@@ -1212,90 +731,46 @@ map.appendChild(dot);
 HUD
 ========================== */
 function updateHUD(){
-let angle=
-player.angle*
-180/
-Math.PI;
-angle=
-(
-angle%360+
-360
-)%360;
-document
-.getElementById("info")
-.innerHTML=
+let angle=player.angle*180/Math.PI;
+angle=(angle%360+360)%360;
+document.getElementById("info").innerHTML=
 "POS: "+
 Math.round(player.x)+
 " / "+
 Math.round(player.y)+
 "&nbsp;&nbsp; ANGLE: "+
-Math.round(angle)+
-"°";
-document
-.getElementById("score")
-.textContent=
-"KILLS: "+
-kills;
-document
-.getElementById("healthBar")
-.style.width=
-Math.max(
-0,
-player.hp
-)+"%";
-document
-.getElementById("healthText")
-.textContent=
-"HP "+
-Math.max(
-0,
-Math.round(player.hp)
-);
-document
-.getElementById("ammo")
-.textContent=
-ammo+
-" / "+
-reserve;
+Math.round(angle)+"°";
+document.getElementById("score")
+.textContent="KILLS: "+kills;
+document.getElementById("healthBar")
+.style.width=Math.max(0,player.hp)+"%";
+document.getElementById("healthText")
+.textContent="HP "+Math.max(0,Math.round(player.hp));
+updateAmmo();
 }
 /* ==========================
 GAME OVER
 ========================== */
 function gameOver(){
-const screen=
-document.getElementById(
-"gameover"
-);
-if(
-screen.style.display==="flex"
-)
-return;
+const screen=document.getElementById("gameover");
+if(screen.style.display==="flex")return;
 screen.style.display="flex";
-document
-.getElementById("finalScore")
-.textContent=
-"KILLS: "+
-kills;
+document.getElementById("finalScore")
+.textContent="KILLS: "+kills;
 }
-document
-.getElementById("restart")
-.addEventListener(
-"touchstart",
-()=>{
+document.getElementById("restart")
+.addEventListener("touchstart",()=>{
 location.reload();
-}
-);
+});
 /* ==========================
 GAME LOOP
 ========================== */
-let last=
-performance.now();
+let ammo=30;
+let reserve=90;
+let kills=0;
+let last=performance.now();
 function loop(now){
-const dt=
-Math.min(
-.05,
-(now-last)/1000
-);
+const dt=Math.min(.05,(now-last)/1000);
 last=now;
 if(player.hp>0){
 updatePlayer(dt);
@@ -1308,6 +783,7 @@ gameOver();
 }
 requestAnimationFrame(loop);
 }
+selectWeapon(1);
 requestAnimationFrame(loop);
 </script>
 </body>
