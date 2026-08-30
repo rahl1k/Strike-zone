@@ -119,10 +119,6 @@ transform:perspective(500px) rotateX(12deg) scaleY(2);
 display:none;
 }
 
-/* =====================
-ЗДАНИЯ
-===================== */
-
 .building{
 display:none !important;
 }
@@ -188,8 +184,6 @@ height:340px;
 transform:translateX(-50%);
 }
 
-/* голова */
-
 #characterHead{
 position:absolute;
 left:50%;
@@ -202,8 +196,6 @@ background:#c98f6c;
 border:3px solid #222;
 z-index:3;
 }
-
-/* шлем */
 
 #helmet{
 position:absolute;
@@ -231,8 +223,6 @@ border-radius:5px;
 z-index:5;
 }
 
-/* шея */
-
 #characterNeck{
 position:absolute;
 left:50%;
@@ -243,8 +233,6 @@ height:35px;
 background:#b97e60;
 z-index:1;
 }
-
-/* тело */
 
 #characterBody{
 position:absolute;
@@ -258,8 +246,6 @@ border-radius:18px 18px 10px 10px;
 border:4px solid #151b18;
 z-index:2;
 }
-
-/* бронежилет */
 
 #vest{
 position:absolute;
@@ -307,8 +293,6 @@ height:95px;
 background:#202722;
 }
 
-/* руки */
-
 #armLeft,
 #armRight{
 position:absolute;
@@ -330,8 +314,6 @@ transform:rotate(8deg);
 right:5px;
 transform:rotate(-8deg);
 }
-
-/* ноги */
 
 #legLeft,
 #legRight{
@@ -363,6 +345,65 @@ font-weight:bold;
 font-size:18px;
 text-shadow:0 2px 5px #000;
 white-space:nowrap;
+}
+
+/* =====================
+ПРОФИЛЬ
+===================== */
+
+#profileBox{
+position:absolute;
+left:130px;
+top:35px;
+width:225px;
+padding:12px;
+border:1px solid #ffffff33;
+border-radius:12px;
+background:#111a22cc;
+z-index:1030;
+color:white;
+}
+
+#profileStatus{
+font-size:11px;
+color:#ffd45b;
+margin-bottom:7px;
+font-weight:bold;
+}
+
+#profileID{
+font-size:14px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+#nicknameRow{
+display:flex;
+gap:6px;
+}
+
+#nicknameInput{
+width:145px;
+height:35px;
+border-radius:7px;
+border:1px solid #ffffff55;
+background:#202d38;
+color:white;
+padding:0 9px;
+font-size:13px;
+user-select:text;
+-webkit-user-select:text;
+}
+
+#saveNickname{
+width:50px;
+height:35px;
+border:0;
+border-radius:7px;
+background:#22b94b;
+color:white;
+font-size:16px;
+font-weight:bold;
 }
 
 #playButton{
@@ -418,7 +459,7 @@ text-shadow:0 2px 6px #000;
 }
 
 /* =====================
-ВКЛАДКИ МЕНЮ
+ВКЛАДКИ
 ===================== */
 
 #menuTabs{
@@ -456,18 +497,7 @@ padding:0;
 .menuTab.active{
 background:#30414d;
 border-color:#ffffff66;
-box-shadow:
-0 0 0 2px #ffffff18,
-0 5px 12px #0008;
 }
-
-.menuTab:active{
-transform:scale(.94);
-}
-
-/* =====================
-ИКОНКА ДРУЗЕЙ
-===================== */
 
 .friendsIcon{
 position:relative;
@@ -512,7 +542,7 @@ top:5px;
 }
 
 /* =====================
-СТРАНИЦА ДРУЗЕЙ
+ДРУЗЬЯ
 ===================== */
 
 #friendsPage{
@@ -520,6 +550,10 @@ display:none;
 position:absolute;
 z-index:900;
 inset:0;
+padding-left:125px;
+padding-right:25px;
+padding-top:115px;
+color:white;
 }
 
 #friendsPage.active{
@@ -528,25 +562,102 @@ display:block;
 
 #friendsTitle{
 position:absolute;
-top:55px;
+top:45px;
 left:50%;
 transform:translateX(-50%);
 color:white;
-font-size:36px;
+font-size:34px;
 font-weight:900;
-letter-spacing:2px;
-text-shadow:0 4px 12px #000;
 }
 
-#friendsEmpty{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-color:#ffffff99;
-font-size:20px;
+#friendSearchBox{
+max-width:600px;
+margin:0 auto;
+background:#111a22cc;
+border:1px solid #ffffff33;
+border-radius:14px;
+padding:14px;
+}
+
+#friendSearchRow{
+display:flex;
+gap:8px;
+}
+
+#friendIDInput{
+flex:1;
+height:42px;
+border:1px solid #ffffff55;
+border-radius:8px;
+background:#202d38;
+color:white;
+font-size:16px;
+padding:0 12px;
+user-select:text;
+-webkit-user-select:text;
+}
+
+#findFriendButton{
+width:110px;
+border:0;
+border-radius:8px;
+background:#3a78d4;
+color:white;
 font-weight:bold;
-text-align:center;
+}
+
+#friendResult{
+display:none;
+margin-top:12px;
+padding:10px;
+border-radius:9px;
+background:#202d38;
+}
+
+#addFriendButton{
+display:none;
+margin-top:8px;
+width:100%;
+height:38px;
+border:0;
+border-radius:8px;
+background:#22b94b;
+color:white;
+font-weight:bold;
+}
+
+#friendsMessage{
+min-height:18px;
+margin-top:8px;
+font-size:12px;
+color:#ffd45b;
+}
+
+#friendsListTitle{
+margin-top:14px;
+font-weight:bold;
+font-size:16px;
+}
+
+#friendsList{
+margin-top:7px;
+max-height:150px;
+overflow:auto;
+}
+
+.friendItem{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:9px 10px;
+margin-bottom:6px;
+border-radius:8px;
+background:#202d38;
+}
+
+.friendOnline{
+color:#46dc73;
+font-size:12px;
 }
 
 /* =====================
@@ -587,10 +698,6 @@ font-weight:bold;
 text-shadow:0 2px 4px #000;
 }
 
-/* =====================
-HP
-===================== */
-
 #healthBox{
 position:fixed;
 z-index:100;
@@ -623,10 +730,6 @@ font-size:16px;
 text-shadow:0 1px 3px #000;
 }
 
-/* =====================
-AMMO
-===================== */
-
 #ammo{
 position:fixed;
 z-index:100;
@@ -637,10 +740,6 @@ font-size:22px;
 font-weight:bold;
 text-shadow:0 2px 4px #000;
 }
-
-/* =====================
-ПРИЦЕЛ
-===================== */
 
 #crosshair{
 position:fixed;
@@ -672,10 +771,6 @@ height:32px;
 background:white;
 }
 
-/* =====================
-ДЖОЙСТИК
-===================== */
-
 #joystick{
 position:fixed;
 z-index:200;
@@ -700,10 +795,6 @@ background:#ffffff70;
 border:2px solid white;
 pointer-events:none;
 }
-
-/* =====================
-КНОПКИ
-===================== */
 
 #fire{
 position:fixed;
@@ -769,8 +860,6 @@ background:#303537;
 border-radius:5px;
 }
 
-/* ПИСТОЛЕТ */
-
 #pistol{
 display:none;
 position:absolute;
@@ -814,8 +903,6 @@ transform:rotate(7deg);
 box-shadow:0 3px 7px #000;
 }
 
-/* НОЖ */
-
 #knife{
 display:none;
 position:absolute;
@@ -833,20 +920,8 @@ left:27px;
 top:0;
 width:25px;
 height:82px;
-background:linear-gradient(
-135deg,
-#eeeeee,
-#888
-);
-
-clip-path:polygon(
-50% 0%,
-100% 20%,
-85% 100%,
-15% 100%,
-0% 20%
-);
-
+background:linear-gradient(135deg,#eeeeee,#888);
+clip-path:polygon(50% 0%,100% 20%,85% 100%,15% 100%,0% 20%);
 filter:drop-shadow(0 2px 5px #000);
 }
 
@@ -871,136 +946,32 @@ background:#444;
 border-radius:5px;
 }
 
-/* =====================
-АНИМАЦИЯ ДОСТАВАНИЯ
-===================== */
-
 #weapon.weaponSwitching{
 animation:weaponDraw .42s ease-out;
 }
 
 @keyframes weaponDraw{
-
-0%{
-transform:
-translateX(-50%)
-translateY(150px)
-rotate(8deg);
-opacity:0;
+0%{transform:translateX(-50%) translateY(150px) rotate(8deg);opacity:0;}
+45%{transform:translateX(-50%) translateY(35px) rotate(-3deg);opacity:1;}
+75%{transform:translateX(-50%) translateY(-8px) rotate(1deg);}
+100%{transform:translateX(-50%) translateY(0) rotate(0);opacity:1;}
 }
-
-45%{
-transform:
-translateX(-50%)
-translateY(35px)
-rotate(-3deg);
-opacity:1;
-}
-
-75%{
-transform:
-translateX(-50%)
-translateY(-8px)
-rotate(1deg);
-}
-
-100%{
-transform:
-translateX(-50%)
-translateY(0)
-rotate(0);
-opacity:1;
-}
-
-}
-
-/* =====================
-АНИМАЦИЯ НОЖА
-===================== */
 
 #weapon.knifeDraw{
 animation:knifeDraw .85s cubic-bezier(.2,.75,.25,1);
 }
 
 @keyframes knifeDraw{
-
-0%{
-transform:
-translateX(-50%)
-translateY(180px)
-rotate(-35deg);
-opacity:0;
+0%{transform:translateX(-50%) translateY(180px) rotate(-35deg);opacity:0;}
+12%{transform:translateX(-50%) translateY(125px) rotate(-20deg);opacity:1;}
+25%{transform:translateX(-50%) translateY(45px) rotate(35deg);opacity:1;}
+40%{transform:translateX(-50%) translateY(-75px) rotate(180deg);opacity:1;}
+55%{transform:translateX(-50%) translateY(-105px) rotate(360deg);opacity:1;}
+68%{transform:translateX(-50%) translateY(-65px) rotate(540deg);opacity:1;}
+80%{transform:translateX(-50%) translateY(-15px) rotate(690deg);opacity:1;}
+91%{transform:translateX(-50%) translateY(5px) rotate(770deg);opacity:1;}
+100%{transform:translateX(-50%) translateY(0) rotate(720deg);opacity:1;}
 }
-
-12%{
-transform:
-translateX(-50%)
-translateY(125px)
-rotate(-20deg);
-opacity:1;
-}
-
-25%{
-transform:
-translateX(-50%)
-translateY(45px)
-rotate(35deg);
-opacity:1;
-}
-
-40%{
-transform:
-translateX(-50%)
-translateY(-75px)
-rotate(180deg);
-opacity:1;
-}
-
-55%{
-transform:
-translateX(-50%)
-translateY(-105px)
-rotate(360deg);
-opacity:1;
-}
-
-68%{
-transform:
-translateX(-50%)
-translateY(-65px)
-rotate(540deg);
-opacity:1;
-}
-
-80%{
-transform:
-translateX(-50%)
-translateY(-15px)
-rotate(690deg);
-opacity:1;
-}
-
-91%{
-transform:
-translateX(-50%)
-translateY(5px)
-rotate(770deg);
-opacity:1;
-}
-
-100%{
-transform:
-translateX(-50%)
-translateY(0)
-rotate(720deg);
-opacity:1;
-}
-
-}
-
-/* =====================
-ВСПЫШКА
-===================== */
 
 #muzzle{
 display:none;
@@ -1010,18 +981,7 @@ bottom:125px;
 width:35px;
 height:35px;
 background:#ffd34d;
-
-clip-path:polygon(
-50% 0%,
-65% 35%,
-100% 50%,
-65% 65%,
-50% 100%,
-35% 65%,
-0% 50%,
-35% 35%
-);
-
+clip-path:polygon(50% 0%,65% 35%,100% 50%,65% 65%,50% 100%,35% 65%,0% 50%,35% 35%);
 filter:drop-shadow(0 0 12px #ff9d00);
 }
 
@@ -1091,10 +1051,6 @@ background:#a92f38;
 background:#8b35b8;
 }
 
-/* =====================
-ВСПЫШКА УРОНА
-===================== */
-
 #damage{
 position:fixed;
 z-index:120;
@@ -1104,10 +1060,6 @@ background:#d00;
 opacity:0;
 transition:opacity .08s;
 }
-
-/* =====================
-HIT MARK
-===================== */
 
 #hitmark{
 position:fixed;
@@ -1121,10 +1073,6 @@ font-weight:bold;
 opacity:0;
 pointer-events:none;
 }
-
-/* =====================
-МИНИ-КАРТА
-===================== */
 
 #minimap{
 position:fixed;
@@ -1162,10 +1110,6 @@ border-radius:50%;
 transform:translate(-50%,-50%);
 }
 
-/* =====================
-ЗОНА СВАЙПА ОРУЖИЯ
-===================== */
-
 #weaponSwitch{
 position:fixed;
 z-index:250;
@@ -1200,10 +1144,6 @@ white-space:nowrap;
 pointer-events:none;
 }
 
-/* =====================
-GAME OVER
-===================== */
-
 #gameover{
 display:none;
 position:fixed;
@@ -1229,10 +1169,6 @@ background:#333;
 color:white;
 }
 
-/* =====================
-ПОВЕРНИ ТЕЛЕФОН
-===================== */
-
 #rotate{
 display:none;
 position:fixed;
@@ -1247,38 +1183,9 @@ font-size:24px;
 }
 
 @media(max-width:700px) and (orientation:portrait){
-
 #rotate{
 display:flex;
 }
-
-#playButton{
-right:25px;
-bottom:30px;
-width:160px;
-height:60px;
-font-size:24px;
-}
-
-#menuTitle{
-font-size:32px;
-top:35px;
-}
-
-#menuSubtitle{
-top:82px;
-}
-
-#menuTabs{
-width:82px;
-padding-top:110px;
-}
-
-.menuTab{
-width:62px;
-height:62px;
-}
-
 }
 
 </style>
@@ -1286,40 +1193,51 @@ height:62px;
 
 <body>
 
-<!-- =====================
-МЕНЮ
-===================== -->
-
 <div id="menu">
-
-<!-- =====================
-ВКЛАДКИ
-===================== -->
 
 <div id="menuTabs">
 
-<button class="menuTab active" id="gameTab">
-▶
-</button>
+<button class="menuTab active" id="gameTab">▶</button>
 
 <button class="menuTab" id="friendsTab">
-
 <div class="friendsIcon">
-
 <div class="person p1"></div>
 <div class="person p2"></div>
 <div class="person p3"></div>
-
 </div>
-
 </button>
 
 </div>
 
+<!-- ПРОФИЛЬ -->
 
-<!-- =====================
-СТРАНИЦА ДРУЗЕЙ
-===================== -->
+<div id="profileBox">
+
+<div id="profileStatus">
+СОЕДИНЕНИЕ С СЕРВЕРОМ...
+</div>
+
+<div id="profileID">
+ID: —
+</div>
+
+<div id="nicknameRow">
+
+<input
+id="nicknameInput"
+maxlength="16"
+placeholder="Введите ник"
+>
+
+<button id="saveNickname">
+✓
+</button>
+
+</div>
+
+</div>
+
+<!-- ДРУЗЬЯ -->
 
 <div id="friendsPage">
 
@@ -1327,12 +1245,39 @@ height:62px;
 ДРУЗЬЯ
 </div>
 
-<div id="friendsEmpty">
-Здесь будут твои друзья
-</div>
+<div id="friendSearchBox">
+
+<div id="friendSearchRow">
+
+<input
+id="friendIDInput"
+inputmode="numeric"
+placeholder="Введите ID игрока"
+>
+
+<button id="findFriendButton">
+НАЙТИ
+</button>
 
 </div>
 
+<div id="friendResult"></div>
+
+<button id="addFriendButton">
+ДОБАВИТЬ В ДРУЗЬЯ
+</button>
+
+<div id="friendsMessage"></div>
+
+<div id="friendsListTitle">
+МОИ ДРУЗЬЯ
+</div>
+
+<div id="friendsList"></div>
+
+</div>
+
+</div>
 
 <div id="menuTitle">
 RAHL1K FPS
@@ -1390,14 +1335,11 @@ RAHL1K
 </div>
 
 
-<!-- =====================
-ИГРА
-===================== -->
+<!-- ИГРА -->
 
 <div id="game">
 
 <div id="sky"></div>
-
 <div id="ground"></div>
 
 <div class="roadV"></div>
@@ -1440,13 +1382,8 @@ KILLS: 0
 </div>
 
 <div id="healthBox">
-
 <div id="healthBar"></div>
-
-<div id="healthText">
-HP 100
-</div>
-
+<div id="healthText">HP 100</div>
 </div>
 
 <div id="ammo">
@@ -1454,37 +1391,21 @@ HP 100
 </div>
 
 <div id="crosshair"></div>
-
-<div id="hitmark">
-×
-</div>
+<div id="hitmark">×</div>
 
 <div id="minimap">
 
-<div class="mapBuilding"
-style="left:10px;top:10px;width:35px;height:25px">
-</div>
-
-<div class="mapBuilding"
-style="right:10px;top:10px;width:35px;height:25px">
-</div>
-
-<div class="mapBuilding"
-style="left:10px;bottom:10px;width:35px;height:30px">
-</div>
-
-<div class="mapBuilding"
-style="right:10px;bottom:10px;width:35px;height:30px">
-</div>
+<div class="mapBuilding" style="left:10px;top:10px;width:35px;height:25px"></div>
+<div class="mapBuilding" style="right:10px;top:10px;width:35px;height:25px"></div>
+<div class="mapBuilding" style="left:10px;bottom:10px;width:35px;height:30px"></div>
+<div class="mapBuilding" style="right:10px;bottom:10px;width:35px;height:30px"></div>
 
 <div id="playerDot"></div>
 
 </div>
 
 <div id="joystick">
-
 <div id="stick"></div>
-
 </div>
 
 <button id="fire">
@@ -1500,27 +1421,18 @@ RELOAD
 <div id="muzzle"></div>
 
 <div id="barrel"></div>
-
 <div id="gun"></div>
 
 <div id="pistol">
-
 <div id="pistolBarrel"></div>
-
 <div id="pistolSlide"></div>
-
 <div id="pistolHandle"></div>
-
 </div>
 
 <div id="knife">
-
 <div id="knifeBlade"></div>
-
 <div id="knifeGuard"></div>
-
 <div id="knifeHandle"></div>
-
 </div>
 
 </div>
@@ -1547,8 +1459,451 @@ GAME OVER
 
 </div>
 
-
 <script>
+
+/* ==========================
+ОНЛАЙН ПРОФИЛЬ
+========================== */
+
+let onlineSocket=null;
+let myOnlineID=null;
+let myNickname="";
+let foundFriendID=null;
+
+const profileStatus=
+document.getElementById("profileStatus");
+
+const profileID=
+document.getElementById("profileID");
+
+const nicknameInput=
+document.getElementById("nicknameInput");
+
+const saveNickname=
+document.getElementById("saveNickname");
+
+const friendIDInput=
+document.getElementById("friendIDInput");
+
+const findFriendButton=
+document.getElementById("findFriendButton");
+
+const friendResult=
+document.getElementById("friendResult");
+
+const addFriendButton=
+document.getElementById("addFriendButton");
+
+const friendsMessage=
+document.getElementById("friendsMessage");
+
+const friendsList=
+document.getElementById("friendsList");
+
+function sendOnline(data){
+
+if(
+onlineSocket &&
+onlineSocket.readyState===WebSocket.OPEN
+){
+
+onlineSocket.send(
+JSON.stringify(data)
+);
+
+return true;
+
+}
+
+friendsMessage.textContent=
+"Нет соединения с сервером";
+
+return false;
+
+}
+
+function connectOnline(){
+
+const protocol=
+location.protocol==="https:"
+?"wss:"
+:"ws:";
+
+onlineSocket=
+new WebSocket(
+protocol+"//"+location.host
+);
+
+onlineSocket.addEventListener(
+"open",
+()=>{
+
+profileStatus.textContent=
+"● ONLINE";
+
+profileStatus.style.color=
+"#46dc73";
+
+}
+);
+
+onlineSocket.addEventListener(
+"close",
+()=>{
+
+profileStatus.textContent=
+"● OFFLINE";
+
+profileStatus.style.color=
+"#ff5555";
+
+setTimeout(
+connectOnline,
+2500
+);
+
+}
+);
+
+onlineSocket.addEventListener(
+"error",
+()=>{
+
+profileStatus.textContent=
+"ОШИБКА СОЕДИНЕНИЯ";
+
+profileStatus.style.color=
+"#ff5555";
+
+}
+);
+
+onlineSocket.addEventListener(
+"message",
+event=>{
+
+let data;
+
+try{
+
+data=
+JSON.parse(event.data);
+
+}catch{
+
+return;
+
+}
+
+
+/* ID ПОЛУЧЕН */
+
+if(data.type==="welcome"){
+
+myOnlineID=data.id;
+myNickname=data.nickname;
+
+profileID.textContent=
+"ID: "+myOnlineID;
+
+const savedNickname=
+localStorage.getItem(
+"rahl1kNickname"
+);
+
+if(savedNickname){
+
+nicknameInput.value=
+savedNickname;
+
+sendOnline({
+type:"setNickname",
+nickname:savedNickname
+});
+
+}else{
+
+nicknameInput.value=
+myNickname;
+
+document
+.getElementById("menuName")
+.textContent=
+myNickname;
+
+}
+
+}
+
+
+/* НИК ИЗМЕНЁН */
+
+if(data.type==="nicknameChanged"){
+
+myNickname=
+data.nickname;
+
+nicknameInput.value=
+myNickname;
+
+document
+.getElementById("menuName")
+.textContent=
+myNickname;
+
+localStorage.setItem(
+"rahl1kNickname",
+myNickname
+);
+
+profileStatus.textContent=
+"● ONLINE";
+
+profileStatus.style.color=
+"#46dc73";
+
+}
+
+
+/* РЕЗУЛЬТАТ ПОИСКА */
+
+if(data.type==="findResult"){
+
+if(!data.found){
+
+foundFriendID=null;
+
+friendResult.style.display=
+"block";
+
+friendResult.textContent=
+"Игрок не найден";
+
+addFriendButton.style.display=
+"none";
+
+return;
+
+}
+
+foundFriendID=
+data.id;
+
+friendResult.style.display=
+"block";
+
+friendResult.innerHTML=
+"<b>"+
+escapeHTML(data.nickname)+
+"</b><br>ID: "+
+data.id;
+
+addFriendButton.style.display=
+"block";
+
+}
+
+
+/* ДОБАВЛЕНИЕ */
+
+if(data.type==="friendResult"){
+
+if(!data.success){
+
+friendsMessage.textContent=
+data.message ||
+"Не удалось добавить";
+
+return;
+
+}
+
+friendsMessage.textContent=
+"Игрок добавлен в друзья";
+
+addFriendButton.style.display=
+"none";
+
+sendOnline({
+type:"getFriends"
+});
+
+}
+
+
+/* ДРУГ ДОБАВИЛ НАС */
+
+if(data.type==="friendAdded"){
+
+friendsMessage.textContent=
+data.nickname+
+" добавлен в друзья";
+
+sendOnline({
+type:"getFriends"
+});
+
+}
+
+
+/* СПИСОК */
+
+if(data.type==="friendsList"){
+
+renderFriends(
+data.friends || []
+);
+
+}
+
+}
+);
+
+}
+
+function escapeHTML(text){
+
+return String(text)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
+
+}
+
+function renderFriends(friends){
+
+friendsList.innerHTML="";
+
+if(friends.length===0){
+
+friendsList.innerHTML=
+'<div style="color:#ffffff77;font-size:13px;padding:8px 0">Список пуст</div>';
+
+return;
+
+}
+
+for(const friend of friends){
+
+const item=
+document.createElement("div");
+
+item.className=
+"friendItem";
+
+item.innerHTML=
+'<div><b>'+
+escapeHTML(friend.nickname)+
+'</b><br><span style="font-size:11px;color:#ffffff88">ID: '+
+friend.id+
+'</span></div>'+
+'<div class="friendOnline">● ONLINE</div>';
+
+friendsList.appendChild(
+item
+);
+
+}
+
+}
+
+saveNickname.addEventListener(
+"touchstart",
+e=>{
+
+e.preventDefault();
+e.stopPropagation();
+
+const nickname=
+nicknameInput.value.trim();
+
+if(!nickname)return;
+
+sendOnline({
+type:"setNickname",
+nickname:nickname
+});
+
+},
+{passive:false}
+);
+
+findFriendButton.addEventListener(
+"touchstart",
+e=>{
+
+e.preventDefault();
+e.stopPropagation();
+
+const id=
+Number(
+friendIDInput.value
+);
+
+if(!id){
+
+friendsMessage.textContent=
+"Введите ID";
+
+return;
+
+}
+
+friendsMessage.textContent="";
+foundFriendID=null;
+
+sendOnline({
+type:"findPlayer",
+id:id
+});
+
+},
+{passive:false}
+);
+
+addFriendButton.addEventListener(
+"touchstart",
+e=>{
+
+e.preventDefault();
+e.stopPropagation();
+
+if(!foundFriendID)return;
+
+sendOnline({
+type:"addFriend",
+id:foundFriendID
+});
+
+},
+{passive:false}
+);
+
+[
+nicknameInput,
+friendIDInput
+].forEach(input=>{
+
+input.addEventListener(
+"touchstart",
+e=>{
+e.stopPropagation();
+}
+);
+
+input.addEventListener(
+"touchmove",
+e=>{
+e.stopPropagation();
+}
+);
+
+});
+
+connectOnline();
+
 
 /* ==========================
 ИГРОК
@@ -1570,7 +1925,6 @@ const MAP_H=3000;
 ========================== */
 
 let cameraPitch=0;
-
 const MAX_PITCH=65;
 
 
@@ -1760,7 +2114,7 @@ if(
 t.clientX>
 window.innerWidth*.42&&
 !t.target.closest(
-"#fire,#reload,#joystick,#weaponSwitch"
+"#fire,#reload,#joystick,#weaponSwitch,#menu"
 )
 ){
 
@@ -2005,50 +2359,11 @@ player.y=ny;
 
 const enemies=[
 
-{
-x:500,
-y:700,
-hp:100,
-el:null,
-attack:0,
-type:"normal"
-},
-
-{
-x:2500,
-y:700,
-hp:100,
-el:null,
-attack:0,
-type:"normal"
-},
-
-{
-x:500,
-y:2400,
-hp:100,
-el:null,
-attack:0,
-type:"fast"
-},
-
-{
-x:2500,
-y:2400,
-hp:100,
-el:null,
-attack:0,
-type:"fast"
-},
-
-{
-x:1500,
-y:2500,
-hp:100,
-el:null,
-attack:0,
-type:"normal"
-}
+{x:500,y:700,hp:100,el:null,attack:0,type:"normal"},
+{x:2500,y:700,hp:100,el:null,attack:0,type:"normal"},
+{x:500,y:2400,hp:100,el:null,attack:0,type:"fast"},
+{x:2500,y:2400,hp:100,el:null,attack:0,type:"fast"},
+{x:1500,y:2500,hp:100,el:null,attack:0,type:"normal"}
 
 ];
 
@@ -2115,12 +2430,6 @@ enemy.el.style.display="block";
 
 }
 
-
-/*
-Новая волна появляется только после того,
-как убиты ВСЕ боты.
-*/
-
 function startNewWave(){
 
 wave++;
@@ -2152,15 +2461,11 @@ enemy.type;
 el.innerHTML=`
 
 <div class="enemyHP">
-
 <div class="enemyHPInner"></div>
-
 </div>
 
 <div class="enemyHead"></div>
-
 <div class="enemyBody"></div>
-
 <div class="enemyGun"></div>
 
 `;
@@ -2177,10 +2482,6 @@ enemy.el=el;
 
 createEnemies();
 
-
-/* ==========================
-ПРОВЕРКА НОВОЙ ВОЛНЫ
-========================== */
 
 function checkWave(){
 
@@ -2224,9 +2525,6 @@ player.y-enemy.y;
 const distance=
 Math.hypot(dx,dy);
 
-
-/* движение */
-
 if(
 distance>120&&
 distance<2400
@@ -2261,9 +2559,6 @@ enemy.y=ny;
 
 }
 
-
-/* атака */
-
 if(distance<750){
 
 enemy.attack-=dt;
@@ -2287,10 +2582,6 @@ showEnemy(enemy);
 
 }
 
-
-/* ==========================
-ВРАГ СТРЕЛЯЕТ
-========================== */
 
 function enemyShoot(enemy){
 
@@ -2499,11 +2790,6 @@ if(target.hp<=0){
 
 kills++;
 
-/*
-+7 HP за убийство.
-Максимум 100.
-*/
-
 player.hp=
 Math.min(
 100,
@@ -2534,7 +2820,7 @@ weapon.style.transform=
 
 
 /* ==========================
-АТАКА НОЖОМ
+НОЖ
 ========================== */
 
 function knifeAttack(){
@@ -2590,11 +2876,6 @@ if(target.hp<=0){
 
 kills++;
 
-/*
-+7 HP за убийство ножом.
-Максимум 100.
-*/
-
 player.hp=
 Math.min(
 100,
@@ -2625,7 +2906,7 @@ weapon.style.transform=
 
 
 /* ==========================
-АВТОМАТИЧЕСКАЯ СТРЕЛЬБА
+АВТОСТРЕЛЬБА
 ========================== */
 
 let fireHeld=false;
@@ -2698,10 +2979,6 @@ fireTimer=null;
 {passive:false}
 );
 
-
-/* ==========================
-ПОПАДАНИЕ
-========================== */
 
 function showHit(){
 
@@ -2785,7 +3062,7 @@ damage.style.opacity=0;
 
 
 /* ==========================
-МИНИ-КАРТА
+МИНИКАРТА
 ========================== */
 
 function updateMinimap(){
@@ -2894,9 +3171,9 @@ reserve;
 }
 
 
-/* ==================================================
-ПЕРЕКЛЮЧЕНИЕ ОРУЖИЯ
-================================================== */
+/* ==========================
+ОРУЖИЕ
+========================== */
 
 let currentWeapon="rifle";
 
@@ -3065,13 +3342,12 @@ document
 
 }
 
-
 showWeapon("rifle");
 updateWeaponIcon();
 
 
 /* ==========================
-ВКЛАДКИ МЕНЮ
+ВКЛАДКИ
 ========================== */
 
 const gameTab=
@@ -3092,6 +3368,12 @@ document.getElementById("menuTitle");
 const menuSubtitle=
 document.getElementById("menuSubtitle");
 
+const profileBox=
+document.getElementById("profileBox");
+
+const playButton=
+document.getElementById("playButton");
+
 function showGamePage(){
 
 gameTab.classList.add("active");
@@ -3102,6 +3384,7 @@ friendsPage.classList.remove("active");
 lobby.style.display="block";
 menuTitle.style.display="block";
 menuSubtitle.style.display="block";
+profileBox.style.display="block";
 playButton.style.display="block";
 
 }
@@ -3116,7 +3399,12 @@ friendsPage.classList.add("active");
 lobby.style.display="none";
 menuTitle.style.display="none";
 menuSubtitle.style.display="none";
+profileBox.style.display="none";
 playButton.style.display="none";
+
+sendOnline({
+type:"getFriends"
+});
 
 }
 
@@ -3153,9 +3441,6 @@ showFriendsPage();
 
 const menu=
 document.getElementById("menu");
-
-const playButton=
-document.getElementById("playButton");
 
 const countdown=
 document.getElementById("countdown");
