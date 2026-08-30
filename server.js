@@ -1,20 +1,53 @@
+const fs = require("fs");
+const path = require("path");
 const http = require("http");
 const WebSocket = require("ws");
 
 const PORT = process.env.PORT || 10000;
 
 const server = http.createServer((req, res) => {
-  res.writeHead(200, {
-    "Content-Type": "text/plain; charset=utf-8"
-  });
 
-  res.end("RAHL1K SERVER ONLINE");
+  if (req.url === "/" || req.url === "/index.html") {
+
+    const filePath = path.join(__dirname, "index.html");
+
+    fs.readFile(filePath, (err, data) => {
+
+      if (err) {
+        res.writeHead(500, {
+          "Content-Type": "text/plain; charset=utf-8"
+        });
+
+        res.end("Ошибка загрузки игры");
+        return;
+      }
+
+      res.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8"
+      });
+
+      res.end(data);
+
+    });
+
+    return;
+  }
+
+  res.writeHead(404);
+  res.end("Not found");
+
 });
 
-const wss = new WebSocket.Server({ server });
+
+const wss = new WebSocket.Server({
+  server
+});
+
 
 let nextID = 1;
+
 const players = new Map();
+
 
 wss.on("connection", (socket) => {
 
@@ -37,6 +70,7 @@ wss.on("connection", (socket) => {
 
   console.log("Игрок подключился:", id);
 
+
   socket.on("message", (data) => {
 
     let message;
@@ -47,17 +81,21 @@ wss.on("connection", (socket) => {
       return;
     }
 
-    // Изменение ника
+
     if (message.type === "setNickname") {
 
-      let nickname = String(message.nickname || "").trim();
+      let nickname =
+        String(message.nickname || "").trim();
 
       if (!nickname) {
         nickname = "Игрок " + id;
       }
 
-      nickname = nickname.substring(0, 16);
-      player.nickname = nickname;
+      nickname =
+        nickname.substring(0, 16);
+
+      player.nickname =
+        nickname;
 
       socket.send(JSON.stringify({
         type: "nicknameChanged",
@@ -67,17 +105,22 @@ wss.on("connection", (socket) => {
       return;
     }
 
-    // Поиск игрока по ID
+
     if (message.type === "findPlayer") {
 
-      const targetID = Number(message.id);
-      const target = players.get(targetID);
+      const targetID =
+        Number(message.id);
+
+      const target =
+        players.get(targetID);
 
       if (!target) {
+
         socket.send(JSON.stringify({
           type: "findResult",
           found: false
         }));
+
         return;
       }
 
@@ -91,27 +134,34 @@ wss.on("connection", (socket) => {
       return;
     }
 
-    // Добавление друга
+
     if (message.type === "addFriend") {
 
-      const targetID = Number(message.id);
-      const target = players.get(targetID);
+      const targetID =
+        Number(message.id);
+
+      const target =
+        players.get(targetID);
 
       if (!target) {
+
         socket.send(JSON.stringify({
           type: "friendResult",
           success: false,
           message: "Игрок не найден"
         }));
+
         return;
       }
 
       if (target.id === player.id) {
+
         socket.send(JSON.stringify({
           type: "friendResult",
           success: false,
           message: "Нельзя добавить себя"
         }));
+
         return;
       }
 
@@ -139,22 +189,26 @@ wss.on("connection", (socket) => {
       return;
     }
 
-    // Список друзей
+
     if (message.type === "getFriends") {
 
       const friends = [];
 
       for (const friendID of player.friends) {
 
-        const friend = players.get(friendID);
+        const friend =
+          players.get(friendID);
 
         if (friend) {
+
           friends.push({
             id: friend.id,
             nickname: friend.nickname,
             online: true
           });
+
         }
+
       }
 
       socket.send(JSON.stringify({
@@ -167,13 +221,29 @@ wss.on("connection", (socket) => {
 
   });
 
+
   socket.on("close", () => {
+
     players.delete(id);
-    console.log("Игрок отключился:", id);
+
+    console.log(
+      "Игрок отключился:",
+      id
+    );
+
   });
 
 });
 
-server.listen(PORT, "0.0.0.0", () => {
-  console.log("RAHL1K SERVER запущен на порту " + PORT);
-});
+
+server.listen(
+  PORT,
+  "0.0.0.0",
+  () => {
+
+    console.log(
+      "RAHL1K SERVER ONLINE"
+    );
+
+  }
+);
