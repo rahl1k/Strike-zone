@@ -4159,9 +4159,38 @@ type==="knife"?"🔪":"🔫";
 
 function switchWeapon(type){
 
+if(type===currentWeapon){
+return;
+}
+
 currentWeapon=type;
 
 showWeapon(type);
+
+/* АНИМАЦИЯ ДОСТАВАНИЯ */
+
+const weaponEl=$("weapon");
+
+weaponEl.classList.remove(
+"equip-rifle",
+"equip-pistol",
+"equip-knife"
+);
+
+/* перезапускаем animation */
+void weaponEl.offsetWidth;
+
+if(type==="rifle"){
+weaponEl.classList.add("equip-rifle");
+}
+
+if(type==="pistol"){
+weaponEl.classList.add("equip-pistol");
+}
+
+if(type==="knife"){
+weaponEl.classList.add("equip-knife");
+}
 
 if(multiplayerMatch&&gameStarted){
 
