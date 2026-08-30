@@ -3786,13 +3786,7 @@ WEAPON
 ========================================================= */
 
 if (
-[
-"rifle",
-"pistol",
-"knife"
-].includes(
-data.weapon
-)
+["rifle", "pistol", "knife", "butterfly"].includes(data.weapon)
 ) {
 
 player.state.weapon =
@@ -3995,7 +3989,7 @@ player.state.weapon;
 
 const maxDistance =
 
-weapon === "knife"
+(weapon === "knife" || weapon === "butterfly")
 
 ?
 
@@ -4034,7 +4028,7 @@ player.state.angle
 
 const allowedAngle =
 
-weapon === "knife"
+(weapon === "knife" || weapon === "butterfly")
 
 ?
 
@@ -4107,8 +4101,7 @@ let damage;
 
 
 if (
-player.state.weapon ===
-"knife"
+(player.state.weapon === "knife" || player.state.weapon === "butterfly")
 ) {
 
 damage =
