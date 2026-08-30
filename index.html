@@ -423,12 +423,14 @@ box-shadow:
 0 8px 18px #0008;
 }
 
-#playButton:active{
+#playButton:active,
+#lobbyPlayButton:active{
 transform:translateY(4px);
-box-shadow:
-0 1px 0 #13732e,
-0 4px 10px #0008;
 }
+
+/* =====================
+ОБРАТНЫЙ ОТСЧЁТ
+===================== */
 
 #countdown{
 display:none;
@@ -474,8 +476,8 @@ border-right:2px solid #ffffff18;
 display:flex;
 flex-direction:column;
 align-items:center;
-padding-top:150px;
-gap:15px;
+justify-content:center;
+gap:12px;
 }
 
 .menuTab{
@@ -497,6 +499,10 @@ padding:0;
 .menuTab.active{
 background:#30414d;
 border-color:#ffffff66;
+}
+
+#lobbyTab{
+font-size:31px;
 }
 
 .friendsIcon{
@@ -658,6 +664,367 @@ background:#202d38;
 .friendOnline{
 color:#46dc73;
 font-size:12px;
+}
+
+/* =====================
+НОВАЯ СТРАНИЦА ЛОББИ
+===================== */
+
+#lobbyPage{
+display:none;
+position:absolute;
+z-index:920;
+inset:0;
+padding-left:120px;
+color:white;
+}
+
+#lobbyPage.active{
+display:block;
+}
+
+#lobbyPageTitle{
+position:absolute;
+left:50%;
+top:28px;
+transform:translateX(-50%);
+font-size:34px;
+font-weight:900;
+text-shadow:0 4px 12px #000;
+}
+
+#partyArea{
+position:absolute;
+left:48%;
+top:51%;
+transform:translate(-50%,-50%);
+display:flex;
+align-items:flex-end;
+justify-content:center;
+gap:35px;
+width:430px;
+height:285px;
+}
+
+.partySlot{
+position:relative;
+width:170px;
+height:280px;
+display:flex;
+align-items:flex-end;
+justify-content:center;
+}
+
+.partySlot.empty{
+opacity:.35;
+}
+
+.partySoldier{
+position:relative;
+width:120px;
+height:245px;
+}
+
+.partyHead{
+position:absolute;
+left:50%;
+top:9px;
+transform:translateX(-50%);
+width:62px;
+height:62px;
+border-radius:50%;
+background:#c98f6c;
+border:3px solid #222;
+z-index:3;
+}
+
+.partyHelmet{
+position:absolute;
+left:50%;
+top:0;
+transform:translateX(-50%);
+width:80px;
+height:48px;
+background:#26352d;
+border-radius:45px 45px 17px 17px;
+border:3px solid #151b18;
+z-index:4;
+box-shadow:0 4px 7px #0008;
+}
+
+.partyHelmetFront{
+position:absolute;
+left:50%;
+top:36px;
+transform:translateX(-50%);
+width:73px;
+height:10px;
+background:#17201b;
+border-radius:5px;
+z-index:5;
+}
+
+.partyNeck{
+position:absolute;
+left:50%;
+top:67px;
+transform:translateX(-50%);
+width:23px;
+height:28px;
+background:#b97e60;
+}
+
+.partyBody{
+position:absolute;
+left:50%;
+top:82px;
+transform:translateX(-50%);
+width:90px;
+height:107px;
+background:#27352f;
+border-radius:15px 15px 8px 8px;
+border:3px solid #151b18;
+z-index:2;
+}
+
+.partyVest{
+position:absolute;
+left:50%;
+top:89px;
+transform:translateX(-50%);
+width:82px;
+height:80px;
+background:#343d38;
+border:4px solid #171c19;
+border-radius:9px;
+z-index:4;
+box-shadow:inset 0 0 0 3px #4b554f;
+}
+
+.partyVest:after{
+content:"";
+position:absolute;
+left:50%;
+top:10px;
+transform:translateX(-50%);
+width:52px;
+height:48px;
+background:#252c29;
+border:2px solid #151917;
+border-radius:5px;
+}
+
+.partyArm{
+position:absolute;
+top:91px;
+width:29px;
+height:94px;
+background:#27352f;
+border:3px solid #151b18;
+border-radius:14px;
+z-index:1;
+}
+
+.partyArm.left{
+left:2px;
+transform:rotate(7deg);
+}
+
+.partyArm.right{
+right:2px;
+transform:rotate(-7deg);
+}
+
+.partyLeg{
+position:absolute;
+top:181px;
+width:34px;
+height:61px;
+background:#202723;
+border:3px solid #151b18;
+border-radius:7px 7px 4px 4px;
+}
+
+.partyLeg.left{
+left:24px;
+}
+
+.partyLeg.right{
+right:24px;
+}
+
+.partyPlayerName{
+position:absolute;
+bottom:-3px;
+left:50%;
+transform:translateX(-50%);
+font-size:14px;
+font-weight:bold;
+white-space:nowrap;
+text-shadow:0 2px 5px #000;
+}
+
+#lobbyFriendsPanel{
+position:absolute;
+right:22px;
+top:82px;
+width:235px;
+max-height:255px;
+padding:12px;
+background:#111a22dd;
+border:1px solid #ffffff2f;
+border-radius:13px;
+overflow:auto;
+}
+
+#lobbyFriendsTitle{
+font-size:15px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+.lobbyFriendItem{
+padding:9px;
+margin-bottom:7px;
+border-radius:8px;
+background:#202d38;
+border:1px solid transparent;
+}
+
+.lobbyFriendItem.selected{
+border-color:#7fbeff;
+background:#293a48;
+}
+
+.lobbyFriendTop{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.lobbyFriendName{
+font-size:13px;
+font-weight:bold;
+}
+
+.lobbyFriendStatus{
+font-size:10px;
+color:#46dc73;
+}
+
+.inviteLobbyButton{
+display:none;
+margin-top:8px;
+width:100%;
+height:34px;
+border:0;
+border-radius:7px;
+background:#3a78d4;
+color:white;
+font-size:11px;
+font-weight:bold;
+}
+
+.lobbyFriendItem.selected .inviteLobbyButton{
+display:block;
+}
+
+#lobbyMessage{
+position:absolute;
+right:22px;
+top:350px;
+width:235px;
+text-align:center;
+font-size:12px;
+color:#ffd45b;
+}
+
+#lobbyPlayButton{
+position:absolute;
+left:135px;
+bottom:28px;
+width:190px;
+height:66px;
+border:3px solid #baffc7;
+border-radius:15px;
+background:#22b94b;
+color:white;
+font-size:25px;
+font-weight:bold;
+box-shadow:
+0 5px 0 #13732e,
+0 8px 18px #0008;
+}
+
+#lobbyLeaveButton{
+position:absolute;
+right:25px;
+bottom:28px;
+width:150px;
+height:42px;
+border:1px solid #ffffff66;
+border-radius:10px;
+background:#8d3232;
+color:white;
+font-weight:bold;
+}
+
+/* =====================
+ПРИГЛАШЕНИЕ
+===================== */
+
+#lobbyInvitePopup{
+display:none;
+position:absolute;
+z-index:1250;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:330px;
+padding:20px;
+border:2px solid #ffffff44;
+border-radius:16px;
+background:#101820f2;
+box-shadow:0 10px 35px #000;
+text-align:center;
+color:white;
+}
+
+#lobbyInviteTitle{
+font-size:20px;
+font-weight:900;
+margin-bottom:8px;
+}
+
+#lobbyInviteText{
+font-size:14px;
+color:#ffffffbb;
+margin-bottom:16px;
+}
+
+#inviteButtons{
+display:flex;
+gap:10px;
+}
+
+#acceptLobbyInvite{
+flex:1;
+height:44px;
+border:0;
+border-radius:9px;
+background:#22b94b;
+color:white;
+font-weight:bold;
+}
+
+#declineLobbyInvite{
+flex:1;
+height:44px;
+border:0;
+border-radius:9px;
+background:#a53737;
+color:white;
+font-weight:bold;
 }
 
 /* =====================
@@ -1199,6 +1566,8 @@ display:flex;
 
 <button class="menuTab active" id="gameTab">▶</button>
 
+<button class="menuTab" id="lobbyTab">🛡️</button>
+
 <button class="menuTab" id="friendsTab">
 <div class="friendsIcon">
 <div class="person p1"></div>
@@ -1237,7 +1606,77 @@ placeholder="Введите ник"
 
 </div>
 
-<!-- ДРУЗЬЯ -->
+<!-- =====================
+СТРАНИЦА ЛОББИ
+===================== -->
+
+<div id="lobbyPage">
+
+<div id="lobbyPageTitle">
+ЛОББИ
+</div>
+
+<div id="partyArea">
+
+<div class="partySlot" id="partySlot1"></div>
+
+<div class="partySlot empty" id="partySlot2"></div>
+
+</div>
+
+<div id="lobbyFriendsPanel">
+
+<div id="lobbyFriendsTitle">
+ДРУЗЬЯ
+</div>
+
+<div id="lobbyFriendsList">
+Загрузка...
+</div>
+
+</div>
+
+<div id="lobbyMessage"></div>
+
+<button id="lobbyPlayButton">
+ИГРАТЬ
+</button>
+
+<button id="lobbyLeaveButton">
+ПОКИНУТЬ ЛОББИ
+</button>
+
+</div>
+
+<!-- =====================
+ПРИГЛАШЕНИЕ
+===================== -->
+
+<div id="lobbyInvitePopup">
+
+<div id="lobbyInviteTitle">
+ПРИГЛАШЕНИЕ В ЛОББИ
+</div>
+
+<div id="lobbyInviteText"></div>
+
+<div id="inviteButtons">
+
+<button id="acceptLobbyInvite">
+ПРИНЯТЬ
+</button>
+
+<button id="declineLobbyInvite">
+ОТКЛОНИТЬ
+</button>
+
+</div>
+
+</div>
+
+<!-- =====================
+ДРУЗЬЯ
+===================== -->
 
 <div id="friendsPage">
 
@@ -1335,7 +1774,9 @@ RAHL1K
 </div>
 
 
-<!-- ИГРА -->
+<!-- =====================
+ИГРА
+===================== -->
 
 <div id="game">
 
@@ -1470,6 +1911,14 @@ let myOnlineID=null;
 let myNickname="";
 let foundFriendID=null;
 
+let cachedFriends=[];
+
+let incomingLobbyFromID=null;
+
+let currentLobbyMembers=[];
+
+let lobbyCountdownTimer=null;
+
 const profileStatus=
 document.getElementById("profileStatus");
 
@@ -1500,6 +1949,31 @@ document.getElementById("friendsMessage");
 const friendsList=
 document.getElementById("friendsList");
 
+const lobbyFriendsList=
+document.getElementById("lobbyFriendsList");
+
+const lobbyMessage=
+document.getElementById("lobbyMessage");
+
+const lobbyInvitePopup=
+document.getElementById("lobbyInvitePopup");
+
+const lobbyInviteText=
+document.getElementById("lobbyInviteText");
+
+const acceptLobbyInvite=
+document.getElementById("acceptLobbyInvite");
+
+const declineLobbyInvite=
+document.getElementById("declineLobbyInvite");
+
+const lobbyPlayButton=
+document.getElementById("lobbyPlayButton");
+
+const lobbyLeaveButton=
+document.getElementById("lobbyLeaveButton");
+
+
 function sendOnline(data){
 
 if(
@@ -1518,9 +1992,13 @@ return true;
 friendsMessage.textContent=
 "Нет соединения с сервером";
 
+lobbyMessage.textContent=
+"Нет соединения с сервером";
+
 return false;
 
 }
+
 
 function connectOnline(){
 
@@ -1596,7 +2074,9 @@ return;
 }
 
 
-/* ID ПОЛУЧЕН */
+/* =========================
+ID ПОЛУЧЕН
+========================= */
 
 if(data.type==="welcome"){
 
@@ -1636,7 +2116,9 @@ myNickname;
 }
 
 
-/* НИК ИЗМЕНЁН */
+/* =========================
+НИК ИЗМЕНЁН
+========================= */
 
 if(data.type==="nicknameChanged"){
 
@@ -1662,10 +2144,16 @@ profileStatus.textContent=
 profileStatus.style.color=
 "#46dc73";
 
+renderLobbyMembers(
+currentLobbyMembers
+);
+
 }
 
 
-/* РЕЗУЛЬТАТ ПОИСКА */
+/* =========================
+ПОИСК ДРУГА
+========================= */
 
 if(data.type==="findResult"){
 
@@ -1704,7 +2192,9 @@ addFriendButton.style.display=
 }
 
 
-/* ДОБАВЛЕНИЕ */
+/* =========================
+ДРУГ ДОБАВЛЕН
+========================= */
 
 if(data.type==="friendResult"){
 
@@ -1731,7 +2221,9 @@ type:"getFriends"
 }
 
 
-/* ДРУГ ДОБАВИЛ НАС */
+/* =========================
+НАС ДОБАВИЛИ
+========================= */
 
 if(data.type==="friendAdded"){
 
@@ -1746,20 +2238,127 @@ type:"getFriends"
 }
 
 
-/* СПИСОК */
+/* =========================
+СПИСОК ДРУЗЕЙ
+========================= */
 
 if(data.type==="friendsList"){
 
+cachedFriends=
+data.friends || [];
+
 renderFriends(
-data.friends || []
+cachedFriends
+);
+
+renderLobbyFriends(
+cachedFriends
 );
 
 }
 
+
+/* =========================
+СООБЩЕНИЕ ЛОББИ
+========================= */
+
+if(data.type==="lobbyMessage"){
+
+lobbyMessage.textContent=
+data.message || "";
+
+}
+
+
+/* =========================
+ПРИГЛАШЕНИЕ
+========================= */
+
+if(data.type==="lobbyInvite"){
+
+incomingLobbyFromID=
+data.fromID;
+
+lobbyInviteText.textContent=
+data.fromNickname+
+" приглашает тебя в лобби";
+
+lobbyInvitePopup.style.display=
+"block";
+
+}
+
+
+/* =========================
+ПРИГЛАШЕНИЕ ПРИНЯТО
+========================= */
+
+if(data.type==="lobbyInviteAccepted"){
+
+lobbyMessage.textContent=
+data.nickname+
+" вошёл в лобби";
+
+}
+
+
+/* =========================
+СОСТОЯНИЕ ЛОББИ
+========================= */
+
+if(data.type==="lobbyState"){
+
+currentLobbyMembers=
+data.members || [];
+
+renderLobbyMembers(
+currentLobbyMembers
+);
+
+if(data.inLobby){
+
+lobbyMessage.textContent=
+currentLobbyMembers.length>=2
+?"Лобби готово"
+:"Ожидание второго игрока";
+
+}
+
+}
+
+
+/* =========================
+ОБЩИЙ ОТСЧЁТ
+========================= */
+
+if(data.type==="lobbyCountdown"){
+
+showLobbyCountdown(
+Number(data.startAt)
+);
+
+}
+
+
+/* =========================
+СЕРВЕР ЗАПУСТИЛ ИГРУ
+========================= */
+
+if(data.type==="startGame"){
+
+launchLobbyGame();
+
+}
+
 }
 );
 
 }
+
+
+/* ==========================
+БЕЗОПАСНЫЙ ТЕКСТ
+========================== */
 
 function escapeHTML(text){
 
@@ -1771,6 +2370,11 @@ return String(text)
 .replaceAll("'","&#039;");
 
 }
+
+
+/* ==========================
+СПИСОК ДРУЗЕЙ
+========================== */
 
 function renderFriends(friends){
 
@@ -1809,6 +2413,282 @@ item
 
 }
 
+
+/* ==========================
+ДРУЗЬЯ В ЛОББИ
+========================== */
+
+function renderLobbyFriends(friends){
+
+lobbyFriendsList.innerHTML="";
+
+if(friends.length===0){
+
+lobbyFriendsList.innerHTML=
+'<div style="color:#ffffff77;font-size:12px">Нет друзей онлайн</div>';
+
+return;
+
+}
+
+for(const friend of friends){
+
+const item=
+document.createElement("div");
+
+item.className=
+"lobbyFriendItem";
+
+const top=
+document.createElement("div");
+
+top.className=
+"lobbyFriendTop";
+
+top.innerHTML=
+'<div>'+
+'<div class="lobbyFriendName">'+
+escapeHTML(friend.nickname)+
+'</div>'+
+'<div style="font-size:10px;color:#ffffff77">ID: '+
+friend.id+
+'</div>'+
+'</div>'+
+'<div class="lobbyFriendStatus">● ONLINE</div>';
+
+const button=
+document.createElement("button");
+
+button.className=
+"inviteLobbyButton";
+
+button.textContent=
+"ПРИГЛАСИТЬ В ЛОББИ";
+
+button.addEventListener(
+"touchstart",
+e=>{
+
+e.preventDefault();
+e.stopPropagation();
+
+sendOnline({
+type:"inviteToLobby",
+id:friend.id
+});
+
+lobbyMessage.textContent=
+"Отправляем приглашение...";
+
+},
+{passive:false}
+);
+
+item.appendChild(top);
+item.appendChild(button);
+
+item.addEventListener(
+"touchstart",
+e=>{
+
+if(
+e.target.closest(
+".inviteLobbyButton"
+)
+)
+return;
+
+e.preventDefault();
+e.stopPropagation();
+
+document
+.querySelectorAll(
+".lobbyFriendItem"
+)
+.forEach(el=>
+el.classList.remove(
+"selected"
+)
+);
+
+item.classList.add(
+"selected"
+);
+
+},
+{passive:false}
+);
+
+lobbyFriendsList.appendChild(
+item
+);
+
+}
+
+}
+
+
+/* ==========================
+БОЕЦ ДЛЯ ЛОББИ
+========================== */
+
+function createPartySoldier(
+nickname
+){
+
+const soldier=
+document.createElement("div");
+
+soldier.className=
+"partySoldier";
+
+soldier.innerHTML=`
+
+<div class="partyHead"></div>
+
+<div class="partyHelmet"></div>
+
+<div class="partyHelmetFront"></div>
+
+<div class="partyNeck"></div>
+
+<div class="partyArm left"></div>
+
+<div class="partyArm right"></div>
+
+<div class="partyBody"></div>
+
+<div class="partyVest"></div>
+
+<div class="partyLeg left"></div>
+
+<div class="partyLeg right"></div>
+
+<div class="partyPlayerName">
+${escapeHTML(nickname)}
+</div>
+
+`;
+
+return soldier;
+
+}
+
+
+/* ==========================
+ПОКАЗАТЬ ИГРОКОВ ЛОББИ
+========================== */
+
+function renderLobbyMembers(
+members
+){
+
+const slot1=
+document.getElementById(
+"partySlot1"
+);
+
+const slot2=
+document.getElementById(
+"partySlot2"
+);
+
+slot1.innerHTML="";
+slot2.innerHTML="";
+
+slot1.classList.remove(
+"empty"
+);
+
+slot2.classList.remove(
+"empty"
+);
+
+let first=
+members[0];
+
+let second=
+members[1];
+
+
+/*
+Если сервер ещё не прислал
+состояние, показываем себя.
+*/
+
+if(!first){
+
+first={
+id:myOnlineID,
+nickname:
+myNickname ||
+nicknameInput.value ||
+"Игрок"
+};
+
+}
+
+
+slot1.appendChild(
+createPartySoldier(
+first.nickname
+)
+);
+
+
+if(second){
+
+slot2.appendChild(
+createPartySoldier(
+second.nickname
+)
+);
+
+}else{
+
+slot2.classList.add(
+"empty"
+);
+
+const waiting=
+document.createElement(
+"div"
+);
+
+waiting.style.position=
+"absolute";
+
+waiting.style.left=
+"50%";
+
+waiting.style.top=
+"50%";
+
+waiting.style.transform=
+"translate(-50%,-50%)";
+
+waiting.style.fontSize=
+"55px";
+
+waiting.style.color=
+"#ffffff55";
+
+waiting.textContent=
+"+";
+
+slot2.appendChild(
+waiting
+);
+
+}
+
+}
+
+
+/* ==========================
+СОХРАНИТЬ НИК
+========================== */
+
 saveNickname.addEventListener(
 "touchstart",
 e=>{
@@ -1829,6 +2709,11 @@ nickname:nickname
 },
 {passive:false}
 );
+
+
+/* ==========================
+ПОИСК ПО ID
+========================== */
 
 findFriendButton.addEventListener(
 "touchstart",
@@ -1863,6 +2748,11 @@ id:id
 {passive:false}
 );
 
+
+/* ==========================
+ДОБАВИТЬ В ДРУЗЬЯ
+========================== */
+
 addFriendButton.addEventListener(
 "touchstart",
 e=>{
@@ -1880,6 +2770,129 @@ id:foundFriendID
 },
 {passive:false}
 );
+
+
+/* ==========================
+ПРИНЯТЬ ПРИГЛАШЕНИЕ
+========================== */
+
+acceptLobbyInvite.addEventListener(
+"touchstart",
+e=>{
+
+e.preventDefault();
+e.stopPropagation();
+
+if(!incomingLobbyFromID)
+return;
+
+sendOnline({
+type:"acceptLobbyInvite",
+fromID:incomingLobbyFromID
+});
+
+lobbyInvitePopup.style.display=
+"none";
+
+incomingLobbyFromID=null;
+
+showLobbyPage();
+
+},
+{passive:false}
+);
+
+
+/* ==========================
+ОТКЛОНИТЬ ПРИГЛАШЕНИЕ
+========================== */
+
+declineLobbyInvite.addEventListener(
+"touchstart",
+e=>{
+
+e.preventDefault();
+e.stopPropagation();
+
+if(incomingLobbyFromID){
+
+sendOnline({
+type:"declineLobbyInvite",
+fromID:incomingLobbyFromID
+});
+
+}
+
+incomingLobbyFromID=null;
+
+lobbyInvitePopup.style.display=
+"none";
+
+},
+{passive:false}
+);
+
+
+/* ==========================
+КНОПКА ИГРАТЬ В ЛОББИ
+========================== */
+
+lobbyPlayButton.addEventListener(
+"touchstart",
+e=>{
+
+e.preventDefault();
+e.stopPropagation();
+
+if(
+currentLobbyMembers.length<2
+){
+
+lobbyMessage.textContent=
+"Сначала пригласи друга";
+
+return;
+
+}
+
+sendOnline({
+type:"startLobbyGame"
+});
+
+lobbyMessage.textContent=
+"Запускаем матч...";
+
+},
+{passive:false}
+);
+
+
+/* ==========================
+ПОКИНУТЬ ЛОББИ
+========================== */
+
+lobbyLeaveButton.addEventListener(
+"touchstart",
+e=>{
+
+e.preventDefault();
+e.stopPropagation();
+
+sendOnline({
+type:"leaveLobby"
+});
+
+currentLobbyMembers=[];
+
+renderLobbyMembers([]);
+
+lobbyMessage.textContent=
+"Ты покинул лобби";
+
+},
+{passive:false}
+);
+
 
 [
 nicknameInput,
@@ -1901,6 +2914,7 @@ e.stopPropagation();
 );
 
 });
+
 
 connectOnline();
 
@@ -2096,7 +3110,7 @@ resetJoy
 
 
 /* ==========================
-КАМЕРА 360° + ВВЕРХ / ВНИЗ
+КАМЕРА
 ========================== */
 
 let lookID=null;
@@ -3353,11 +4367,17 @@ updateWeaponIcon();
 const gameTab=
 document.getElementById("gameTab");
 
+const lobbyTab=
+document.getElementById("lobbyTab");
+
 const friendsTab=
 document.getElementById("friendsTab");
 
 const friendsPage=
 document.getElementById("friendsPage");
+
+const lobbyPage=
+document.getElementById("lobbyPage");
 
 const lobby=
 document.getElementById("lobby");
@@ -3374,39 +4394,118 @@ document.getElementById("profileBox");
 const playButton=
 document.getElementById("playButton");
 
-function showGamePage(){
 
-gameTab.classList.add("active");
-friendsTab.classList.remove("active");
+function hideAllMenuPages(){
 
-friendsPage.classList.remove("active");
+gameTab.classList.remove(
+"active"
+);
 
-lobby.style.display="block";
-menuTitle.style.display="block";
-menuSubtitle.style.display="block";
-profileBox.style.display="block";
-playButton.style.display="block";
+lobbyTab.classList.remove(
+"active"
+);
+
+friendsTab.classList.remove(
+"active"
+);
+
+friendsPage.classList.remove(
+"active"
+);
+
+lobbyPage.classList.remove(
+"active"
+);
+
+lobby.style.display=
+"none";
+
+menuTitle.style.display=
+"none";
+
+menuSubtitle.style.display=
+"none";
+
+profileBox.style.display=
+"none";
+
+playButton.style.display=
+"none";
 
 }
 
+
+function showGamePage(){
+
+hideAllMenuPages();
+
+gameTab.classList.add(
+"active"
+);
+
+lobby.style.display=
+"block";
+
+menuTitle.style.display=
+"block";
+
+menuSubtitle.style.display=
+"block";
+
+profileBox.style.display=
+"block";
+
+playButton.style.display=
+"block";
+
+}
+
+
+function showLobbyPage(){
+
+hideAllMenuPages();
+
+lobbyTab.classList.add(
+"active"
+);
+
+lobbyPage.classList.add(
+"active"
+);
+
+sendOnline({
+type:"createLobby"
+});
+
+sendOnline({
+type:"getFriends"
+});
+
+renderLobbyMembers(
+currentLobbyMembers
+);
+
+}
+
+
 function showFriendsPage(){
 
-friendsTab.classList.add("active");
-gameTab.classList.remove("active");
+hideAllMenuPages();
 
-friendsPage.classList.add("active");
+friendsTab.classList.add(
+"active"
+);
 
-lobby.style.display="none";
-menuTitle.style.display="none";
-menuSubtitle.style.display="none";
-profileBox.style.display="none";
-playButton.style.display="none";
+friendsPage.classList.add(
+"active"
+);
 
 sendOnline({
 type:"getFriends"
 });
 
 }
+
 
 gameTab.addEventListener(
 "touchstart",
@@ -3420,6 +4519,21 @@ showGamePage();
 },
 {passive:false}
 );
+
+
+lobbyTab.addEventListener(
+"touchstart",
+e=>{
+
+e.preventDefault();
+e.stopPropagation();
+
+showLobbyPage();
+
+},
+{passive:false}
+);
+
 
 friendsTab.addEventListener(
 "touchstart",
@@ -3436,7 +4550,7 @@ showFriendsPage();
 
 
 /* ==========================
-МЕНЮ → ИГРА
+ОБЫЧНЫЙ ЗАПУСК ИГРЫ
 ========================== */
 
 const menu=
@@ -3450,28 +4564,34 @@ document.getElementById("countdownText");
 
 let gameStarted=false;
 
+
 function startGame(){
 
 if(gameStarted)return;
 
-gameStarted=true;
+playButton.style.display=
+"none";
 
-playButton.style.display="none";
+countdown.style.display=
+"block";
 
-countdown.style.display="block";
-countdownText.style.display="block";
+countdownText.style.display=
+"block";
 
 let number=5;
 
-countdown.textContent=number;
+countdown.textContent=
+number;
 
-const timer=setInterval(()=>{
+const timer=
+setInterval(()=>{
 
 number--;
 
 if(number>=0){
 
-countdown.textContent=number;
+countdown.textContent=
+number;
 
 }
 
@@ -3479,16 +4599,23 @@ if(number<0){
 
 clearInterval(timer);
 
-countdown.style.display="none";
-countdownText.style.display="none";
+countdown.style.display=
+"none";
 
-menu.style.display="none";
+countdownText.style.display=
+"none";
+
+menu.style.display=
+"none";
+
+gameStarted=true;
 
 }
 
 },1000);
 
 }
+
 
 playButton.addEventListener(
 "touchstart",
@@ -3501,6 +4628,105 @@ startGame();
 },
 {passive:false}
 );
+
+
+/* ==========================
+СЕРВЕРНЫЙ ОТСЧЁТ ЛОББИ
+========================== */
+
+function showLobbyCountdown(
+startAt
+){
+
+if(lobbyCountdownTimer){
+
+clearInterval(
+lobbyCountdownTimer
+);
+
+lobbyCountdownTimer=null;
+
+}
+
+countdown.style.display=
+"block";
+
+countdownText.style.display=
+"block";
+
+countdownText.textContent=
+"МАТЧ НАЧИНАЕТСЯ";
+
+function update(){
+
+const remaining=
+startAt-Date.now();
+
+let number=
+Math.ceil(
+remaining/1000
+);
+
+if(number<0)
+number=0;
+
+if(number>5)
+number=5;
+
+countdown.textContent=
+number;
+
+}
+
+update();
+
+lobbyCountdownTimer=
+setInterval(
+update,
+100
+);
+
+}
+
+
+/* ==========================
+ЗАПУСК ОТ СЕРВЕРА
+========================== */
+
+function launchLobbyGame(){
+
+if(lobbyCountdownTimer){
+
+clearInterval(
+lobbyCountdownTimer
+);
+
+lobbyCountdownTimer=null;
+
+}
+
+countdown.textContent=
+"0";
+
+setTimeout(
+()=>{
+
+countdown.style.display=
+"none";
+
+countdownText.style.display=
+"none";
+
+menu.style.display=
+"none";
+
+gameStarted=true;
+
+},
+120
+);
+
+}
 
 
 /* ==========================
