@@ -5,12 +5,329 @@ const WebSocket = require("ws");
 
 const PORT = process.env.PORT || 3000;
 
+const MATCH_DURATION = 5 * 60 * 1000;
+const RESPAWN_TIME = 3000;
 
-/* ==========================
-HTTP СЕРВЕР
-========================== */
+const MAP_W = 3000;
+const MAP_H = 3000;
 
-const server = http.createServer((req, res) => {
+
+/* =========================================================
+КАРТЫ
+========================================================= */
+
+const MAPS = {
+
+city: {
+
+name: "CITY",
+
+spawns: {
+
+ct: {
+x: 850,
+y: 250,
+angle: 1.15
+},
+
+t: {
+x: 2700,
+y: 2720,
+angle: -2.25
+}
+
+},
+
+obstacles: [
+
+{
+x: 470,
+y: 500,
+w: 510,
+h: 320
+},
+
+{
+x: 1280,
+y: 460,
+w: 430,
+h: 300
+},
+
+{
+x: 2280,
+y: 520,
+w: 520,
+h: 330
+},
+
+{
+x: 430,
+y: 1430,
+w: 350,
+h: 620
+},
+
+{
+x: 2560,
+y: 1440,
+w: 350,
+h: 610
+},
+
+{
+x: 730,
+y: 2460,
+w: 650,
+h: 350
+},
+
+{
+x: 2100,
+y: 2450,
+w: 700,
+h: 360
+},
+
+{
+x: 1470,
+y: 1120,
+w: 610,
+h: 80
+},
+
+{
+x: 1470,
+y: 1900,
+w: 610,
+h: 80
+},
+
+{
+x: 1050,
+y: 1510,
+w: 80,
+h: 520
+},
+
+{
+x: 1940,
+y: 1510,
+w: 80,
+h: 520
+},
+
+{
+x: 1340,
+y: 1480,
+w: 200,
+h: 115
+},
+
+{
+x: 1645,
+y: 1560,
+w: 200,
+h: 115
+},
+
+{
+x: 760,
+y: 1120,
+w: 260,
+h: 80
+},
+
+{
+x: 2220,
+y: 1900,
+w: 260,
+h: 80
+},
+
+{
+x: 1500,
+y: 2450,
+w: 180,
+h: 115
+}
+
+]
+
+},
+
+
+/* =========================================================
+SAKURA
+========================================================= */
+
+sakura: {
+
+name: "SAKURA",
+
+spawns: {
+
+ct: {
+x: 330,
+y: 2570,
+angle: -0.75
+},
+
+t: {
+x: 2680,
+y: 420,
+angle: 2.35
+}
+
+},
+
+obstacles: [
+
+/* Храм сверху */
+
+{
+x: 1460,
+y: 420,
+w: 560,
+h: 300
+},
+
+/* Левый японский дом */
+
+{
+x: 520,
+y: 650,
+w: 430,
+h: 320
+},
+
+/* Правый японский дом */
+
+{
+x: 2440,
+y: 730,
+w: 430,
+h: 350
+},
+
+/* Левое длинное здание */
+
+{
+x: 410,
+y: 1510,
+w: 300,
+h: 650
+},
+
+/* Правое длинное здание */
+
+{
+x: 2590,
+y: 1530,
+w: 300,
+h: 650
+},
+
+/* Нижний чайный дом */
+
+{
+x: 1510,
+y: 2560,
+w: 600,
+h: 320
+},
+
+/* Центральные стены */
+
+{
+x: 1460,
+y: 1120,
+w: 620,
+h: 75
+},
+
+{
+x: 1460,
+y: 1910,
+w: 620,
+h: 75
+},
+
+{
+x: 1050,
+y: 1510,
+w: 75,
+h: 520
+},
+
+{
+x: 1940,
+y: 1510,
+w: 75,
+h: 520
+},
+
+/* Укрытия */
+
+{
+x: 1320,
+y: 1450,
+w: 190,
+h: 120
+},
+
+{
+x: 1640,
+y: 1580,
+w: 190,
+h: 120
+},
+
+/* Малые стены */
+
+{
+x: 760,
+y: 1120,
+w: 280,
+h: 75
+},
+
+{
+x: 2240,
+y: 1900,
+w: 280,
+h: 75
+},
+
+/* Садовые павильоны */
+
+{
+x: 850,
+y: 2110,
+w: 300,
+h: 220
+},
+
+{
+x: 2190,
+y: 1030,
+w: 300,
+h: 220
+}
+
+]
+
+}
+
+};
+
+
+/* =========================================================
+HTTP
+========================================================= */
+
+const server = http.createServer(
+(req, res) => {
 
 let filePath = req.url;
 
@@ -24,14 +341,17 @@ filePath = "/index.html";
 } else {
 
 res.writeHead(404);
-res.end("Not found");
+
+res.end(
+"Not found"
+);
+
 return;
 
 }
 
 
-const fullPath =
-path.join(
+const fullPath = path.join(
 __dirname,
 filePath
 );
@@ -44,7 +364,11 @@ fullPath,
 if (err) {
 
 res.writeHead(500);
-res.end("Server error");
+
+res.end(
+"Server error"
+);
+
 return;
 
 }
@@ -54,51 +378,54 @@ res.writeHead(
 200,
 {
 "Content-Type":
-"text/html; charset=utf-8"
+"text/html; charset=utf-8",
+
+"Cache-Control":
+"no-cache"
 }
 );
 
-res.end(data);
+res.end(
+data
+);
 
 }
 );
 
-});
+}
+);
 
 
-/* ==========================
+/* =========================================================
 WEBSOCKET
-========================== */
+========================================================= */
 
-const wss =
-new WebSocket.Server({
+const wss = new WebSocket.Server({
 server
 });
 
 
-/* ==========================
+/* =========================================================
 ИГРОКИ
-========================== */
+========================================================= */
 
-const players =
-new Map();
+const players = new Map();
 
 let nextID = 1000;
 
 
-/* ==========================
+/* =========================================================
 ЛОББИ
-========================== */
+========================================================= */
 
-const lobbies =
-new Map();
+const lobbies = new Map();
 
 let nextLobbyID = 1;
 
 
-/* ==========================
-ОТПРАВКА
-========================== */
+/* =========================================================
+SAFE SEND
+========================================================= */
 
 function safeSend(
 socket,
@@ -107,12 +434,13 @@ data
 
 if (
 socket &&
-socket.readyState ===
-WebSocket.OPEN
+socket.readyState === WebSocket.OPEN
 ) {
 
 socket.send(
-JSON.stringify(data)
+JSON.stringify(
+data
+)
 );
 
 }
@@ -120,48 +448,55 @@ JSON.stringify(data)
 }
 
 
-/* ==========================
-ИГРОКИ ЛОББИ
-========================== */
+/* =========================================================
+LOBBY PLAYERS
+========================================================= */
 
 function getLobbyPlayers(
 lobbyID
 ) {
 
-const lobby =
-lobbies.get(
+const lobby = lobbies.get(
 lobbyID
 );
 
 if (!lobby) {
+
 return [];
+
 }
 
 
 const result = [];
 
+
 for (
-const id
-of lobby.members
+const id of lobby.members
 ) {
 
-const player =
-players.get(id);
+const player = players.get(
+id
+);
 
 if (player) {
-result.push(player);
+
+result.push(
+player
+);
+
 }
 
 }
+
 
 return result;
 
 }
 
 
-/* ==========================
-РАССЫЛКА ЛОББИ
-========================== */
+/* =========================================================
+BROADCAST
+========================================================= */
 
 function broadcastLobby(
 lobbyID,
@@ -169,21 +504,23 @@ data,
 exceptID = null
 ) {
 
-const members =
-getLobbyPlayers(
+const members = getLobbyPlayers(
 lobbyID
 );
 
 
 for (
-const member
-of members
+const member of members
 ) {
 
 if (
 exceptID !== null &&
-Number(member.id) ===
-Number(exceptID)
+Number(
+member.id
+) ===
+Number(
+exceptID
+)
 ) {
 
 continue;
@@ -201,21 +538,22 @@ data
 }
 
 
-/* ==========================
-ПУБЛИЧНЫЙ СПИСОК ИГРОКОВ
-========================== */
+/* =========================================================
+PUBLIC MEMBERS
+========================================================= */
 
 function getPublicLobbyMembers(
 lobbyID
 ) {
 
-const lobby =
-lobbies.get(
+const lobby = lobbies.get(
 lobbyID
 );
 
 if (!lobby) {
+
 return [];
+
 }
 
 
@@ -223,6 +561,7 @@ return getLobbyPlayers(
 lobbyID
 ).map(
 player => ({
+
 id:
 player.id,
 
@@ -230,35 +569,39 @@ nickname:
 player.nickname,
 
 team:
-lobby.teams[player.id] ||
-null
+lobby.teams[
+player.id
+] || null
+
 })
 );
 
 }
 
 
-/* ==========================
-СОСТОЯНИЕ ЛОББИ
-========================== */
+/* =========================================================
+LOBBY STATE
+========================================================= */
 
 function sendLobbyState(
 lobbyID
 ) {
 
-const lobby =
-lobbies.get(
+const lobby = lobbies.get(
 lobbyID
 );
 
 if (!lobby) {
+
 return;
+
 }
 
 
 broadcastLobby(
 lobbyID,
 {
+
 type:
 "lobbyState",
 
@@ -268,10 +611,18 @@ true,
 leaderID:
 lobby.leaderID,
 
-/* НОВОЕ */
-
 botsEnabled:
 lobby.botsEnabled,
+
+/* ВЫБРАННАЯ КАРТА */
+
+map:
+lobby.map,
+
+mapName:
+MAPS[
+lobby.map
+]?.name || "CITY",
 
 teamSelectionOpen:
 lobby.teamSelectionOpen,
@@ -283,15 +634,441 @@ members:
 getPublicLobbyMembers(
 lobbyID
 )
+
 }
 );
 
 }
 
 
-/* ==========================
+/* =========================================================
+СЧЁТ
+========================================================= */
+
+function broadcastScore(
+lobby
+) {
+
+if (!lobby) {
+
+return;
+
+}
+
+
+broadcastLobby(
+lobby.id,
+{
+
+type:
+"scoreState",
+
+ct:
+lobby.score.ct,
+
+t:
+lobby.score.t
+
+}
+);
+
+}
+
+
+/* =========================================================
+НОРМАЛИЗАЦИЯ УГЛА
+========================================================= */
+
+function normalizeAngle(
+angle
+) {
+
+return Math.atan2(
+Math.sin(
+angle
+),
+Math.cos(
+angle
+)
+);
+
+}
+
+
+/* =========================================================
+СПАВН
+========================================================= */
+
+function getTeamSpawn(
+mapID,
+team
+) {
+
+const map =
+MAPS[
+mapID
+] || MAPS.city;
+
+
+const source =
+
+team === "ct"
+
+?
+
+map.spawns.ct
+
+:
+
+map.spawns.t;
+
+
+return {
+
+x:
+source.x,
+
+y:
+source.y,
+
+angle:
+source.angle
+
+};
+
+}
+
+
+/* =========================================================
+КОЛЛИЗИЯ ТОЧКИ
+========================================================= */
+
+function pointBlocked(
+mapID,
+x,
+y,
+radius = 28
+) {
+
+if (
+x < radius ||
+y < radius ||
+x > MAP_W - radius ||
+y > MAP_H - radius
+) {
+
+return true;
+
+}
+
+
+const map =
+MAPS[
+mapID
+] || MAPS.city;
+
+
+for (
+const object of map.obstacles
+) {
+
+if (
+
+x >
+object.x -
+object.w / 2 -
+radius
+
+&&
+
+x <
+object.x +
+object.w / 2 +
+radius
+
+&&
+
+y >
+object.y -
+object.h / 2 -
+radius
+
+&&
+
+y <
+object.y +
+object.h / 2 +
+radius
+
+) {
+
+return true;
+
+}
+
+}
+
+
+return false;
+
+}
+
+
+/* =========================================================
+ПЕРЕСЕЧЕНИЕ ЛИНИИ С ПРЯМОУГОЛЬНИКОМ
+========================================================= */
+
+function segmentIntersectsRectangle(
+x1,
+y1,
+x2,
+y2,
+rect
+) {
+
+const minX =
+rect.x -
+rect.w / 2;
+
+const maxX =
+rect.x +
+rect.w / 2;
+
+const minY =
+rect.y -
+rect.h / 2;
+
+const maxY =
+rect.y +
+rect.h / 2;
+
+
+const dx =
+x2 - x1;
+
+const dy =
+y2 - y1;
+
+
+let tMin = 0;
+let tMax = 1;
+
+
+function clip(
+p,
+q
+) {
+
+if (
+Math.abs(
+p
+) < 0.000001
+) {
+
+return q >= 0;
+
+}
+
+
+const r =
+q / p;
+
+
+if (
+p < 0
+) {
+
+if (
+r > tMax
+) {
+
+return false;
+
+}
+
+if (
+r > tMin
+) {
+
+tMin = r;
+
+}
+
+} else {
+
+if (
+r < tMin
+) {
+
+return false;
+
+}
+
+if (
+r < tMax
+) {
+
+tMax = r;
+
+}
+
+}
+
+
+return true;
+
+}
+
+
+if (
+!clip(
+-dx,
+x1 - minX
+)
+) {
+
+return false;
+
+}
+
+
+if (
+!clip(
+dx,
+maxX - x1
+)
+) {
+
+return false;
+
+}
+
+
+if (
+!clip(
+-dy,
+y1 - minY
+)
+) {
+
+return false;
+
+}
+
+
+if (
+!clip(
+dy,
+maxY - y1
+)
+) {
+
+return false;
+
+}
+
+
+return (
+tMax >= tMin &&
+tMax >= 0 &&
+tMin <= 1
+);
+
+}
+
+
+/* =========================================================
+ПРОВЕРКА СТЕНЫ МЕЖДУ ИГРОКАМИ
+========================================================= */
+
+function hasWallBetween(
+mapID,
+x1,
+y1,
+x2,
+y2
+) {
+
+const map =
+MAPS[
+mapID
+] || MAPS.city;
+
+
+for (
+const object of map.obstacles
+) {
+
+if (
+segmentIntersectsRectangle(
+x1,
+y1,
+x2,
+y2,
+object
+)
+) {
+
+return true;
+
+}
+
+}
+
+
+return false;
+
+}
+
+
+/* =========================================================
+ОЧИСТКА ТАЙМЕРОВ ЛОББИ
+========================================================= */
+
+function clearLobbyTimers(
+lobby
+) {
+
+if (!lobby) {
+
+return;
+
+}
+
+
+if (
+lobby.startTimer
+) {
+
+clearTimeout(
+lobby.startTimer
+);
+
+lobby.startTimer =
+null;
+
+}
+
+
+if (
+lobby.matchTimer
+) {
+
+clearTimeout(
+lobby.matchTimer
+);
+
+lobby.matchTimer =
+null;
+
+}
+
+}
+
+
+/* =========================================================
 ПОКИНУТЬ ЛОББИ
-========================== */
+========================================================= */
 
 function leaveLobby(
 player
@@ -310,6 +1087,7 @@ return;
 const lobbyID =
 player.lobbyID;
 
+
 const lobby =
 lobbies.get(
 lobbyID
@@ -322,34 +1100,61 @@ null;
 player.inGame =
 false;
 
+player.dead =
+false;
 
-if (!lobby) {
-return;
+
+if (
+player.respawnTimer
+) {
+
+clearTimeout(
+player.respawnTimer
+);
+
+player.respawnTimer =
+null;
+
 }
 
 
-/* Убираем игрока */
+if (!lobby) {
+
+return;
+
+}
+
+
+/* Удаляем игрока */
 
 lobby.members =
 lobby.members.filter(
 id =>
-Number(id) !==
-Number(player.id)
+Number(
+id
+) !==
+Number(
+player.id
+)
 );
 
 
-/* Убираем его команду */
+/* Удаляем команду */
 
 delete lobby.teams[
 player.id
 ];
 
 
-/* Если ушёл лидер */
+/* Новый лидер */
 
 if (
-Number(lobby.leaderID) ===
-Number(player.id)
+Number(
+lobby.leaderID
+) ===
+Number(
+player.id
+)
 ) {
 
 if (
@@ -375,6 +1180,10 @@ if (
 lobby.members.length === 0
 ) {
 
+clearLobbyTimers(
+lobby
+);
+
 lobbies.delete(
 lobbyID
 );
@@ -384,11 +1193,25 @@ return;
 }
 
 
-/* Отмена выбора команд */
+/*
+Если игрок ушёл во время матча,
+останавливаем матч.
+*/
 
 if (
-lobby.teamSelectionOpen
+lobby.matchActive ||
+lobby.starting
 ) {
+
+clearLobbyTimers(
+lobby
+);
+
+lobby.matchActive =
+false;
+
+lobby.starting =
+false;
 
 lobby.teamSelectionOpen =
 false;
@@ -396,19 +1219,34 @@ false;
 lobby.teams =
 {};
 
+broadcastLobby(
+lobbyID,
+{
+
+type:
+"matchCancelled",
+
+message:
+"Игрок покинул матч"
+
+}
+);
+
 }
 
 
-/* Сообщаем оставшемуся */
+/* Уведомляем */
 
 broadcastLobby(
 lobbyID,
 {
+
 type:
 "remotePlayerLeft",
 
 id:
 player.id
+
 }
 );
 
@@ -420,82 +1258,365 @@ lobbyID
 }
 
 
-/* ==========================
-ТОЧКИ ПОЯВЛЕНИЯ
-========================== */
+/* =========================================================
+ЗАВЕРШИТЬ МАТЧ
+========================================================= */
 
-function getTeamSpawn(
-team
+function finishMatch(
+lobby
 ) {
-
-
-/*
-СПЕЦНАЗ:
-верхний левый угол карты
-*/
 
 if (
-team ===
-"ct"
+!lobby ||
+!lobby.matchActive
 ) {
 
-return {
-
-x:
-360,
-
-y:
-360,
-
-angle:
-0.25
-
-};
+return;
 
 }
 
 
-/*
-ТЕРРОРИСТЫ:
-нижний правый угол
-*/
+lobby.matchActive =
+false;
 
-return {
+lobby.starting =
+false;
 
-x:
-2640,
 
-y:
-2640,
+if (
+lobby.matchTimer
+) {
 
-angle:
-Math.PI +
-0.25
+clearTimeout(
+lobby.matchTimer
+);
 
-};
+lobby.matchTimer =
+null;
 
 }
 
 
-/* ==========================
-НОРМАЛИЗАЦИЯ УГЛА
-========================== */
+let winnerTeam =
+null;
 
-function normalizeAngle(
-angle
+
+if (
+lobby.score.ct >
+lobby.score.t
 ) {
 
-return Math.atan2(
-Math.sin(angle),
-Math.cos(angle)
+winnerTeam =
+"ct";
+
+}
+
+
+if (
+lobby.score.t >
+lobby.score.ct
+) {
+
+winnerTeam =
+"t";
+
+}
+
+
+const members =
+getLobbyPlayers(
+lobby.id
+);
+
+
+for (
+const member of members
+) {
+
+member.inGame =
+false;
+
+member.dead =
+false;
+
+
+if (
+member.respawnTimer
+) {
+
+clearTimeout(
+member.respawnTimer
+);
+
+member.respawnTimer =
+null;
+
+}
+
+
+safeSend(
+member.socket,
+{
+
+type:
+"matchEnded",
+
+winnerTeam:
+winnerTeam,
+
+myTeam:
+lobby.teams[
+member.id
+] || null,
+
+score: {
+
+ct:
+lobby.score.ct,
+
+t:
+lobby.score.t
+
+}
+
+}
+);
+
+}
+
+}
+
+
+/* =========================================================
+РЕСПАВН
+========================================================= */
+
+function scheduleRespawn(
+player,
+lobby
+) {
+
+if (
+!player ||
+!lobby ||
+!lobby.matchActive
+) {
+
+return;
+
+}
+
+
+if (
+player.respawnTimer
+) {
+
+return;
+
+}
+
+
+player.dead =
+true;
+
+player.state.hp =
+0;
+
+
+safeSend(
+player.socket,
+{
+
+type:
+"playerDied",
+
+respawnIn:
+RESPAWN_TIME
+
+}
+);
+
+
+broadcastLobby(
+lobby.id,
+{
+
+type:
+"remotePlayerState",
+
+id:
+player.id,
+
+nickname:
+player.nickname,
+
+x:
+player.state.x,
+
+y:
+player.state.y,
+
+angle:
+player.state.angle,
+
+hp:
+0,
+
+weapon:
+player.state.weapon,
+
+team:
+lobby.teams[
+player.id
+] || null,
+
+dead:
+true
+
+},
+player.id
+);
+
+
+player.respawnTimer =
+setTimeout(
+() => {
+
+player.respawnTimer =
+null;
+
+
+const currentLobby =
+lobbies.get(
+player.lobbyID
+);
+
+
+if (
+!currentLobby ||
+!currentLobby.matchActive
+) {
+
+return;
+
+}
+
+
+const team =
+currentLobby.teams[
+player.id
+];
+
+
+const spawn =
+getTeamSpawn(
+currentLobby.map,
+team
+);
+
+
+player.state = {
+
+x:
+spawn.x,
+
+y:
+spawn.y,
+
+angle:
+spawn.angle,
+
+hp:
+100,
+
+weapon:
+"rifle"
+
+};
+
+
+player.dead =
+false;
+
+player.inGame =
+true;
+
+
+safeSend(
+player.socket,
+{
+
+type:
+"respawn",
+
+spawn: {
+
+x:
+spawn.x,
+
+y:
+spawn.y,
+
+angle:
+spawn.angle
+
+},
+
+hp:
+100
+
+}
+);
+
+
+broadcastLobby(
+currentLobby.id,
+{
+
+type:
+"remotePlayerState",
+
+id:
+player.id,
+
+nickname:
+player.nickname,
+
+x:
+spawn.x,
+
+y:
+spawn.y,
+
+angle:
+spawn.angle,
+
+hp:
+100,
+
+weapon:
+"rifle",
+
+team:
+team,
+
+dead:
+false
+
+},
+player.id
+);
+
+},
+RESPAWN_TIME
 );
 
 }
 
 
-/* ==========================
-НАЧАТЬ МАТЧ
-========================== */
+/* =========================================================
+НАЧАЛО МАТЧА
+========================================================= */
 
 function startMatch(
 lobby
@@ -503,7 +1624,8 @@ lobby
 
 if (
 !lobby ||
-lobby.starting
+lobby.starting ||
+lobby.matchActive
 ) {
 
 return;
@@ -525,11 +1647,6 @@ return;
 
 }
 
-
-/*
-Проверяем:
-оба выбрали команду.
-*/
 
 const memberTeams =
 lobbyMembers.map(
@@ -553,10 +1670,7 @@ return;
 }
 
 
-/*
-В 1v1 нельзя выбрать
-одинаковую сторону.
-*/
+/* 1v1 — разные стороны */
 
 if (
 new Set(
@@ -577,9 +1691,20 @@ lobby.teamSelectionOpen =
 false;
 
 
-/* ==========================
-ОБЩИЙ ОТСЧЁТ
-========================== */
+/* Сбрасываем счёт */
+
+lobby.score = {
+
+ct:
+0,
+
+t:
+0
+
+};
+
+
+/* Общий отсчёт */
 
 const startAt =
 Date.now() +
@@ -589,22 +1714,24 @@ Date.now() +
 broadcastLobby(
 lobby.id,
 {
+
 type:
 "lobbyCountdown",
 
 startAt:
-startAt
+startAt,
+
+map:
+lobby.map
+
 }
 );
 
 
-/* ==========================
-ПОЗИЦИИ
-========================== */
+/* Спавны */
 
 for (
-const member
-of lobbyMembers
+const member of lobbyMembers
 ) {
 
 const team =
@@ -612,13 +1739,18 @@ lobby.teams[
 member.id
 ];
 
+
 const spawn =
 getTeamSpawn(
+lobby.map,
 team
 );
 
 
 member.inGame =
+false;
+
+member.dead =
 false;
 
 
@@ -644,12 +1776,15 @@ weapon:
 }
 
 
-/* ==========================
-СТАРТ ЧЕРЕЗ 5 СЕКУНД
-========================== */
+/* Через 5 секунд */
 
+lobby.startTimer =
 setTimeout(
 () => {
+
+lobby.startTimer =
+null;
+
 
 const currentLobby =
 lobbies.get(
@@ -658,7 +1793,9 @@ lobby.id
 
 
 if (!currentLobby) {
+
 return;
+
 }
 
 
@@ -680,25 +1817,52 @@ return;
 }
 
 
+currentLobby.starting =
+false;
+
+currentLobby.matchActive =
+true;
+
+currentLobby.matchStartedAt =
+Date.now();
+
+currentLobby.matchEndAt =
+currentLobby.matchStartedAt +
+MATCH_DURATION;
+
+
+/* Оба получают одинаковый старт */
+
 for (
-const member
-of currentMembers
+const member of currentMembers
 ) {
 
 member.inGame =
 true;
 
+member.dead =
+false;
+
 
 safeSend(
 member.socket,
 {
+
 type:
 "startGame",
 
-/* НОВОЕ */
-
 botsEnabled:
 currentLobby.botsEnabled,
+
+/* КАРТА */
+
+map:
+currentLobby.map,
+
+mapName:
+MAPS[
+currentLobby.map
+]?.name || "CITY",
 
 team:
 currentLobby.teams[
@@ -715,6 +1879,27 @@ member.state.y,
 
 angle:
 member.state.angle
+
+},
+
+/* ОБЩЕЕ ВРЕМЯ */
+
+matchStartedAt:
+currentLobby.matchStartedAt,
+
+matchEndAt:
+currentLobby.matchEndAt,
+
+matchDuration:
+MATCH_DURATION,
+
+score: {
+
+ct:
+0,
+
+t:
+0
 
 },
 
@@ -746,8 +1931,7 @@ p.state.weapon,
 team:
 currentLobby.teams[
 p.id
-] ||
-null
+] || null
 
 })
 )
@@ -758,8 +1942,24 @@ null
 }
 
 
-currentLobby.starting =
-false;
+broadcastScore(
+currentLobby
+);
+
+
+/* Конец через 5 минут */
+
+currentLobby.matchTimer =
+setTimeout(
+() => {
+
+finishMatch(
+currentLobby
+);
+
+},
+MATCH_DURATION
+);
 
 },
 5000
@@ -768,14 +1968,13 @@ false;
 }
 
 
-/* ==========================
+/* =========================================================
 ПОДКЛЮЧЕНИЕ
-========================== */
+========================================================= */
 
 wss.on(
 "connection",
 socket => {
-
 
 const id =
 nextID++;
@@ -784,28 +1983,28 @@ nextID++;
 const player = {
 
 id:
-
 id,
 
 nickname:
-"Игрок " +
-id,
+"Игрок " + id,
 
 socket:
-
 socket,
 
 friends:
-
 [],
 
 lobbyID:
-
 null,
 
 inGame:
-
 false,
+
+dead:
+false,
+
+respawnTimer:
+null,
 
 state: {
 
@@ -835,13 +2034,14 @@ player
 );
 
 
-/* ==========================
+/* =========================================================
 WELCOME
-========================== */
+========================================================= */
 
 safeSend(
 socket,
 {
+
 type:
 "welcome",
 
@@ -849,19 +2049,39 @@ id:
 player.id,
 
 nickname:
-player.nickname
+player.nickname,
+
+maps: [
+
+{
+id:
+"city",
+
+name:
+"CITY"
+},
+
+{
+id:
+"sakura",
+
+name:
+"SAKURA"
+}
+
+]
+
 }
 );
 
 
-/* ==========================
-СООБЩЕНИЯ
-========================== */
+/* =========================================================
+MESSAGES
+========================================================= */
 
 socket.on(
 "message",
 raw => {
-
 
 let data;
 
@@ -880,9 +2100,9 @@ return;
 }
 
 
-/* ==========================
-СМЕНА НИКА
-========================== */
+/* =========================================================
+NICKNAME
+========================================================= */
 
 if (
 data.type ===
@@ -891,10 +2111,8 @@ data.type ===
 
 let nickname =
 String(
-data.nickname ||
-""
-)
-.trim();
+data.nickname || ""
+).trim();
 
 
 nickname =
@@ -905,7 +2123,9 @@ nickname.slice(
 
 
 if (!nickname) {
+
 return;
+
 }
 
 
@@ -916,11 +2136,13 @@ nickname;
 safeSend(
 socket,
 {
+
 type:
 "nicknameChanged",
 
 nickname:
 player.nickname
+
 }
 );
 
@@ -941,9 +2163,9 @@ return;
 }
 
 
-/* ==========================
-ПОИСК ИГРОКА
-========================== */
+/* =========================================================
+FIND PLAYER
+========================================================= */
 
 if (
 data.type ===
@@ -964,18 +2186,19 @@ targetID
 
 if (
 !target ||
-target.id ===
-player.id
+target.id === player.id
 ) {
 
 safeSend(
 socket,
 {
+
 type:
 "findResult",
 
 found:
 false
+
 }
 );
 
@@ -987,6 +2210,7 @@ return;
 safeSend(
 socket,
 {
+
 type:
 "findResult",
 
@@ -998,6 +2222,7 @@ target.id,
 
 nickname:
 target.nickname
+
 }
 );
 
@@ -1007,9 +2232,9 @@ return;
 }
 
 
-/* ==========================
-ДОБАВИТЬ ДРУГА
-========================== */
+/* =========================================================
+ADD FRIEND
+========================================================= */
 
 if (
 data.type ===
@@ -1033,6 +2258,7 @@ if (!target) {
 safeSend(
 socket,
 {
+
 type:
 "friendResult",
 
@@ -1041,6 +2267,7 @@ false,
 
 message:
 "Игрок не найден"
+
 }
 );
 
@@ -1050,13 +2277,13 @@ return;
 
 
 if (
-target.id ===
-player.id
+target.id === player.id
 ) {
 
 safeSend(
 socket,
 {
+
 type:
 "friendResult",
 
@@ -1065,6 +2292,7 @@ false,
 
 message:
 "Нельзя добавить себя"
+
 }
 );
 
@@ -1082,6 +2310,7 @@ target.id
 safeSend(
 socket,
 {
+
 type:
 "friendResult",
 
@@ -1090,6 +2319,7 @@ false,
 
 message:
 "Игрок уже в друзьях"
+
 }
 );
 
@@ -1097,8 +2327,6 @@ return;
 
 }
 
-
-/* Добавляем обоим */
 
 player.friends.push(
 target.id
@@ -1121,11 +2349,13 @@ player.id
 safeSend(
 socket,
 {
+
 type:
 "friendResult",
 
 success:
 true
+
 }
 );
 
@@ -1133,6 +2363,7 @@ true
 safeSend(
 target.socket,
 {
+
 type:
 "friendAdded",
 
@@ -1141,6 +2372,7 @@ player.id,
 
 nickname:
 player.nickname
+
 }
 );
 
@@ -1150,9 +2382,9 @@ return;
 }
 
 
-/* ==========================
-СПИСОК ДРУЗЕЙ
-========================== */
+/* =========================================================
+GET FRIENDS
+========================================================= */
 
 if (
 data.type ===
@@ -1163,8 +2395,7 @@ const list = [];
 
 
 for (
-const friendID
-of player.friends
+const friendID of player.friends
 ) {
 
 const friend =
@@ -1174,7 +2405,9 @@ friendID
 
 
 if (!friend) {
+
 continue;
+
 }
 
 
@@ -1197,11 +2430,13 @@ true
 safeSend(
 socket,
 {
+
 type:
 "friendsList",
 
 friends:
 list
+
 }
 );
 
@@ -1211,20 +2446,14 @@ return;
 }
 
 
-/* ==========================
-СОЗДАТЬ ЛОББИ
-========================== */
+/* =========================================================
+CREATE LOBBY
+========================================================= */
 
 if (
 data.type ===
 "createLobby"
 ) {
-
-
-/*
-Если уже в лобби,
-не создаём новое.
-*/
 
 if (
 player.lobbyID
@@ -1255,12 +2484,13 @@ members: [
 player.id
 ],
 
-/* ==========================
-НОВЫЕ НАСТРОЙКИ
-========================== */
-
 botsEnabled:
 true,
+
+/* КАРТА ПО УМОЛЧАНИЮ */
+
+map:
+"city",
 
 teams:
 {},
@@ -1269,7 +2499,32 @@ teamSelectionOpen:
 false,
 
 starting:
-false
+false,
+
+matchActive:
+false,
+
+score: {
+
+ct:
+0,
+
+t:
+0
+
+},
+
+matchStartedAt:
+0,
+
+matchEndAt:
+0,
+
+startTimer:
+null,
+
+matchTimer:
+null
 
 };
 
@@ -1286,6 +2541,9 @@ lobbyID;
 player.inGame =
 false;
 
+player.dead =
+false;
+
 
 sendLobbyState(
 lobbyID
@@ -1297,9 +2555,162 @@ return;
 }
 
 
-/* ==========================
-ВКЛ / ВЫКЛ БОТОВ
-========================== */
+/* =========================================================
+ВЫБОР КАРТЫ В ЛОББИ
+ТОЛЬКО ЛИДЕР
+========================================================= */
+
+if (
+data.type ===
+"setLobbyMap"
+) {
+
+if (
+!player.lobbyID
+) {
+
+return;
+
+}
+
+
+const lobby =
+lobbies.get(
+player.lobbyID
+);
+
+
+if (!lobby) {
+
+return;
+
+}
+
+
+/* Только лидер */
+
+if (
+Number(
+lobby.leaderID
+) !==
+Number(
+player.id
+)
+) {
+
+safeSend(
+socket,
+{
+
+type:
+"lobbyMessage",
+
+message:
+"Только лидер может выбирать карту"
+
+}
+);
+
+return;
+
+}
+
+
+/* Во время запуска нельзя */
+
+if (
+lobby.starting ||
+lobby.teamSelectionOpen ||
+lobby.matchActive
+) {
+
+safeSend(
+socket,
+{
+
+type:
+"lobbyMessage",
+
+message:
+"Сейчас карту изменить нельзя"
+
+}
+);
+
+return;
+
+}
+
+
+const map =
+String(
+data.map || ""
+).toLowerCase();
+
+
+if (
+!MAPS[
+map
+]
+) {
+
+safeSend(
+socket,
+{
+
+type:
+"lobbyMessage",
+
+message:
+"Такой карты нет"
+
+}
+);
+
+return;
+
+}
+
+
+lobby.map =
+map;
+
+
+sendLobbyState(
+lobby.id
+);
+
+
+broadcastLobby(
+lobby.id,
+{
+
+type:
+"mapChanged",
+
+map:
+lobby.map,
+
+mapName:
+MAPS[
+lobby.map
+].name,
+
+leaderID:
+lobby.leaderID
+
+}
+);
+
+
+return;
+
+}
+
+
+/* =========================================================
+BOTS
+========================================================= */
 
 if (
 data.type ===
@@ -1322,28 +2733,31 @@ player.lobbyID
 
 
 if (!lobby) {
+
 return;
+
 }
 
 
-/*
-Только лидер может
-менять настройку.
-*/
-
 if (
-Number(lobby.leaderID) !==
-Number(player.id)
+Number(
+lobby.leaderID
+) !==
+Number(
+player.id
+)
 ) {
 
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Только лидер может менять настройку ботов"
+
 }
 );
 
@@ -1352,14 +2766,10 @@ return;
 }
 
 
-/*
-Во время старта
-уже менять нельзя.
-*/
-
 if (
 lobby.starting ||
-lobby.teamSelectionOpen
+lobby.teamSelectionOpen ||
+lobby.matchActive
 ) {
 
 return;
@@ -1383,9 +2793,9 @@ return;
 }
 
 
-/* ==========================
-ПРИГЛАСИТЬ В ЛОББИ
-========================== */
+/* =========================================================
+INVITE
+========================================================= */
 
 if (
 data.type ===
@@ -1409,11 +2819,13 @@ if (!target) {
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Игрок не найден"
+
 }
 );
 
@@ -1429,11 +2841,13 @@ if (
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Сначала создай лобби"
+
 }
 );
 
@@ -1449,25 +2863,31 @@ player.lobbyID
 
 
 if (!lobby) {
+
 return;
+
 }
 
 
-/* Только лидер приглашает */
-
 if (
-Number(lobby.leaderID) !==
-Number(player.id)
+Number(
+lobby.leaderID
+) !==
+Number(
+player.id
+)
 ) {
 
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Только лидер может приглашать игроков"
+
 }
 );
 
@@ -1476,8 +2896,6 @@ return;
 }
 
 
-/* Максимум два игрока */
-
 if (
 lobby.members.length >= 2
 ) {
@@ -1485,11 +2903,13 @@ lobby.members.length >= 2
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Лобби уже заполнено"
+
 }
 );
 
@@ -1505,11 +2925,13 @@ target.lobbyID
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Игрок уже находится в лобби"
+
 }
 );
 
@@ -1521,6 +2943,7 @@ return;
 safeSend(
 target.socket,
 {
+
 type:
 "lobbyInvite",
 
@@ -1529,6 +2952,7 @@ player.id,
 
 fromNickname:
 player.nickname
+
 }
 );
 
@@ -1536,11 +2960,13 @@ player.nickname
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Приглашение отправлено"
+
 }
 );
 
@@ -1550,9 +2976,9 @@ return;
 }
 
 
-/* ==========================
-ПРИНЯТЬ ПРИГЛАШЕНИЕ
-========================== */
+/* =========================================================
+ACCEPT INVITE
+========================================================= */
 
 if (
 data.type ===
@@ -1579,11 +3005,13 @@ if (
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Лобби больше не существует"
+
 }
 );
 
@@ -1603,11 +3031,13 @@ if (!lobby) {
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Лобби больше не существует"
+
 }
 );
 
@@ -1616,24 +3046,25 @@ return;
 }
 
 
-/*
-Приглашающий должен
-оставаться лидером.
-*/
-
 if (
-Number(lobby.leaderID) !==
-Number(inviter.id)
+Number(
+lobby.leaderID
+) !==
+Number(
+inviter.id
+)
 ) {
 
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Приглашение больше недействительно"
+
 }
 );
 
@@ -1649,11 +3080,13 @@ lobby.members.length >= 2
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Лобби уже заполнено"
+
 }
 );
 
@@ -1679,6 +3112,9 @@ lobby.id;
 player.inGame =
 false;
 
+player.dead =
+false;
+
 
 if (
 !lobby.members.includes(
@@ -1696,6 +3132,7 @@ player.id
 safeSend(
 inviter.socket,
 {
+
 type:
 "lobbyInviteAccepted",
 
@@ -1704,6 +3141,7 @@ player.id,
 
 nickname:
 player.nickname
+
 }
 );
 
@@ -1718,9 +3156,9 @@ return;
 }
 
 
-/* ==========================
-ОТКЛОНИТЬ ПРИГЛАШЕНИЕ
-========================== */
+/* =========================================================
+DECLINE INVITE
+========================================================= */
 
 if (
 data.type ===
@@ -1744,12 +3182,14 @@ if (inviter) {
 safeSend(
 inviter.socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 player.nickname +
 " отклонил приглашение"
+
 }
 );
 
@@ -1761,9 +3201,9 @@ return;
 }
 
 
-/* ==========================
-ПОКИНУТЬ ЛОББИ
-========================== */
+/* =========================================================
+LEAVE LOBBY
+========================================================= */
 
 if (
 data.type ===
@@ -1778,6 +3218,7 @@ player
 safeSend(
 socket,
 {
+
 type:
 "lobbyState",
 
@@ -1790,6 +3231,12 @@ null,
 botsEnabled:
 true,
 
+map:
+"city",
+
+mapName:
+"CITY",
+
 teamSelectionOpen:
 false,
 
@@ -1798,6 +3245,7 @@ teams:
 
 members:
 []
+
 }
 );
 
@@ -1807,15 +3255,14 @@ return;
 }
 
 
-/* ==========================
-НАЖАТИЕ "ИГРАТЬ"
-========================== */
+/* =========================================================
+START LOBBY GAME
+========================================================= */
 
 if (
 data.type ===
 "startLobbyGame"
 ) {
-
 
 if (
 !player.lobbyID
@@ -1824,11 +3271,13 @@ if (
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Ты не в лобби"
+
 }
 );
 
@@ -1844,25 +3293,31 @@ player.lobbyID
 
 
 if (!lobby) {
+
 return;
+
 }
 
 
-/* Только лидер */
-
 if (
-Number(player.id) !==
-Number(lobby.leaderID)
+Number(
+player.id
+) !==
+Number(
+lobby.leaderID
+)
 ) {
 
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Только лидер лобби может начать матч"
+
 }
 );
 
@@ -1884,11 +3339,13 @@ lobbyMembers.length < 2
 safeSend(
 socket,
 {
+
 type:
 "lobbyMessage",
 
 message:
 "Нужен второй игрок"
+
 }
 );
 
@@ -1898,18 +3355,14 @@ return;
 
 
 if (
-lobby.starting
+lobby.starting ||
+lobby.matchActive
 ) {
 
 return;
 
 }
 
-
-/*
-Вместо мгновенного старта
-открываем выбор команд.
-*/
 
 lobby.teams =
 {};
@@ -1918,25 +3371,34 @@ lobby.teamSelectionOpen =
 true;
 
 
-/* Открываем окно обоим */
-
 broadcastLobby(
 lobby.id,
 {
+
 type:
 "teamSelectionStart",
 
 botsEnabled:
-lobby.botsEnabled
+lobby.botsEnabled,
+
+/* Передаём карту */
+
+map:
+lobby.map,
+
+mapName:
+MAPS[
+lobby.map
+].name
+
 }
 );
 
 
-/* Отправляем пустой выбор */
-
 broadcastLobby(
 lobby.id,
 {
+
 type:
 "teamState",
 
@@ -1947,6 +3409,7 @@ members:
 getPublicLobbyMembers(
 lobby.id
 )
+
 }
 );
 
@@ -1961,9 +3424,9 @@ return;
 }
 
 
-/* ==========================
-ВЫБОР КОМАНДЫ
-========================== */
+/* =========================================================
+SELECT TEAM
+========================================================= */
 
 if (
 data.type ===
@@ -1988,7 +3451,8 @@ player.lobbyID
 if (
 !lobby ||
 !lobby.teamSelectionOpen ||
-lobby.starting
+lobby.starting ||
+lobby.matchActive
 ) {
 
 return;
@@ -1998,12 +3462,9 @@ return;
 
 const team =
 String(
-data.team ||
-""
+data.team || ""
 );
 
-
-/* Только 2 команды */
 
 if (
 team !== "ct" &&
@@ -2015,20 +3476,19 @@ return;
 }
 
 
-/*
-Проверяем:
-не занял ли друг
-эту сторону.
-*/
+/* Нельзя одинаковую сторону */
 
 for (
-const id
-of lobby.members
+const id of lobby.members
 ) {
 
 if (
-Number(id) ===
-Number(player.id)
+Number(
+id
+) ===
+Number(
+player.id
+)
 ) {
 
 continue;
@@ -2037,22 +3497,29 @@ continue;
 
 
 if (
-lobby.teams[id] ===
-team
+lobby.teams[
+id
+] === team
 ) {
 
 safeSend(
 socket,
 {
+
 type:
 "teamSelectError",
 
 message:
 team === "ct"
+
 ?
+
 "Спецназ уже выбрал другой игрок"
+
 :
-"Террористы уже выбрал другой игрок"
+
+"Террористов уже выбрал другой игрок"
+
 }
 );
 
@@ -2063,19 +3530,16 @@ return;
 }
 
 
-/* Сохраняем выбор */
-
 lobby.teams[
 player.id
 ] =
 team;
 
 
-/* Отправляем выбор обоим */
-
 broadcastLobby(
 lobby.id,
 {
+
 type:
 "teamState",
 
@@ -2086,14 +3550,10 @@ members:
 getPublicLobbyMembers(
 lobby.id
 )
+
 }
 );
 
-
-/*
-Проверяем,
-выбрали ли оба.
-*/
 
 const lobbyMembers =
 getLobbyPlayers(
@@ -2102,7 +3562,9 @@ lobby.id
 
 
 const ready =
+
 lobbyMembers.length >= 2 &&
+
 lobbyMembers.every(
 member => {
 
@@ -2120,11 +3582,6 @@ selected === "t"
 );
 
 
-/*
-Проверяем,
-что команды разные.
-*/
-
 const selectedTeams =
 lobbyMembers.map(
 member =>
@@ -2135,16 +3592,12 @@ member.id
 
 
 const differentTeams =
+
 new Set(
 selectedTeams
 ).size ===
 lobbyMembers.length;
 
-
-/*
-Когда оба готовы —
-начинается 5 → 0.
-*/
 
 if (
 ready &&
@@ -2163,19 +3616,19 @@ return;
 }
 
 
-/* ==========================
-СИНХРОНИЗАЦИЯ ИГРОКА
-========================== */
+/* =========================================================
+PLAYER STATE
+========================================================= */
 
 if (
 data.type ===
 "playerState"
 ) {
 
-
 if (
 !player.lobbyID ||
-!player.inGame
+!player.inGame ||
+player.dead
 ) {
 
 return;
@@ -2189,8 +3642,13 @@ player.lobbyID
 );
 
 
-if (!lobby) {
+if (
+!lobby ||
+!lobby.matchActive
+) {
+
 return;
+
 }
 
 
@@ -2215,44 +3673,66 @@ data.hp
 );
 
 
-/* ==========================
+/* =========================================================
 КООРДИНАТЫ
-========================== */
+========================================================= */
 
 if (
-Number.isFinite(x)
+Number.isFinite(
+x
+) &&
+Number.isFinite(
+y
+)
 ) {
 
-player.state.x =
+const clampedX =
 Math.max(
-0,
+28,
 Math.min(
-3000,
+MAP_W - 28,
 x
 )
 );
 
-}
-
-
-if (
-Number.isFinite(y)
-) {
-
-player.state.y =
+const clampedY =
 Math.max(
-0,
+28,
 Math.min(
-3000,
+MAP_H - 28,
 y
 )
 );
 
+
+/*
+Не разрешаем серверному
+игроку оказаться внутри стены.
+*/
+
+if (
+!pointBlocked(
+lobby.map,
+clampedX,
+clampedY
+)
+) {
+
+player.state.x =
+clampedX;
+
+player.state.y =
+clampedY;
+
+}
+
 }
 
 
 if (
-Number.isFinite(angle)
+Number.isFinite(
+angle
+)
 ) {
 
 player.state.angle =
@@ -2262,37 +3742,55 @@ angle;
 
 
 /*
-HP от клиента оставляем
-для совместимости с ботами.
+HP клиента нужен для урона от ботов.
+
+Но клиент НЕ может сам увеличить HP
+выше серверного значения.
 */
 
 if (
-Number.isFinite(hp)
+Number.isFinite(
+hp
+) &&
+hp < player.state.hp
 ) {
 
 player.state.hp =
 Math.max(
 0,
-Math.min(
-100,
 hp
-)
+);
+
+
+if (
+player.state.hp <= 0
+) {
+
+/*
+Смерть от бота:
+счёт PvP никому не добавляем.
+*/
+
+scheduleRespawn(
+player,
+lobby
 );
 
 }
 
+}
 
-/* ==========================
-ОРУЖИЕ
-========================== */
+
+/* =========================================================
+WEAPON
+========================================================= */
 
 if (
 [
 "rifle",
 "pistol",
 "knife"
-]
-.includes(
+].includes(
 data.weapon
 )
 ) {
@@ -2303,13 +3801,14 @@ data.weapon;
 }
 
 
-/* ==========================
-СИНХРОНИЗАЦИЯ ДРУГУ
-========================== */
+/* =========================================================
+SYNC
+========================================================= */
 
 broadcastLobby(
 player.lobbyID,
 {
+
 type:
 "remotePlayerState",
 
@@ -2337,8 +3836,10 @@ player.state.weapon,
 team:
 lobby.teams[
 player.id
-] ||
-null
+] || null,
+
+dead:
+player.dead
 
 },
 player.id
@@ -2350,19 +3851,19 @@ return;
 }
 
 
-/* ==========================
-ВЫСТРЕЛ / УДАР НОЖОМ
-========================== */
+/* =========================================================
+SHOT
+========================================================= */
 
 if (
 data.type ===
 "playerShot"
 ) {
 
-
 if (
 !player.lobbyID ||
-!player.inGame
+!player.inGame ||
+player.dead
 ) {
 
 return;
@@ -2376,16 +3877,22 @@ player.lobbyID
 );
 
 
-if (!lobby) {
+if (
+!lobby ||
+!lobby.matchActive
+) {
+
 return;
+
 }
 
 
-/* Анимация выстрела у друга */
+/* Анимация */
 
 broadcastLobby(
 player.lobbyID,
 {
+
 type:
 "remotePlayerShot",
 
@@ -2394,14 +3901,15 @@ player.id,
 
 weapon:
 player.state.weapon
+
 },
 player.id
 );
 
 
-/* ==========================
-PVP УРОН
-========================== */
+/* =========================================================
+PVP
+========================================================= */
 
 const shooterTeam =
 lobby.teams[
@@ -2423,14 +3931,11 @@ Infinity;
 
 
 for (
-const target
-of lobbyPlayers
+const target of lobbyPlayers
 ) {
 
-
 if (
-target.id ===
-player.id
+target.id === player.id
 ) {
 
 continue;
@@ -2440,6 +3945,7 @@ continue;
 
 if (
 !target.inGame ||
+target.dead ||
 target.state.hp <= 0
 ) {
 
@@ -2448,7 +3954,7 @@ continue;
 }
 
 
-/* Свои не получают урон */
+/* FRIENDLY FIRE OFF */
 
 const targetTeam =
 lobby.teams[
@@ -2459,8 +3965,7 @@ target.id
 if (
 shooterTeam &&
 targetTeam &&
-shooterTeam ===
-targetTeam
+shooterTeam === targetTeam
 ) {
 
 continue;
@@ -2488,13 +3993,16 @@ const weapon =
 player.state.weapon;
 
 
-/* Дальность */
-
 const maxDistance =
+
 weapon === "knife"
+
 ?
+
 180
+
 :
+
 3000;
 
 
@@ -2507,8 +4015,6 @@ continue;
 
 }
 
-
-/* Угол до противника */
 
 const targetAngle =
 Math.atan2(
@@ -2526,19 +4032,46 @@ player.state.angle
 );
 
 
-/* Точность */
-
 const allowedAngle =
+
 weapon === "knife"
+
 ?
+
 0.28
+
 :
+
 0.12;
 
 
 if (
 difference >
 allowedAngle
+) {
+
+continue;
+
+}
+
+
+/* =========================================================
+ГЛАВНЫЙ ФИКС:
+НЕ СТРЕЛЯЕМ ЧЕРЕЗ СТЕНУ
+========================================================= */
+
+if (
+hasWallBetween(
+
+lobby.map,
+
+player.state.x,
+player.state.y,
+
+target.state.x,
+target.state.y
+
+)
 ) {
 
 continue;
@@ -2562,9 +4095,9 @@ target;
 }
 
 
-/* ==========================
-ПОПАДАНИЕ
-========================== */
+/* =========================================================
+HIT
+========================================================= */
 
 if (
 closestTarget
@@ -2572,12 +4105,6 @@ closestTarget
 
 let damage;
 
-
-/*
-Нож — 100.
-Автомат / пистолет
-пока как раньше — 50.
-*/
 
 if (
 player.state.weapon ===
@@ -2589,10 +4116,21 @@ damage =
 
 } else {
 
+/*
+Автомат и пистолет:
+2 попадания.
+*/
+
 damage =
 50;
 
 }
+
+
+const wasAlive =
+
+closestTarget.state.hp > 0 &&
+!closestTarget.dead;
 
 
 closestTarget.state.hp =
@@ -2603,11 +4141,18 @@ damage
 );
 
 
-/* Стрелявшему — hitmarker */
+const killed =
+
+wasAlive &&
+closestTarget.state.hp <= 0;
+
+
+/* Hitmarker */
 
 safeSend(
 player.socket,
 {
+
 type:
 "hitConfirmed",
 
@@ -2618,16 +4163,18 @@ hp:
 closestTarget.state.hp,
 
 killed:
-closestTarget.state.hp <= 0
+killed
+
 }
 );
 
 
-/* Получившему урон */
+/* Damage */
 
 safeSend(
 closestTarget.socket,
 {
+
 type:
 "playerDamaged",
 
@@ -2638,16 +4185,123 @@ damage:
 damage,
 
 hp:
-closestTarget.state.hp
+closestTarget.state.hp,
+
+killed:
+killed
+
 }
 );
 
 
-/* Обновляем HP противника */
+/* =========================================================
+СЧЁТ:
+РОВНО +1 ЗА УБИЙСТВО
+========================================================= */
+
+if (
+killed
+) {
+
+closestTarget.dead =
+true;
+
+
+/*
+Добавляем ровно одно очко
+команде стрелявшего.
+*/
+
+if (
+shooterTeam === "ct"
+) {
+
+lobby.score.ct += 1;
+
+}
+
+
+if (
+shooterTeam === "t"
+) {
+
+lobby.score.t += 1;
+
+}
+
+
+/*
+Отправляем одинаковый счёт
+ОБОИМ игрокам.
+*/
+
+broadcastScore(
+lobby
+);
+
+
+/*
+Сообщение об убийстве
+обоим игрокам.
+*/
+
+broadcastLobby(
+lobby.id,
+{
+
+type:
+"playerKilled",
+
+killerID:
+player.id,
+
+killerNickname:
+player.nickname,
+
+killerTeam:
+shooterTeam,
+
+victimID:
+closestTarget.id,
+
+victimNickname:
+closestTarget.nickname,
+
+victimTeam:
+lobby.teams[
+closestTarget.id
+] || null,
+
+score: {
+
+ct:
+lobby.score.ct,
+
+t:
+lobby.score.t
+
+}
+
+}
+);
+
+
+/* Респавн через 3 секунды */
+
+scheduleRespawn(
+closestTarget,
+lobby
+);
+
+}
+
+
+/* Sync HP */
 
 broadcastLobby(
 player.lobbyID,
 {
+
 type:
 "remotePlayerState",
 
@@ -2675,8 +4329,10 @@ closestTarget.state.weapon,
 team:
 lobby.teams[
 closestTarget.id
-] ||
-null
+] || null,
+
+dead:
+closestTarget.dead
 
 },
 closestTarget.id
@@ -2693,13 +4349,26 @@ return;
 );
 
 
-/* ==========================
-ОТКЛЮЧЕНИЕ
-========================== */
+/* =========================================================
+DISCONNECT
+========================================================= */
 
 socket.on(
 "close",
 () => {
+
+if (
+player.respawnTimer
+) {
+
+clearTimeout(
+player.respawnTimer
+);
+
+player.respawnTimer =
+null;
+
+}
 
 
 if (
@@ -2709,11 +4378,13 @@ player.lobbyID
 broadcastLobby(
 player.lobbyID,
 {
+
 type:
 "remotePlayerLeft",
 
 id:
 player.id
+
 },
 player.id
 );
@@ -2733,12 +4404,13 @@ player.id
 }
 );
 
-});
+}
+);
 
 
-/* ==========================
-ЗАПУСК
-========================== */
+/* =========================================================
+START SERVER
+========================================================= */
 
 server.listen(
 PORT,
