@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>RAHL1K FPS v7 CITY</title>
+<title>RAHL1K FPS v8 MATCH</title>
 
 <style>
 *{
@@ -46,7 +46,8 @@ right:0;
 top:0;
 height:55%;
 z-index:0;
-background:linear-gradient(
+background:
+linear-gradient(
 to bottom,
 #4e9bd0 0%,
 #78bce4 52%,
@@ -90,10 +91,6 @@ box-shadow:
 -340px 15px 0 #fff;
 }
 
-/* =========================
-ЗЕМЛЯ
-========================= */
-
 #ground{
 position:absolute;
 left:-100%;
@@ -113,7 +110,10 @@ background-size:
 190px 190px,
 100% 100%;
 transform-origin:center top;
-transform:perspective(520px) rotateX(12deg) scaleY(2.15);
+transform:
+perspective(520px)
+rotateX(12deg)
+scaleY(2.15);
 }
 
 /* =========================
@@ -175,7 +175,12 @@ border:4px solid #4c2116;
 }
 
 .worldObject.wall{
-background:linear-gradient(to bottom,#aaaead,#646a6c);
+background:
+linear-gradient(
+to bottom,
+#aaaead,
+#646a6c
+);
 border-top:5px solid #d3d5d4;
 }
 
@@ -228,7 +233,8 @@ inset:0;
 width:100vw;
 height:100vh;
 height:100dvh;
-background:linear-gradient(
+background:
+linear-gradient(
 to bottom,
 #182635,
 #263746 55%,
@@ -381,8 +387,13 @@ height:95px;
 background:#202722;
 }
 
-#vestStrap1{left:7px;}
-#vestStrap2{right:7px;}
+#vestStrap1{
+left:7px;
+}
+
+#vestStrap2{
+right:7px;
+}
 
 #armLeft,
 #armRight{
@@ -416,8 +427,13 @@ border:4px solid #151b18;
 border-radius:8px;
 }
 
-#legLeft{left:28px;}
-#legRight{right:28px;}
+#legLeft{
+left:28px;
+}
+
+#legRight{
+right:28px;
+}
 
 #menuName{
 position:absolute;
@@ -544,7 +560,7 @@ font-weight:bold;
 }
 
 /* =========================
-ЛЕВАЯ ПАНЕЛЬ
+ТАБЫ
 ========================= */
 
 #menuTabs{
@@ -611,9 +627,20 @@ border-radius:14px 14px 5px 5px;
 background:#c7cdd1;
 }
 
-.person.p1{left:0;top:5px;}
-.person.p2{left:17px;top:0;}
-.person.p3{right:0;top:5px;}
+.person.p1{
+left:0;
+top:5px;
+}
+
+.person.p2{
+left:17px;
+top:0;
+}
+
+.person.p3{
+right:0;
+top:5px;
+}
 
 /* =========================
 СТРАНИЦЫ
@@ -749,7 +776,7 @@ font-size:12px;
 }
 
 /* =========================
-ЛОББИ FULLSCREEN
+ЛОББИ
 ========================= */
 
 #lobbyPage{
@@ -887,8 +914,13 @@ border:3px solid #151b18;
 border-radius:14px;
 }
 
-.partyArm.left{left:2px;}
-.partyArm.right{right:2px;}
+.partyArm.left{
+left:2px;
+}
+
+.partyArm.right{
+right:2px;
+}
 
 .partyLeg{
 position:absolute;
@@ -899,8 +931,13 @@ background:#202723;
 border:3px solid #151b18;
 }
 
-.partyLeg.left{left:20px;}
-.partyLeg.right{right:20px;}
+.partyLeg.left{
+left:20px;
+}
+
+.partyLeg.right{
+right:20px;
+}
 
 .partyPlayerName{
 position:absolute;
@@ -914,10 +951,6 @@ font-size:12px;
 font-weight:bold;
 white-space:nowrap;
 }
-
-/* =========================
-ДРУЗЬЯ В ЛОББИ
-========================= */
 
 #lobbyFriendsPanel{
 position:absolute;
@@ -981,10 +1014,6 @@ font-weight:bold;
 display:block;
 }
 
-/* =========================
-БОТЫ — ВСЕГДА ВИДНЫ
-========================= */
-
 #botsControl{
 position:absolute;
 right:max(12px,env(safe-area-inset-right));
@@ -1011,10 +1040,6 @@ border-color:#ff9090;
 opacity:.5;
 }
 
-/* =========================
-LOBBY MESSAGE
-========================= */
-
 #lobbyMessage{
 position:absolute;
 right:max(12px,env(safe-area-inset-right));
@@ -1027,10 +1052,6 @@ font-size:10px;
 line-height:1.15;
 color:#ffd45b;
 }
-
-/* =========================
-LOBBY BUTTONS
-========================= */
 
 #lobbyPlayButton{
 position:absolute;
@@ -1057,7 +1078,7 @@ font-weight:bold;
 }
 
 /* =========================
-INVITE
+ПРИГЛАШЕНИЕ
 ========================= */
 
 #lobbyInvitePopup{
@@ -1098,11 +1119,16 @@ color:white;
 font-weight:bold;
 }
 
-#acceptLobbyInvite{background:#22b94b;}
-#declineLobbyInvite{background:#a53737;}
+#acceptLobbyInvite{
+background:#22b94b;
+}
+
+#declineLobbyInvite{
+background:#a53737;
+}
 
 /* =========================
-TEAM SELECT
+ВЫБОР КОМАНД
 ========================= */
 
 #teamSelectPopup{
@@ -1179,6 +1205,179 @@ margin-top:15px;
 min-height:20px;
 font-size:13px;
 color:#ffd45b;
+}
+
+/* =========================
+НОВЫЙ СЧЁТ И ТАЙМЕР
+========================= */
+
+#matchTop{
+position:fixed;
+z-index:300;
+left:50%;
+top:max(8px,env(safe-area-inset-top));
+transform:translateX(-50%);
+display:none;
+align-items:center;
+justify-content:center;
+gap:12px;
+height:42px;
+padding:0 13px;
+border:1px solid #ffffff55;
+border-radius:11px;
+background:#091017d9;
+box-shadow:0 5px 16px #0008;
+color:white;
+font-weight:900;
+pointer-events:none;
+}
+
+#ctScoreBox{
+color:#79c8ff;
+}
+
+#tScoreBox{
+color:#ffad63;
+}
+
+#matchTimer{
+min-width:64px;
+text-align:center;
+font-size:18px;
+color:white;
+}
+
+.teamScore{
+font-size:16px;
+white-space:nowrap;
+}
+
+/* =========================
+ВОЗРОЖДЕНИЕ
+========================= */
+
+#respawnScreen{
+display:none;
+position:fixed;
+z-index:450;
+inset:0;
+background:#0009;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+color:white;
+text-align:center;
+pointer-events:none;
+}
+
+#respawnTitle{
+font-size:38px;
+font-weight:900;
+text-shadow:0 4px 12px #000;
+}
+
+#respawnTimer{
+margin-top:6px;
+font-size:24px;
+color:#ffd45b;
+font-weight:900;
+}
+
+/* =========================
+ПОБЕДА / ПОРАЖЕНИЕ
+========================= */
+
+#matchResult{
+display:none;
+position:fixed;
+z-index:3000;
+inset:0;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+background:
+radial-gradient(circle at center,#263747 0%,#080d12 70%);
+color:white;
+text-align:center;
+overflow:hidden;
+}
+
+#matchResult:before,
+#matchResult:after{
+content:"";
+position:absolute;
+width:300px;
+height:300px;
+border:5px solid #ffffff16;
+border-radius:50%;
+animation:resultPulse 1.5s infinite ease-out;
+}
+
+#matchResult:after{
+animation-delay:.7s;
+}
+
+@keyframes resultPulse{
+0%{
+transform:scale(.2);
+opacity:1;
+}
+100%{
+transform:scale(2.7);
+opacity:0;
+}
+}
+
+#resultTitle{
+position:relative;
+z-index:2;
+font-size:clamp(50px,12vw,100px);
+font-weight:1000;
+letter-spacing:4px;
+text-shadow:0 8px 25px #000;
+animation:resultPop .65s cubic-bezier(.2,1.4,.3,1);
+}
+
+#resultScore{
+position:relative;
+z-index:2;
+margin-top:8px;
+font-size:25px;
+font-weight:900;
+}
+
+#resultHint{
+position:relative;
+z-index:2;
+margin-top:15px;
+font-size:12px;
+color:#ffffff99;
+}
+
+#matchResult.win #resultTitle{
+color:#55ef84;
+}
+
+#matchResult.lose #resultTitle{
+color:#ff5656;
+}
+
+#matchResult.draw #resultTitle{
+color:#ffd55d;
+}
+
+@keyframes resultPop{
+0%{
+transform:scale(.15) rotate(-8deg);
+opacity:0;
+}
+70%{
+transform:scale(1.12) rotate(2deg);
+opacity:1;
+}
+100%{
+transform:scale(1) rotate(0);
+}
 }
 
 /* =========================
@@ -1501,7 +1700,8 @@ top:0;
 width:25px;
 height:82px;
 background:linear-gradient(135deg,#eee,#888);
-clip-path:polygon(
+clip-path:
+polygon(
 50% 0,
 100% 20%,
 85% 100%,
@@ -1537,7 +1737,8 @@ bottom:125px;
 width:35px;
 height:35px;
 background:#ffd34d;
-clip-path:polygon(
+clip-path:
+polygon(
 50% 0,
 65% 35%,
 100% 50%,
@@ -1573,7 +1774,7 @@ white-space:nowrap;
 }
 
 /* =========================
-БОТЫ И REMOTE
+БОТЫ / ИГРОКИ
 ========================= */
 
 .enemy,
@@ -1769,7 +1970,7 @@ z-index:1;
 }
 
 /* =========================
-GAME OVER
+OLD GAME OVER
 ========================= */
 
 #gameover{
@@ -1815,30 +2016,49 @@ font-size:24px;
 }
 
 @media(max-width:700px) and (orientation:portrait){
+
 #rotate{
 display:flex;
 }
+
 }
 
 /* =========================
-НИЗКИЙ ЭКРАН IPHONE
+НИЗКИЙ ЭКРАН
 ========================= */
 
 @media(max-height:500px) and (orientation:landscape){
 
 #title{
-font-size:16px;
+font-size:14px;
 top:5px;
+left:32%;
 }
 
 #info{
 top:27px;
-font-size:10px;
+font-size:9px;
 }
 
 #score{
 top:43px;
-font-size:11px;
+font-size:10px;
+}
+
+#matchTop{
+top:6px;
+height:36px;
+gap:8px;
+padding:0 10px;
+}
+
+.teamScore{
+font-size:12px;
+}
+
+#matchTimer{
+font-size:15px;
+min-width:50px;
 }
 
 #minimap{
@@ -1944,7 +2164,9 @@ font-size:21px;
 left:41%;
 top:48%;
 height:205px;
-transform:translate(-50%,-50%) scale(.82);
+transform:
+translate(-50%,-50%)
+scale(.82);
 }
 
 #lobbyFriendsPanel{
@@ -1989,6 +2211,10 @@ font-size:9px;
 
 <body>
 
+<!-- =========================
+МЕНЮ
+========================= -->
+
 <div id="menu">
 
 <div id="menuTabs">
@@ -2002,11 +2228,13 @@ font-size:9px;
 </button>
 
 <button class="menuTab" id="friendsTab">
+
 <div class="friendsIcon">
 <div class="person p1"></div>
 <div class="person p2"></div>
 <div class="person p3"></div>
 </div>
+
 </button>
 
 </div>
@@ -2056,7 +2284,9 @@ placeholder="Введите ник">
 
 <div id="lobbyFriendsPanel">
 
-<b>ДРУЗЬЯ</b>
+<b>
+ДРУЗЬЯ
+</b>
 
 <div id="lobbyFriendsList">
 Загрузка...
@@ -2212,9 +2442,11 @@ LOBBY
 <div id="characterBody"></div>
 
 <div id="vest">
+
 <div id="vestPlate"></div>
 <div id="vestStrap1"></div>
 <div id="vestStrap2"></div>
+
 </div>
 
 <div id="legLeft"></div>
@@ -2252,17 +2484,33 @@ GAME
 </div>
 
 <div id="title">
-RAHL1K FPS v7 CITY
+RAHL1K FPS
 </div>
 
 <div id="info">
-POS: 1500 / 1500
-&nbsp;&nbsp;
-ANGLE: 0°
+POS: 1500 / 1500 &nbsp;&nbsp; ANGLE: 0°
 </div>
 
 <div id="score">
 KILLS: 0
+</div>
+
+<!-- НОВЫЙ СЧЁТ -->
+
+<div id="matchTop">
+
+<div class="teamScore" id="ctScoreBox">
+СПЕЦНАЗ 0
+</div>
+
+<div id="matchTimer">
+5:00
+</div>
+
+<div class="teamScore" id="tScoreBox">
+0 ТЕРРОРИСТЫ
+</div>
+
 </div>
 
 <div id="teamHUD">
@@ -2282,8 +2530,13 @@ KILLS: 0
 </div>
 
 <div id="healthBox">
+
 <div id="healthBar"></div>
-<div id="healthText">HP 100</div>
+
+<div id="healthText">
+HP 100
+</div>
+
 </div>
 
 <div id="ammo">
@@ -2291,14 +2544,21 @@ KILLS: 0
 </div>
 
 <div id="crosshair"></div>
-<div id="hitmark">×</div>
+
+<div id="hitmark">
+×
+</div>
 
 <div id="minimap">
+
 <div id="playerDot"></div>
+
 </div>
 
 <div id="joystick">
+
 <div id="stick"></div>
+
 </div>
 
 <button id="fire">
@@ -2312,26 +2572,60 @@ RELOAD
 <div id="weapon">
 
 <div id="muzzle"></div>
-
 <div id="barrel"></div>
-
 <div id="gun"></div>
 
 <div id="pistol">
+
 <div id="pistolBarrel"></div>
 <div id="pistolSlide"></div>
 <div id="pistolHandle"></div>
+
 </div>
 
 <div id="knife">
+
 <div id="knifeBlade"></div>
 <div id="knifeGuard"></div>
 <div id="knifeHandle"></div>
+
 </div>
 
 </div>
 
 <div id="damage"></div>
+
+<!-- ВОЗРОЖДЕНИЕ -->
+
+<div id="respawnScreen">
+
+<div id="respawnTitle">
+ТЫ ПОГИБ
+</div>
+
+<div id="respawnTimer">
+Возрождение через 3
+</div>
+
+</div>
+
+<!-- РЕЗУЛЬТАТ -->
+
+<div id="matchResult">
+
+<div id="resultTitle">
+ПОБЕДА
+</div>
+
+<div id="resultScore">
+0 : 0
+</div>
+
+<div id="resultHint">
+Возвращение в главное меню...
+</div>
+
+</div>
 
 <div id="gameover">
 
@@ -2346,9 +2640,11 @@ GAME OVER
 </div>
 
 <div id="rotate">
+
 ↔️
 <br>
 Поверни телефон горизонтально
+
 </div>
 
 <script>
@@ -2357,28 +2653,51 @@ const $ =
 id =>
 document.getElementById(id);
 
-let onlineSocket = null;
-let myOnlineID = null;
-let myNickname = "";
-let foundFriendID = null;
-let cachedFriends = [];
-let incomingLobbyFromID = null;
+/* =========================
+ONLINE
+========================= */
 
-let currentLobbyMembers = [];
+let onlineSocket =
+null;
 
-let lobbyLeaderID = null;
+let myOnlineID =
+null;
 
-let lobbyBotsEnabled = true;
+let myNickname =
+"";
 
-let botsEnabled = true;
+let foundFriendID =
+null;
 
-let teamSelectionActive = false;
+let cachedFriends =
+[];
 
-let teamAssignments = {};
+let incomingLobbyFromID =
+null;
 
-let myTeam = null;
+let currentLobbyMembers =
+[];
 
-let lobbyCountdownTimer = null;
+let lobbyLeaderID =
+null;
+
+let lobbyBotsEnabled =
+true;
+
+let botsEnabled =
+true;
+
+let teamSelectionActive =
+false;
+
+let teamAssignments =
+{};
+
+let myTeam =
+null;
+
+let lobbyCountdownTimer =
+null;
 
 const remotePlayers =
 new Map();
@@ -2388,6 +2707,60 @@ false;
 
 let lastStateSend =
 0;
+
+/* =========================
+МАТЧ
+========================= */
+
+const MATCH_DURATION =
+5 * 60 * 1000;
+
+let matchEndAt =
+0;
+
+let matchEnded =
+false;
+
+let respawning =
+false;
+
+let deaths =
+0;
+
+let teamScores = {
+ct:0,
+t:0
+};
+
+/* =========================
+БЕЗОПАСНЫЕ СПАВНЫ
+========================= */
+
+/*
+ВАЖНО:
+старый сервер отправляет CT 360/360,
+но там здание.
+
+Поэтому этот HTML
+сразу переносит игрока
+на безопасную позицию.
+*/
+
+const TEAM_SPAWNS = {
+
+ct:{
+x:850,
+y:250,
+angle:1.15
+},
+
+t:{
+x:2700,
+y:2720,
+angle:-2.25
+}
+
+};
 
 /* =========================
 ELEMENTS
@@ -2462,6 +2835,33 @@ $("teamT");
 const teamStatus =
 $("teamStatus");
 
+const matchTop =
+$("matchTop");
+
+const matchTimer =
+$("matchTimer");
+
+const ctScoreBox =
+$("ctScoreBox");
+
+const tScoreBox =
+$("tScoreBox");
+
+const respawnScreen =
+$("respawnScreen");
+
+const respawnTimer =
+$("respawnTimer");
+
+const matchResult =
+$("matchResult");
+
+const resultTitle =
+$("resultTitle");
+
+const resultScore =
+$("resultScore");
+
 /* =========================
 HTML SAFE
 ========================= */
@@ -2469,21 +2869,16 @@ HTML SAFE
 function escapeHTML(t){
 
 return String(t)
-
 .replaceAll("&","&amp;")
-
 .replaceAll("<","&lt;")
-
 .replaceAll(">","&gt;")
-
 .replaceAll('"',"&quot;")
-
 .replaceAll("'","&#039;");
 
 }
 
 /* =========================
-ONLINE SEND
+SEND
 ========================= */
 
 function sendOnline(data){
@@ -2520,7 +2915,8 @@ function connectOnline(){
 
 const protocol =
 
-location.protocol === "https:"
+location.protocol ===
+"https:"
 
 ?
 
@@ -2531,13 +2927,10 @@ location.protocol === "https:"
 "ws:";
 
 onlineSocket =
-
 new WebSocket(
-
 protocol +
 "//" +
 location.host
-
 );
 
 onlineSocket.addEventListener(
@@ -2614,7 +3007,9 @@ return;
 
 }
 
-/* WELCOME */
+/* =========================
+WELCOME
+========================= */
 
 if(
 data.type ===
@@ -2642,11 +3037,8 @@ nicknameInput.value =
 saved;
 
 sendOnline({
-
 type:"setNickname",
-
 nickname:saved
-
 });
 
 }else{
@@ -2661,7 +3053,9 @@ myNickname;
 
 }
 
-/* NICK */
+/* =========================
+NICKNAME
+========================= */
 
 if(
 data.type ===
@@ -2688,7 +3082,9 @@ currentLobbyMembers
 
 }
 
-/* FIND PLAYER */
+/* =========================
+FIND PLAYER
+========================= */
 
 if(
 data.type ===
@@ -2735,7 +3131,9 @@ addFriendButton.style.display =
 
 }
 
-/* FRIEND RESULT */
+/* =========================
+FRIEND RESULT
+========================= */
 
 if(
 data.type ===
@@ -2772,7 +3170,9 @@ type:"getFriends"
 
 }
 
-/* FRIEND ADDED */
+/* =========================
+FRIEND ADDED
+========================= */
 
 if(
 data.type ===
@@ -2790,7 +3190,9 @@ type:"getFriends"
 
 }
 
-/* FRIENDS */
+/* =========================
+FRIENDS
+========================= */
 
 if(
 data.type ===
@@ -2811,7 +3213,9 @@ cachedFriends
 
 }
 
-/* LOBBY MESSAGE */
+/* =========================
+LOBBY MESSAGE
+========================= */
 
 if(
 data.type ===
@@ -2824,7 +3228,9 @@ data.message ||
 
 }
 
-/* INVITE */
+/* =========================
+INVITE
+========================= */
 
 if(
 data.type ===
@@ -2844,7 +3250,9 @@ lobbyInvitePopup.style.display =
 
 }
 
-/* ACCEPTED */
+/* =========================
+INVITE ACCEPTED
+========================= */
 
 if(
 data.type ===
@@ -2858,7 +3266,9 @@ data.nickname +
 
 }
 
-/* LOBBY STATE */
+/* =========================
+LOBBY STATE
+========================= */
 
 if(
 data.type ===
@@ -2874,7 +3284,8 @@ data.leaderID ??
 null;
 
 lobbyBotsEnabled =
-data.botsEnabled !== false;
+data.botsEnabled !==
+false;
 
 teamAssignments =
 data.teams ||
@@ -2892,7 +3303,8 @@ data.inLobby
 
 lobbyMessage.textContent =
 
-currentLobbyMembers.length >= 2
+currentLobbyMembers.length >=
+2
 
 ?
 
@@ -2906,7 +3318,9 @@ currentLobbyMembers.length >= 2
 
 }
 
-/* TEAM SELECT START */
+/* =========================
+TEAM SELECT START
+========================= */
 
 if(
 data.type ===
@@ -2929,7 +3343,9 @@ updateTeamButtons();
 
 }
 
-/* TEAM STATE */
+/* =========================
+TEAM STATE
+========================= */
 
 if(
 data.type ===
@@ -2959,7 +3375,9 @@ teamAssignments[
 String(
 myOnlineID
 )
-] ||
+]
+
+||
 
 teamAssignments[
 myOnlineID
@@ -2976,7 +3394,9 @@ updateTeamButtons();
 
 }
 
-/* TEAM ERROR */
+/* =========================
+TEAM ERROR
+========================= */
 
 if(
 data.type ===
@@ -2990,7 +3410,9 @@ data.message ||
 
 }
 
-/* COUNTDOWN */
+/* =========================
+COUNTDOWN
+========================= */
 
 if(
 data.type ===
@@ -3008,7 +3430,9 @@ data.startAt
 
 }
 
-/* START GAME */
+/* =========================
+START MATCH
+========================= */
 
 if(
 data.type ===
@@ -3019,7 +3443,8 @@ multiplayerMatch =
 true;
 
 botsEnabled =
-data.botsEnabled !== false;
+data.botsEnabled !==
+false;
 
 myTeam =
 data.team ||
@@ -3031,9 +3456,56 @@ false;
 teamSelectPopup.style.display =
 "none";
 
+matchEnded =
+false;
+
+respawning =
+false;
+
+deaths =
+0;
+
+kills =
+0;
+
+teamScores.ct =
+0;
+
+teamScores.t =
+0;
+
+ammo =
+30;
+
+reserve =
+90;
+
 clearRemotePlayers();
 
+/*
+Используем наш новый
+безопасный спавн.
+*/
+
+const safeSpawn =
+TEAM_SPAWNS[
+myTeam
+];
+
 if(
+safeSpawn
+){
+
+player.x =
+safeSpawn.x;
+
+player.y =
+safeSpawn.y;
+
+player.angle =
+safeSpawn.angle;
+
+}else if(
 data.spawn
 ){
 
@@ -3055,10 +3527,10 @@ data.spawn.angle
 ) ||
 0;
 
+}
+
 player.hp =
 100;
-
-}
 
 for(
 const p
@@ -3087,14 +3559,16 @@ p
 }
 
 if(
-myTeam === "ct"
+myTeam ===
+"ct"
 ){
 
 $("teamHUD").textContent =
 "🛡️ СПЕЦНАЗ";
 
 }else if(
-myTeam === "t"
+myTeam ===
+"t"
 ){
 
 $("teamHUD").textContent =
@@ -3113,7 +3587,9 @@ launchLobbyGame();
 
 }
 
-/* REMOTE STATE */
+/* =========================
+REMOTE PLAYER
+========================= */
 
 if(
 data.type ===
@@ -3126,7 +3602,9 @@ data
 
 }
 
-/* SHOT */
+/* =========================
+REMOTE SHOT
+========================= */
 
 if(
 data.type ===
@@ -3139,7 +3617,9 @@ data.id
 
 }
 
-/* REMOTE LEFT */
+/* =========================
+REMOTE LEFT
+========================= */
 
 if(
 data.type ===
@@ -3152,7 +3632,9 @@ data.id
 
 }
 
-/* HIT */
+/* =========================
+PVP HIT
+========================= */
 
 if(
 data.type ===
@@ -3167,19 +3649,44 @@ data.killed
 
 kills++;
 
-}
+/*
+Добавляем очко своей команде.
+*/
+
+if(
+myTeam ===
+"ct"
+){
+
+teamScores.ct++;
 
 }
 
-/* DAMAGE */
+if(
+myTeam ===
+"t"
+){
+
+teamScores.t++;
+
+}
+
+updateMatchScore();
+
+}
+
+}
+
+/* =========================
+PVP DAMAGE
+========================= */
 
 if(
 data.type ===
 "playerDamaged"
 ){
 
-player.hp =
-
+const newHP =
 Math.max(
 0,
 Number(
@@ -3187,6 +3694,9 @@ data.hp
 ) ||
 0
 );
+
+player.hp =
+newHP;
 
 damageEffect();
 
@@ -3214,7 +3724,10 @@ if(
 ){
 
 friendsList.innerHTML =
-'<div style="color:#ffffff77;padding:8px 0">Список пуст</div>';
+
+'<div style="color:#ffffff77;padding:8px 0">'+
+'Список пуст'+
+'</div>';
 
 return;
 
@@ -3435,7 +3948,8 @@ let teamText =
 "";
 
 if(
-member.team === "ct"
+member.team ===
+"ct"
 ){
 
 teamText =
@@ -3447,7 +3961,8 @@ teamText =
 }
 
 if(
-member.team === "t"
+member.team ===
+"t"
 ){
 
 teamText =
@@ -3495,7 +4010,7 @@ return s;
 }
 
 /* =========================
-RENDER LOBBY
+LOBBY PLAYERS
 ========================= */
 
 function renderLobbyMembers(members){
@@ -3576,7 +4091,8 @@ function isLobbyLeader(){
 
 return(
 
-lobbyLeaderID !== null
+lobbyLeaderID !==
+null
 
 &&
 
@@ -3613,18 +4129,16 @@ lobbyBotsEnabled
 "БОТЫ: ВЫКЛ";
 
 botsControl.classList.toggle(
-
 "off",
-
 !lobbyBotsEnabled
-
 );
 
 botsControl.disabled =
 !leader;
 
 if(
-currentLobbyMembers.length < 2
+currentLobbyMembers.length <
+2
 ){
 
 lobbyPlayButton.disabled =
@@ -3709,7 +4223,8 @@ id;
 
 teamCT.disabled =
 
-ctOwner !== null
+ctOwner !==
+null
 
 &&
 
@@ -3722,7 +4237,8 @@ myOnlineID
 
 teamT.disabled =
 
-tOwner !== null
+tOwner !==
+null
 
 &&
 
@@ -3734,37 +4250,31 @@ myOnlineID
 );
 
 teamCT.classList.toggle(
-
 "selected",
-
 myTeam ===
 "ct"
-
 );
 
 teamT.classList.toggle(
-
 "selected",
-
 myTeam ===
 "t"
-
 );
 
 if(
-myTeam === "ct"
+myTeam ===
+"ct"
 ){
 
 teamStatus.textContent =
-
 "Ты выбрал СПЕЦНАЗ. Ждём второго игрока...";
 
 }else if(
-myTeam === "t"
+myTeam ===
+"t"
 ){
 
 teamStatus.textContent =
-
 "Ты выбрал ТЕРРОРИСТОВ. Ждём второго игрока...";
 
 }else{
@@ -3777,7 +4287,7 @@ teamStatus.textContent =
 }
 
 /* =========================
-NICK
+PROFILE BUTTONS
 ========================= */
 
 saveNickname.addEventListener(
@@ -3810,10 +4320,6 @@ passive:false
 }
 
 );
-
-/* =========================
-FIND FRIEND
-========================= */
 
 findFriendButton.addEventListener(
 
@@ -3848,10 +4354,6 @@ passive:false
 
 );
 
-/* =========================
-ADD FRIEND
-========================= */
-
 addFriendButton.addEventListener(
 
 "touchstart",
@@ -3883,7 +4385,7 @@ passive:false
 );
 
 /* =========================
-BOTS SWITCH
+BOT SWITCH
 ========================= */
 
 botsControl.addEventListener(
@@ -3922,7 +4424,9 @@ passive:false
 
 );
 
-/* CT */
+/* =========================
+CT
+========================= */
 
 teamCT.addEventListener(
 
@@ -3956,7 +4460,9 @@ passive:false
 
 );
 
-/* T */
+/* =========================
+T
+========================= */
 
 teamT.addEventListener(
 
@@ -4033,7 +4539,9 @@ passive:false
 
 );
 
-/* DECLINE */
+/* =========================
+DECLINE
+========================= */
 
 declineLobbyInvite.addEventListener(
 
@@ -4073,7 +4581,7 @@ passive:false
 );
 
 /* =========================
-ONLINE PLAY
+LOBBY PLAY
 ========================= */
 
 lobbyPlayButton.addEventListener(
@@ -4085,7 +4593,8 @@ e=>{
 e.preventDefault();
 
 if(
-currentLobbyMembers.length < 2
+currentLobbyMembers.length <
+2
 ){
 
 lobbyMessage.textContent =
@@ -4107,9 +4616,7 @@ return;
 }
 
 sendOnline({
-
 type:"startLobbyGame"
-
 });
 
 lobbyMessage.textContent =
@@ -4136,9 +4643,7 @@ e=>{
 e.preventDefault();
 
 sendOnline({
-
 type:"leaveLobby"
-
 });
 
 currentLobbyMembers =
@@ -4193,7 +4698,7 @@ const MAX_PITCH =
 65;
 
 /* =========================
-WORLD MAP
+MAP
 ========================= */
 
 const worldObjects = [
@@ -4426,7 +4931,7 @@ return false;
 }
 
 /* =========================
-CREATE WORLD
+WORLD CREATE
 ========================= */
 
 function createWorld(){
@@ -4481,7 +4986,7 @@ el;
 createWorld();
 
 /* =========================
-UPDATE WORLD
+WORLD UPDATE
 ========================= */
 
 function updateWorld(){
@@ -4521,15 +5026,18 @@ Math.cos(rel)
 );
 
 if(
-Math.abs(rel) > 1.62
+Math.abs(rel) >
+1.62
 
 ||
 
-d < 40
+d <
+40
 
 ||
 
-d > 3300
+d >
+3300
 ){
 
 o.el.style.display =
@@ -4545,8 +5053,7 @@ innerWidth/2 +
 
 Math.tan(rel) *
 
-innerWidth *
-.55;
+innerWidth*.55;
 
 const perspective =
 
@@ -4565,8 +5072,7 @@ Math.min(
 innerWidth*.9,
 perspective *
 (
-o.w /
-300
+o.w/300
 )
 )
 );
@@ -4579,8 +5085,7 @@ Math.min(
 innerHeight*.9,
 perspective *
 (
-o.height /
-180
+o.height/180
 )
 )
 );
@@ -4611,7 +5116,6 @@ height +
 o.el.style.zIndex =
 
 String(
-
 Math.max(
 10,
 50 -
@@ -4619,7 +5123,6 @@ Math.floor(
 d/90
 )
 )
-
 );
 
 }
@@ -4627,7 +5130,7 @@ d/90
 }
 
 /* =========================
-REMOTE PLAYER
+REMOTE
 ========================= */
 
 function makeRemoteElement(p){
@@ -4692,6 +5195,7 @@ return;
 }
 
 let r =
+
 remotePlayers.get(
 Number(
 p.id
@@ -4849,6 +5353,7 @@ r.team ||
 function removeRemotePlayer(id){
 
 const r =
+
 remotePlayers.get(
 Number(
 id
@@ -4975,7 +5480,6 @@ const sx =
 innerWidth/2 +
 
 Math.tan(rel) *
-
 innerWidth*.55;
 
 const size =
@@ -4984,8 +5488,7 @@ Math.max(
 28,
 Math.min(
 190,
-70000 /
-d
+70000/d
 )
 );
 
@@ -5037,7 +5540,8 @@ r.el
 )
 .textContent =
 
-r.weapon === "knife"
+r.weapon ===
+"knife"
 
 ?
 
@@ -5073,6 +5577,8 @@ function sendPlayerState(now){
 if(
 !multiplayerMatch ||
 !gameStarted ||
+matchEnded ||
+respawning ||
 now -
 lastStateSend <
 50
@@ -5215,7 +5721,8 @@ e=>{
 e.preventDefault();
 
 if(
-joyID !== null
+joyID !==
+null
 ){
 
 return;
@@ -5255,7 +5762,8 @@ of e.changedTouches
 ){
 
 if(
-t.identifier === joyID
+t.identifier ===
+joyID
 ){
 
 setJoy(
@@ -5287,7 +5795,8 @@ of e.changedTouches
 ){
 
 if(
-t.identifier === joyID
+t.identifier ===
+joyID
 ){
 
 resetJoy();
@@ -5373,7 +5882,8 @@ document.addEventListener(
 e=>{
 
 if(
-lookID === null
+lookID ===
+null
 ){
 
 return;
@@ -5482,59 +5992,107 @@ let kills =
 function showWeapon(type){
 
 $("gun").style.display =
-type === "rifle"
+
+type ===
+"rifle"
+
 ?
+
 "block"
+
 :
+
 "none";
 
 $("barrel").style.display =
-type === "rifle"
+
+type ===
+"rifle"
+
 ?
+
 "block"
+
 :
+
 "none";
 
 $("pistol").style.display =
-type === "pistol"
+
+type ===
+"pistol"
+
 ?
+
 "block"
+
 :
+
 "none";
 
 $("knife").style.display =
-type === "knife"
+
+type ===
+"knife"
+
 ?
+
 "block"
+
 :
+
 "none";
 
 $("ammo").style.display =
-type === "knife"
+
+type ===
+"knife"
+
 ?
+
 "none"
+
 :
+
 "block";
 
 $("reload").style.display =
-type === "knife"
+
+type ===
+"knife"
+
 ?
+
 "none"
+
 :
+
 "block";
 
 $("fire").textContent =
-type === "knife"
+
+type ===
+"knife"
+
 ?
+
 "ATTACK"
+
 :
+
 "FIRE";
 
 $("weaponSwipeIcon").textContent =
-type === "knife"
+
+type ===
+"knife"
+
 ?
+
 "🔪"
+
 :
+
 "🔫";
 
 }
@@ -5586,7 +6144,9 @@ weapon.classList.add(
 
 if(
 multiplayerMatch &&
-gameStarted
+gameStarted &&
+!respawning &&
+!matchEnded
 ){
 
 sendOnline({
@@ -5730,7 +6290,8 @@ dx < 0
 );
 
 }else if(
-dy > 0
+dy >
+0
 ){
 
 switchWeapon(
@@ -5762,7 +6323,9 @@ function updatePlayer(dt){
 
 if(
 player.hp <=
-0
+0 ||
+respawning ||
+matchEnded
 ){
 
 return;
@@ -5987,9 +6550,7 @@ let attempts =
 do{
 
 x =
-
 150 +
-
 Math.random() *
 (
 MAP_W -
@@ -5997,9 +6558,7 @@ MAP_W -
 );
 
 y =
-
 150 +
-
 Math.random() *
 (
 MAP_H -
@@ -6093,7 +6652,9 @@ e
 function showEnemy(e){
 
 if(
-!botsEnabled
+!botsEnabled ||
+respawning ||
+matchEnded
 ){
 
 e.el.style.display =
@@ -6149,7 +6710,6 @@ const x =
 innerWidth/2 +
 
 Math.tan(rel) *
-
 innerWidth*.55;
 
 const size =
@@ -6158,8 +6718,7 @@ Math.max(
 25,
 Math.min(
 190,
-70000 /
-d
+70000/d
 )
 );
 
@@ -6223,7 +6782,9 @@ $("damage").style.opacity =
 function updateEnemies(dt){
 
 if(
-!botsEnabled
+!botsEnabled ||
+respawning ||
+matchEnded
 ){
 
 for(
@@ -6369,14 +6930,24 @@ Math.max(
 player.hp -
 
 (
-d < 300
+d <
+300
+
 ?
+
 9
+
 :
-d < 500
+
+d <
+500
+
 ?
+
 6
+
 :
+
 4
 )
 );
@@ -6424,6 +6995,15 @@ KNIFE
 ========================= */
 
 function knifeAttack(){
+
+if(
+respawning ||
+matchEnded
+){
+
+return;
+
+}
 
 if(
 multiplayerMatch
@@ -6555,7 +7135,9 @@ function shoot(){
 
 if(
 player.hp <=
-0
+0 ||
+respawning ||
+matchEnded
 ){
 
 return;
@@ -6731,6 +7313,15 @@ RELOAD
 function reload(){
 
 if(
+respawning ||
+matchEnded
+){
+
+return;
+
+}
+
+if(
 currentWeapon ===
 "knife"
 
@@ -6824,44 +7415,28 @@ passive:false
 
 );
 
-$("fire").addEventListener(
+function stopFire(){
 
+fireHeld =
+false;
+
+clearInterval(
+fireTimer
+);
+
+fireTimer =
+null;
+
+}
+
+$("fire").addEventListener(
 "touchend",
-
-()=>{
-
-fireHeld =
-false;
-
-clearInterval(
-fireTimer
-);
-
-fireTimer =
-null;
-
-}
-
+stopFire
 );
 
 $("fire").addEventListener(
-
 "touchcancel",
-
-()=>{
-
-fireHeld =
-false;
-
-clearInterval(
-fireTimer
-);
-
-fireTimer =
-null;
-
-}
-
+stopFire
 );
 
 $("reload").addEventListener(
@@ -6883,7 +7458,7 @@ passive:false
 );
 
 /* =========================
-MINIMAP
+МИНИКАРТА
 ========================= */
 
 function updateMinimap(){
@@ -6912,11 +7487,9 @@ h +
 "px";
 
 document
-
 .querySelectorAll(
 ".enemyDot,.remotePlayerDot,.mapBuilding"
 )
-
 .forEach(
 x =>
 x.remove()
@@ -7124,6 +7697,482 @@ reserve;
 }
 
 /* =========================
+СЧЁТ МАТЧА
+========================= */
+
+function updateMatchScore(){
+
+ctScoreBox.textContent =
+
+"СПЕЦНАЗ " +
+teamScores.ct;
+
+tScoreBox.textContent =
+
+teamScores.t +
+" ТЕРРОРИСТЫ";
+
+}
+
+/* =========================
+ТАЙМЕР
+========================= */
+
+function startMatchClock(){
+
+matchEndAt =
+Date.now() +
+MATCH_DURATION;
+
+matchTop.style.display =
+"flex";
+
+matchEnded =
+false;
+
+updateMatchScore();
+
+updateMatchClock();
+
+}
+
+function updateMatchClock(){
+
+if(
+!gameStarted ||
+matchEnded ||
+matchEndAt <=
+0
+){
+
+return;
+
+}
+
+const left =
+
+Math.max(
+0,
+matchEndAt -
+Date.now()
+);
+
+const totalSeconds =
+
+Math.ceil(
+left /
+1000
+);
+
+const minutes =
+
+Math.floor(
+totalSeconds /
+60
+);
+
+const seconds =
+
+totalSeconds %
+60;
+
+matchTimer.textContent =
+
+minutes +
+":" +
+String(
+seconds
+).padStart(
+2,
+"0"
+);
+
+if(
+left <=
+0
+){
+
+finishMatch();
+
+}
+
+}
+
+/* =========================
+СМЕРТЬ И РЕСПАВН
+========================= */
+
+function handlePlayerDeath(){
+
+if(
+respawning ||
+matchEnded
+){
+
+return;
+
+}
+
+respawning =
+true;
+
+deaths++;
+
+stopFire();
+
+resetJoy();
+
+/*
+Если погиб в сетевом матче,
+противоположная команда
+получает очко.
+*/
+
+if(
+multiplayerMatch
+){
+
+if(
+myTeam ===
+"ct"
+){
+
+teamScores.t++;
+
+}
+
+if(
+myTeam ===
+"t"
+){
+
+teamScores.ct++;
+
+}
+
+updateMatchScore();
+
+}
+
+respawnScreen.style.display =
+"flex";
+
+let seconds =
+3;
+
+respawnTimer.textContent =
+
+"Возрождение через " +
+seconds;
+
+const timer =
+
+setInterval(
+
+()=>{
+
+seconds--;
+
+if(
+seconds >
+0
+){
+
+respawnTimer.textContent =
+
+"Возрождение через " +
+seconds;
+
+}else{
+
+clearInterval(
+timer
+);
+
+respawnPlayer();
+
+}
+
+},
+
+1000
+
+);
+
+}
+
+/* =========================
+ВОЗРОЖДЕНИЕ
+========================= */
+
+function respawnPlayer(){
+
+if(
+matchEnded
+){
+
+return;
+
+}
+
+let spawn;
+
+/*
+ONLINE:
+возвращаем на спавн команды.
+*/
+
+if(
+multiplayerMatch &&
+myTeam &&
+TEAM_SPAWNS[
+myTeam
+]
+){
+
+spawn =
+TEAM_SPAWNS[
+myTeam
+];
+
+}else{
+
+/*
+SOLO:
+безопасный центр дороги.
+*/
+
+spawn = {
+x:850,
+y:850,
+angle:.7
+};
+
+}
+
+player.x =
+spawn.x;
+
+player.y =
+spawn.y;
+
+player.angle =
+spawn.angle;
+
+player.hp =
+100;
+
+cameraPitch =
+0;
+
+ammo =
+30;
+
+reserve =
+90;
+
+currentWeapon =
+"rifle";
+
+showWeapon(
+"rifle"
+);
+
+respawning =
+false;
+
+respawnScreen.style.display =
+"none";
+
+if(
+multiplayerMatch
+){
+
+sendOnline({
+
+type:"playerState",
+
+x:player.x,
+
+y:player.y,
+
+angle:player.angle,
+
+hp:100,
+
+weapon:
+currentWeapon
+
+});
+
+}
+
+}
+
+/* =========================
+КОНЕЦ МАТЧА
+========================= */
+
+function finishMatch(){
+
+if(
+matchEnded
+){
+
+return;
+
+}
+
+matchEnded =
+true;
+
+respawning =
+false;
+
+stopFire();
+
+resetJoy();
+
+respawnScreen.style.display =
+"none";
+
+matchTimer.textContent =
+"0:00";
+
+let state =
+"draw";
+
+let text =
+"НИЧЬЯ";
+
+/*
+ONLINE
+*/
+
+if(
+multiplayerMatch
+){
+
+const myScore =
+
+myTeam ===
+"ct"
+
+?
+
+teamScores.ct
+
+:
+
+teamScores.t;
+
+const enemyScore =
+
+myTeam ===
+"ct"
+
+?
+
+teamScores.t
+
+:
+
+teamScores.ct;
+
+if(
+myScore >
+enemyScore
+){
+
+state =
+"win";
+
+text =
+"ПОБЕДА";
+
+}else if(
+myScore <
+enemyScore
+){
+
+state =
+"lose";
+
+text =
+"ПОРАЖЕНИЕ";
+
+}else{
+
+state =
+"draw";
+
+text =
+"НИЧЬЯ";
+
+}
+
+}else{
+
+/*
+SOLO
+*/
+
+text =
+"МАТЧ ОКОНЧЕН";
+
+state =
+"draw";
+
+}
+
+matchResult.className =
+state;
+
+resultTitle.textContent =
+text;
+
+if(
+multiplayerMatch
+){
+
+resultScore.textContent =
+
+teamScores.ct +
+" : " +
+teamScores.t;
+
+}else{
+
+resultScore.textContent =
+
+"УБИЙСТВ: " +
+kills;
+
+}
+
+matchResult.style.display =
+"flex";
+
+/*
+Через 5 секунд
+возвращаем в меню.
+*/
+
+setTimeout(
+
+()=>{
+
+location.reload();
+
+},
+
+5000
+
+);
+
+}
+
+/* =========================
 MENU TABS
 ========================= */
 
@@ -7164,7 +8213,6 @@ gameTab,
 lobbyTab,
 friendsTab
 ]
-
 .forEach(
 x =>
 x.classList.remove(
@@ -7323,7 +8371,7 @@ passive:false
 );
 
 /* =========================
-SOLO
+SOLO START
 ========================= */
 
 const menu =
@@ -7356,6 +8404,42 @@ true;
 
 myTeam =
 null;
+
+kills =
+0;
+
+deaths =
+0;
+
+teamScores.ct =
+0;
+
+teamScores.t =
+0;
+
+matchEnded =
+false;
+
+respawning =
+false;
+
+player.hp =
+100;
+
+player.x =
+850;
+
+player.y =
+850;
+
+player.angle =
+.7;
+
+ammo =
+30;
+
+reserve =
+90;
 
 $("teamHUD").textContent =
 "СВОБОДНАЯ ИГРА";
@@ -7417,6 +8501,8 @@ menu.style.display =
 
 gameStarted =
 true;
+
+startMatchClock();
 
 }
 
@@ -7510,7 +8596,7 @@ update,
 }
 
 /* =========================
-SERVER START
+ONLINE LAUNCH
 ========================= */
 
 function launchLobbyGame(){
@@ -7544,6 +8630,30 @@ menu.style.display =
 gameStarted =
 true;
 
+startMatchClock();
+
+/*
+Сразу отправляем серверу
+новый безопасный спавн.
+*/
+
+sendOnline({
+
+type:"playerState",
+
+x:player.x,
+
+y:player.y,
+
+angle:player.angle,
+
+hp:100,
+
+weapon:
+currentWeapon
+
+});
+
 },
 
 120
@@ -7553,29 +8663,8 @@ true;
 }
 
 /* =========================
-GAME OVER
+OLD RESTART
 ========================= */
-
-function gameOver(){
-
-if(
-$("gameover").style.display ===
-"flex"
-){
-
-return;
-
-}
-
-$("gameover").style.display =
-"flex";
-
-$("finalScore").textContent =
-
-"KILLS: " +
-kills;
-
-}
 
 $("restart").addEventListener(
 
@@ -7590,7 +8679,7 @@ location.reload();
 );
 
 /* =========================
-LOOP
+GAME LOOP
 ========================= */
 
 let last =
@@ -7614,8 +8703,26 @@ now;
 
 if(
 gameStarted &&
-player.hp >
+!matchEnded
+){
+
+/*
+Если умер —
+запускаем респавн,
+а не GAME OVER.
+*/
+
+if(
+player.hp <=
 0
+){
+
+handlePlayerDeath();
+
+}
+
+if(
+!respawning
 ){
 
 updatePlayer(
@@ -7632,19 +8739,15 @@ updateRemotePlayers();
 
 updateMinimap();
 
-updateHUD();
-
 sendPlayerState(
 now
 );
 
-}else if(
-gameStarted &&
-player.hp <=
-0
-){
+}
 
-gameOver();
+updateHUD();
+
+updateMatchClock();
 
 }
 
