@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>RAHL1K FPS v4</title>
+<title>RAHL1K FPS v5</title>
 <style>
 *{
 box-sizing:border-box;
@@ -83,7 +83,7 @@ height:45px;
 left:calc(50% - 3px);
 }
 /* =====================
-   ЗДАНИЯ
+ЗДАНИЯ
 ===================== */
 .building{
 position:absolute;
@@ -98,7 +98,7 @@ box-shadow:inset 0 0 20px #0008;
 z-index:10;
 }
 /* =====================
-   HUD
+HUD
 ===================== */
 #title{
 position:fixed;
@@ -131,16 +131,37 @@ font-size:16px;
 font-weight:bold;
 text-shadow:0 2px 4px #000;
 }
-#hp{
+/* HP */
+#healthBox{
 position:fixed;
 z-index:100;
 left:20px;
 bottom:20px;
-color:white;
-font-size:22px;
-font-weight:bold;
-text-shadow:0 2px 4px #000;
+width:190px;
+height:28px;
+background:#111c;
+border:2px solid white;
+border-radius:6px;
+overflow:hidden;
 }
+#healthBar{
+height:100%;
+width:100%;
+background:#36c968;
+transition:width .15s;
+}
+#healthText{
+position:absolute;
+inset:0;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-weight:bold;
+font-size:16px;
+text-shadow:0 1px 3px #000;
+}
+/* AMMO */
 #ammo{
 position:fixed;
 z-index:100;
@@ -152,7 +173,7 @@ font-weight:bold;
 text-shadow:0 2px 4px #000;
 }
 /* =====================
-   ПРИЦЕЛ
+ПРИЦЕЛ
 ===================== */
 #crosshair{
 position:fixed;
@@ -182,13 +203,13 @@ height:32px;
 background:white;
 }
 /* =====================
-   ДЖОЙСТИК
+ДЖОЙСТИК
 ===================== */
 #joystick{
 position:fixed;
 z-index:200;
 left:25px;
-bottom:25px;
+bottom:65px;
 width:140px;
 height:140px;
 border-radius:50%;
@@ -208,7 +229,7 @@ border:2px solid white;
 pointer-events:none;
 }
 /* =====================
-   КНОПКИ
+КНОПКИ
 ===================== */
 #fire{
 position:fixed;
@@ -237,7 +258,7 @@ color:white;
 font-weight:bold;
 }
 /* =====================
-   ОРУЖИЕ
+ОРУЖИЕ
 ===================== */
 #weapon{
 position:fixed;
@@ -268,8 +289,29 @@ height:70px;
 background:#303537;
 border-radius:5px;
 }
+/* ВСПЫШКА */
+#muzzle{
+display:none;
+position:absolute;
+left:78px;
+bottom:125px;
+width:35px;
+height:35px;
+background:#ffd34d;
+clip-path:polygon(
+50% 0%,
+65% 35%,
+100% 50%,
+65% 65%,
+50% 100%,
+35% 65%,
+0% 50%,
+35% 35%
+);
+filter:drop-shadow(0 0 12px #ff9d00);
+}
 /* =====================
-   ВРАГ
+ВРАГИ
 ===================== */
 .enemy{
 position:absolute;
@@ -285,7 +327,6 @@ left:20%;
 bottom:0;
 width:60%;
 height:63%;
-background:#a92f38;
 border-radius:8px 8px 2px 2px;
 }
 .enemyHead{
@@ -320,31 +361,42 @@ height:100%;
 width:100%;
 background:#39d36b;
 }
-/* =====================
-   АПТЕЧКИ
-===================== */
-.medkit{
-position:absolute;
-z-index:25;
-width:35px;
-height:35px;
-background:#eee;
-border:3px solid #222;
-border-radius:7px;
-transform:translate(-50%,-50%);
+/* типы врагов */
+.enemy.normal .enemyBody{
+background:#a92f38;
 }
-.medkit:before{
-content:"+";
-position:absolute;
+.enemy.fast .enemyBody{
+background:#8b35b8;
+}
+/* =====================
+ВСПЫШКА УРОНА
+===================== */
+#damage{
+position:fixed;
+z-index:120;
+inset:0;
+pointer-events:none;
+background:#d00;
+opacity:0;
+transition:opacity .08s;
+}
+/* =====================
+HIT MARK
+===================== */
+#hitmark{
+position:fixed;
+z-index:150;
 left:50%;
 top:50%;
 transform:translate(-50%,-50%);
-font-size:27px;
+color:#ff4444;
+font-size:35px;
 font-weight:bold;
-color:#d33;
+opacity:0;
+pointer-events:none;
 }
 /* =====================
-   МИНИ-КАРТА
+МИНИ-КАРТА
 ===================== */
 #minimap{
 position:fixed;
@@ -380,25 +432,14 @@ border-radius:50%;
 transform:translate(-50%,-50%);
 }
 /* =====================
-   УРОН
-===================== */
-#damage{
-position:fixed;
-z-index:120;
-inset:0;
-pointer-events:none;
-background:#d00;
-opacity:0;
-}
-/* =====================
-   GAME OVER
+GAME OVER
 ===================== */
 #gameover{
 display:none;
 position:fixed;
 z-index:500;
 inset:0;
-background:#000c;
+background:#000d;
 align-items:center;
 justify-content:center;
 flex-direction:column;
@@ -417,7 +458,7 @@ background:#333;
 color:white;
 }
 /* =====================
-   ПОВЕРНИ ТЕЛЕФОН
+ПОВЕРНИ ТЕЛЕФОН
 ===================== */
 #rotate{
 display:none;
@@ -456,7 +497,7 @@ display:flex;
 <div class="building" id="b6"></div>
 </div>
 <div id="title">
-RAHL1K FPS v4
+RAHL1K FPS v5
 </div>
 <div id="info">
 POS: 1500 / 1100 &nbsp;&nbsp; ANGLE: 0°
@@ -464,13 +505,17 @@ POS: 1500 / 1100 &nbsp;&nbsp; ANGLE: 0°
 <div id="score">
 KILLS: 0
 </div>
-<div id="hp">
-HP 100
+<div id="healthBox">
+<div id="healthBar"></div>
+<div id="healthText">HP 100</div>
 </div>
 <div id="ammo">
 30 / 90
 </div>
 <div id="crosshair"></div>
+<div id="hitmark">
+×
+</div>
 <div id="minimap">
 <div class="mapBuilding"
 style="left:10px;top:10px;width:35px;height:25px"></div>
@@ -492,6 +537,7 @@ FIRE
 RELOAD
 </button>
 <div id="weapon">
+<div id="muzzle"></div>
 <div id="barrel"></div>
 <div id="gun"></div>
 </div>
@@ -764,17 +810,54 @@ player.y=ny;
 ВРАГИ
 ========================== */
 const enemies=[
-{x:700,y:900,hp:100,el:null,attack:0},
-{x:3300,y:900,hp:100,el:null,attack:0},
-{x:700,y:2500,hp:100,el:null,attack:0},
-{x:3300,y:2500,hp:100,el:null,attack:0},
-{x:1800,y:2200,hp:100,el:null,attack:0}
+{
+x:700,
+y:900,
+hp:100,
+el:null,
+attack:0,
+type:"normal"
+},
+{
+x:3300,
+y:900,
+hp:100,
+el:null,
+attack:0,
+type:"normal"
+},
+{
+x:700,
+y:2500,
+hp:100,
+el:null,
+attack:0,
+type:"fast"
+},
+{
+x:3300,
+y:2500,
+hp:100,
+el:null,
+attack:0,
+type:"fast"
+},
+{
+x:1800,
+y:2200,
+hp:100,
+el:null,
+attack:0,
+type:"normal"
+}
 ];
 function createEnemies(){
 for(const enemy of enemies){
 const el=
 document.createElement("div");
-el.className="enemy";
+el.className=
+"enemy "+
+enemy.type;
 el.innerHTML=`
 <div class="enemyHP">
 <div class="enemyHPInner"></div>
@@ -790,6 +873,9 @@ enemy.el=el;
 }
 }
 createEnemies();
+/* ==========================
+ВРАГИ
+========================== */
 function updateEnemies(dt){
 for(const enemy of enemies){
 if(enemy.hp<=0){
@@ -802,32 +888,71 @@ const dy=
 player.y-enemy.y;
 const distance=
 Math.hypot(dx,dy);
+/* движение */
 if(
-distance>100&&
-distance<2200
+distance>120&&
+distance<2400
 ){
-const speed=65;
+const speed=
+enemy.type==="fast"
+?105
+:65;
 const ex=
-dx/distance*speed*dt;
+dx/distance*
+speed*
+dt;
 const ey=
-dy/distance*speed*dt;
-const nx=enemy.x+ex;
-const ny=enemy.y+ey;
+dy/distance*
+speed*
+dt;
+const nx=
+enemy.x+ex;
+const ny=
+enemy.y+ey;
 if(!blocked(nx,enemy.y))
 enemy.x=nx;
 if(!blocked(enemy.x,ny))
 enemy.y=ny;
 }
-if(distance<170){
+/* атака */
+if(distance<750){
 enemy.attack-=dt;
 if(enemy.attack<=0){
-player.hp-=8;
-enemy.attack=1;
-damageEffect();
+enemy.attack=
+enemy.type==="fast"
+?0.65
+:1.15;
+enemyShoot(enemy);
 }
 }
 showEnemy(enemy);
 }
+}
+/* ==========================
+ВРАГ СТРЕЛЯЕТ
+========================== */
+function enemyShoot(enemy){
+if(player.hp<=0)return;
+const dx=
+player.x-enemy.x;
+const dy=
+player.y-enemy.y;
+const distance=
+Math.hypot(dx,dy);
+/*
+урон зависит от расстояния
+*/
+let damage=4;
+if(distance<300)
+damage=9;
+else if(distance<500)
+damage=6;
+player.hp=
+Math.max(
+0,
+player.hp-damage
+);
+damageEffect();
 }
 /* ==========================
 ОТОБРАЖЕНИЕ ВРАГА
@@ -869,13 +994,6 @@ enemy.el.style.display="block";
 enemy.el.style.left=sx+"px";
 enemy.el.style.top=
 window.innerHeight*.57+"px";
-/*
-ВАЖНО:
-один размер задаётся всему врагу.
-Голова и тело находятся внутри
-одного контейнера и поэтому
-больше не разъезжаются.
-*/
 enemy.el.style.width=
 size+"px";
 enemy.el.style.height=
@@ -883,7 +1001,9 @@ enemy.el.style.height=
 enemy.el.style.transform=
 "translate(-50%,-50%)";
 enemy.el
-.querySelector(".enemyHPInner")
+.querySelector(
+".enemyHPInner"
+)
 .style.width=
 Math.max(
 0,
@@ -913,6 +1033,15 @@ reload();
 return;
 }
 ammo--;
+const muzzle=
+document.getElementById("muzzle");
+muzzle.style.display="block";
+setTimeout(
+()=>{
+muzzle.style.display="none";
+},
+70
+);
 let target=null;
 let closest=Infinity;
 for(const enemy of enemies){
@@ -924,7 +1053,10 @@ enemy.y-player.y;
 const distance=
 Math.hypot(dx,dy);
 let a=
-Math.atan2(dy,dx)-player.angle;
+Math.atan2(
+dy,
+dx
+)-player.angle;
 a=
 Math.atan2(
 Math.sin(a),
@@ -941,6 +1073,7 @@ closest=distance;
 }
 if(target){
 target.hp-=50;
+showHit();
 if(target.hp<=0){
 kills++;
 }
@@ -956,6 +1089,52 @@ weapon.style.transform=
 },
 70
 );
+}
+/* ==========================
+ПОПАДАНИЕ
+========================== */
+function showHit(){
+const hit=
+document.getElementById("hitmark");
+hit.style.opacity=1;
+setTimeout(
+()=>{
+hit.style.opacity=0;
+},
+120
+);
+}
+/* ==========================
+ЗВУК
+========================== */
+function gunSound(){
+try{
+const AudioContext=
+window.AudioContext||
+window.webkitAudioContext;
+const ctx=
+new AudioContext();
+const osc=
+ctx.createOscillator();
+const gain=
+ctx.createGain();
+osc.type="square";
+osc.frequency.value=90;
+gain.gain.setValueAtTime(
+.12,
+ctx.currentTime
+);
+gain.gain.exponentialRampToValueAtTime(
+.001,
+ctx.currentTime+.08
+);
+osc.connect(gain);
+gain.connect(ctx.destination);
+osc.start();
+osc.stop(
+ctx.currentTime+.08
+);
+}catch(e){}
 }
 /* ==========================
 ПЕРЕЗАРЯДКА
@@ -990,12 +1169,12 @@ reload();
 function damageEffect(){
 const damage=
 document.getElementById("damage");
-damage.style.opacity=.35;
+damage.style.opacity=.32;
 setTimeout(
 ()=>{
 damage.style.opacity=0;
 },
-100
+120
 );
 }
 /* ==========================
@@ -1030,81 +1209,6 @@ map.appendChild(dot);
 }
 }
 /* ==========================
-АПТЕЧКИ
-========================== */
-const medkits=[
-{x:1500,y:600,used:false,el:null},
-{x:1500,y:2500,used:false,el:null},
-{x:2500,y:1500,used:false,el:null}
-];
-function createMedkits(){
-for(const m of medkits){
-const el=
-document.createElement("div");
-el.className="medkit";
-document
-.getElementById("game")
-.appendChild(el);
-m.el=el;
-}
-}
-createMedkits();
-function updateMedkits(){
-for(const m of medkits){
-if(m.used){
-m.el.style.display="none";
-continue;
-}
-const dx=m.x-player.x;
-const dy=m.y-player.y;
-const distance=
-Math.hypot(dx,dy);
-let relative=
-Math.atan2(dy,dx)-player.angle;
-relative=
-Math.atan2(
-Math.sin(relative),
-Math.cos(relative)
-);
-if(
-Math.abs(relative)>
-Math.PI/2
-){
-m.el.style.display="none";
-continue;
-}
-const sx=
-window.innerWidth/2+
-Math.tan(relative)*
-window.innerWidth*.55;
-const size=
-Math.max(
-15,
-Math.min(
-70,
-35000/distance
-)
-);
-m.el.style.display="block";
-m.el.style.left=sx+"px";
-m.el.style.top=
-window.innerHeight*.60+"px";
-m.el.style.width=size+"px";
-m.el.style.height=size+"px";
-if(
-distance<80&&
-player.hp<100
-){
-player.hp=
-Math.min(
-100,
-player.hp+30
-);
-m.used=true;
-}
-}
-}
-/* ==========================
 HUD
 ========================== */
 function updateHUD(){
@@ -1133,7 +1237,14 @@ document
 "KILLS: "+
 kills;
 document
-.getElementById("hp")
+.getElementById("healthBar")
+.style.width=
+Math.max(
+0,
+player.hp
+)+"%";
+document
+.getElementById("healthText")
 .textContent=
 "HP "+
 Math.max(
@@ -1190,7 +1301,6 @@ if(player.hp>0){
 updatePlayer(dt);
 updateEnemies(dt);
 updateBuildings();
-updateMedkits();
 updateMinimap();
 updateHUD();
 }else{
