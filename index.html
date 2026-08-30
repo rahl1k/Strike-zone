@@ -2,95 +2,69 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>rahl1k FPS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>RAHL1K FPS TEST</title>
 <style>
-*{
-    box-sizing:border-box;
-    user-select:none;
-    -webkit-user-select:none;
-}
 html,body{
     margin:0;
     padding:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#333;
+    background:#222;
     touch-action:none;
 }
 #game{
     position:fixed;
-    left:0;
-    top:0;
+    inset:0;
     width:100%;
     height:100%;
 }
 #title{
     position:fixed;
-    z-index:10;
-    top:12px;
+    top:10px;
     left:50%;
     transform:translateX(-50%);
+    z-index:100;
     color:white;
-    font:bold 22px Arial;
+    font:bold 24px Arial;
     text-shadow:0 2px 5px black;
-}
-#hp{
-    position:fixed;
-    z-index:10;
-    left:20px;
-    top:15px;
-    color:white;
-    font:bold 18px Arial;
-    text-shadow:0 2px 4px black;
-}
-#ammo{
-    position:fixed;
-    z-index:10;
-    right:20px;
-    bottom:20px;
-    color:white;
-    font:bold 20px Arial;
-    text-shadow:0 2px 4px black;
 }
 #crosshair{
     position:fixed;
-    z-index:10;
     left:50%;
     top:50%;
-    width:24px;
-    height:24px;
+    width:30px;
+    height:30px;
     transform:translate(-50%,-50%);
+    z-index:100;
 }
 #crosshair:before{
     content:"";
     position:absolute;
-    left:0;
-    top:11px;
-    width:24px;
+    width:30px;
     height:2px;
+    top:14px;
     background:white;
 }
 #crosshair:after{
     content:"";
     position:absolute;
-    left:11px;
-    top:0;
     width:2px;
-    height:24px;
+    height:30px;
+    left:14px;
     background:white;
 }
 #joystick{
     position:fixed;
-    z-index:50;
     left:25px;
     bottom:25px;
     width:140px;
     height:140px;
     border-radius:50%;
+    border:3px solid rgba(255,255,255,.4);
     background:rgba(255,255,255,.12);
-    border:3px solid rgba(255,255,255,.35);
+    z-index:200;
     touch-action:none;
 }
 #stick{
@@ -100,435 +74,232 @@ html,body{
     width:60px;
     height:60px;
     border-radius:50%;
-    background:rgba(255,255,255,.45);
-    border:2px solid rgba(255,255,255,.7);
+    background:rgba(255,255,255,.5);
+    border:2px solid white;
     pointer-events:none;
 }
-#fire{
+#info{
     position:fixed;
-    z-index:50;
-    right:25px;
-    bottom:85px;
-    width:85px;
-    height:85px;
-    border-radius:50%;
-    border:2px solid rgba(255,255,255,.5);
-    background:rgba(170,30,30,.8);
+    left:20px;
+    top:50px;
+    z-index:100;
     color:white;
-    font:bold 14px Arial;
-    touch-action:none;
-}
-#reload{
-    position:fixed;
-    z-index:50;
-    right:125px;
-    bottom:25px;
-    width:100px;
-    height:45px;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,.4);
-    background:rgba(30,30,30,.8);
-    color:white;
-    font:bold 14px Arial;
-    touch-action:none;
+    font:bold 16px Arial;
 }
 </style>
 </head>
 <body>
-<div id="title">rahl1k FPS</div>
-<div id="hp">HP 100</div>
-<div id="ammo">30 / 90</div>
+<div id="title">RAHL1K FPS TEST 3</div>
+<div id="info">
+    JOYSTICK: READY
+</div>
 <div id="crosshair"></div>
 <div id="joystick">
     <div id="stick"></div>
 </div>
-
-FIRE
-RELOAD
-
 <script>
-/* =========================================
-   CANVAS
-========================================= */
-const canvas=document.getElementById("game");
-const ctx=canvas.getContext("2d");
-let W=0;
-let H=0;
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+let W = 0;
+let H = 0;
 function resize(){
-    W=window.innerWidth;
-    H=window.innerHeight;
-    canvas.width=W;
-    canvas.height=H;
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
 }
-window.addEventListener("resize",resize);
 resize();
-/* =========================================
+window.addEventListener("resize", resize);
+/* =========================
    ИГРОК
-========================================= */
-let player={
-    x:700,
-    y:600,
-    angle:0,
-    hp:100
-};
-/* =========================================
-   КАРТА
-========================================= */
-const walls=[
-    {x:100,y:100,w:2600,h:80},
-    {x:100,y:1900,w:2600,h:80},
-    {x:100,y:100,w:80,h:1880},
-    {x:2620,y:100,w:80,h:1880},
-    {x:350,y:350,w:500,h:80},
-    {x:350,y:350,w:80,h:500},
-    {x:770,y:350,w:80,h:500},
-    {x:1100,y:250,w:600,h:80},
-    {x:1100,y:250,w:80,h:500},
-    {x:1620,y:250,w:80,h:500},
-    {x:1050,y:950,w:650,h:80},
-    {x:1950,y:400,w:500,h:80},
-    {x:1950,y:400,w:80,h:600},
-    {x:2370,y:400,w:80,h:600},
-    {x:350,y:1200,w:550,h:80},
-    {x:350,y:1200,w:80,h:550},
-    {x:820,y:1200,w:80,h:550},
-    {x:350,y:1670,w:550,h:80},
-    {x:1100,y:1200,w:650,h:80},
-    {x:1100,y:1200,w:80,h:550},
-    {x:1670,y:1200,w:80,h:550},
-    {x:1100,y:1670,w:650,h:80},
-    {x:950,y:500,w:100,h:100},
-    {x:1800,y:650,w:120,h:120},
-    {x:950,y:1450,w:120,h:120},
-    {x:1850,y:1400,w:120,h:120}
-];
-/* =========================================
-   ВРАГИ
-========================================= */
-const enemies=[
-    {x:2200,y:250,hp:100,dead:false},
-    {x:2150,y:1100,hp:100,dead:false},
-    {x:1400,y:500,hp:100,dead:false},
-    {x:600,y:1050,hp:100,dead:false},
-    {x:1450,y:1800,hp:100,dead:false}
-];
-/* =========================================
-   СТОЛКНОВЕНИЯ
-========================================= */
-function collision(x,y){
-    const r=20;
-    for(let i=0;i<walls.length;i++){
-        const w=walls[i];
-        if(
-            x+r>w.x &&
-            x-r<w.x+w.w &&
-            y+r>w.y &&
-            y-r<w.y+w.h
-        ){
-            return true;
-        }
-    }
-    return false;
-}
-/* =========================================
+========================= */
+let playerX = 0;
+let playerY = 0;
+let camera = 0;
+/* =========================
    ДЖОЙСТИК
-========================================= */
-const joystick=document.getElementById("joystick");
-const stick=document.getElementById("stick");
-let joyX=0;
-let joyY=0;
-let joyId=-1;
-function joystickMove(x,y){
-    const rect=joystick.getBoundingClientRect();
-    let dx=x-(rect.left+70);
-    let dy=y-(rect.top+70);
-    const max=42;
-    const len=Math.sqrt(dx*dx+dy*dy);
-    if(len>max){
-        dx=dx/len*max;
-        dy=dy/len*max;
+========================= */
+const joystick =
+    document.getElementById("joystick");
+const stick =
+    document.getElementById("stick");
+let joyX = 0;
+let joyY = 0;
+let active = false;
+function moveStick(clientX,clientY){
+    const rect =
+        joystick.getBoundingClientRect();
+    const centerX =
+        rect.left + rect.width/2;
+    const centerY =
+        rect.top + rect.height/2;
+    let dx =
+        clientX-centerX;
+    let dy =
+        clientY-centerY;
+    const max = 40;
+    const distance =
+        Math.sqrt(dx*dx+dy*dy);
+    if(distance > max){
+        dx =
+            dx/distance*max;
+        dy =
+            dy/distance*max;
     }
-    joyX=dx/max;
-    joyY=dy/max;
-    stick.style.left=(40+dx)+"px";
-    stick.style.top=(40+dy)+"px";
+    joyX = dx/max;
+    joyY = dy/max;
+    stick.style.left =
+        (40+dx)+"px";
+    stick.style.top =
+        (40+dy)+"px";
 }
-function joystickReset(){
+function resetStick(){
+    active=false;
     joyX=0;
     joyY=0;
-    joyId=-1;
     stick.style.left="40px";
     stick.style.top="40px";
 }
-joystick.addEventListener("touchstart",function(e){
-    e.preventDefault();
-    const t=e.changedTouches[0];
-    joyId=t.identifier;
-    joystickMove(
-        t.clientX,
-        t.clientY
-    );
-},{passive:false});
-joystick.addEventListener("touchmove",function(e){
-    e.preventDefault();
-    for(let i=0;i<e.changedTouches.length;i++){
-        const t=e.changedTouches[i];
-        if(t.identifier===joyId){
-            joystickMove(
-                t.clientX,
-                t.clientY
-            );
+joystick.addEventListener(
+    "touchstart",
+    function(e){
+        e.preventDefault();
+        active=true;
+        const t=e.touches[0];
+        moveStick(
+            t.clientX,
+            t.clientY
+        );
+    },
+    {passive:false}
+);
+joystick.addEventListener(
+    "touchmove",
+    function(e){
+        e.preventDefault();
+        if(!active)
+            return;
+        const t=e.touches[0];
+        moveStick(
+            t.clientX,
+            t.clientY
+        );
+    },
+    {passive:false}
+);
+joystick.addEventListener(
+    "touchend",
+    function(e){
+        e.preventDefault();
+        resetStick();
+    },
+    {passive:false}
+);
+joystick.addEventListener(
+    "touchcancel",
+    resetStick
+);
+/* =========================
+   СВАЙП
+========================= */
+let lookActive=false;
+let lastLookX=0;
+canvas.addEventListener(
+    "touchstart",
+    function(e){
+        const t=e.touches[0];
+        if(t.clientX > W*0.45){
+            lookActive=true;
+            lastLookX=t.clientX;
         }
+    },
+    {passive:false}
+);
+canvas.addEventListener(
+    "touchmove",
+    function(e){
+        if(!lookActive)
+            return;
+        e.preventDefault();
+        const t=e.touches[0];
+        const dx =
+            t.clientX-lastLookX;
+        camera += dx*0.01;
+        lastLookX=t.clientX;
+    },
+    {passive:false}
+);
+canvas.addEventListener(
+    "touchend",
+    function(){
+        lookActive=false;
     }
-},{passive:false});
-joystick.addEventListener("touchend",function(e){
-    e.preventDefault();
-    joystickReset();
-},{passive:false});
-joystick.addEventListener("touchcancel",function(){
-    joystickReset();
-});
-/* =========================================
-   СВАЙП КАМЕРЫ
-========================================= */
-let lookId=-1;
-let lookX=0;
-canvas.addEventListener("touchstart",function(e){
-    for(let i=0;i<e.changedTouches.length;i++){
-        const t=e.changedTouches[i];
-        if(t.clientX>W*0.45){
-            lookId=t.identifier;
-            lookX=t.clientX;
-        }
-    }
-},{passive:false});
-canvas.addEventListener("touchmove",function(e){
-    if(lookId===-1)
-        return;
-    e.preventDefault();
-    for(let i=0;i<e.changedTouches.length;i++){
-        const t=e.changedTouches[i];
-        if(t.identifier===lookId){
-            const dx=t.clientX-lookX;
-            player.angle+=dx*0.008;
-            lookX=t.clientX;
-        }
-    }
-},{passive:false});
-canvas.addEventListener("touchend",function(e){
-    for(let i=0;i<e.changedTouches.length;i++){
-        if(
-            e.changedTouches[i].identifier===
-            lookId
-        ){
-            lookId=-1;
-        }
-    }
-});
-/* =========================================
-   ДВИЖЕНИЕ
-========================================= */
-function updatePlayer(dt){
-    const speed=220;
-    const forward=-joyY;
-    const side=joyX;
-    const dx=(
-        Math.cos(player.angle)*forward-
-        Math.sin(player.angle)*side
-    )*speed*dt;
-    const dy=(
-        Math.sin(player.angle)*forward+
-        Math.cos(player.angle)*side
-    )*speed*dt;
-    const nx=player.x+dx;
-    const ny=player.y+dy;
-    if(!collision(nx,player.y))
-        player.x=nx;
-    if(!collision(player.x,ny))
-        player.y=ny;
-}
-/* =========================================
-   ЛУЧ
-========================================= */
-function ray(angle){
-    const max=1600;
-    for(
-        let d=5;
-        d<max;
-        d+=8
-    ){
-        const x=
-            player.x+
-            Math.cos(angle)*d;
-        const y=
-            player.y+
-            Math.sin(angle)*d;
-        for(let i=0;i<walls.length;i++){
-            const w=walls[i];
-            if(
-                x>=w.x &&
-                x<=w.x+w.w &&
-                y>=w.y &&
-                y<=w.y+w.h
-            ){
-                return d;
-            }
-        }
-    }
-    return max;
-}
-/* =========================================
-   РИСОВАНИЕ
-========================================= */
+);
+/* =========================
+   FPS СЦЕНА
+========================= */
 function draw(){
-    /* небо */
-    ctx.fillStyle="#718991";
+    /* НЕБО */
+    ctx.fillStyle="#4d82a8";
     ctx.fillRect(
         0,
         0,
         W,
         H/2
     );
-    /* земля */
-    ctx.fillStyle="#30383c";
+    /* ЗЕМЛЯ */
+    ctx.fillStyle="#303030";
     ctx.fillRect(
         0,
         H/2,
         W,
         H/2
     );
-    /* пол */
-    ctx.strokeStyle="#4c5558";
-    for(let i=1;i<14;i++){
-        const y=
-            H/2+
-            i*(H/2)/14;
+    /* ДОРОГА */
+    ctx.fillStyle="#3d3d3d";
+    ctx.fillRect(
+        W*0.25,
+        H/2,
+        W*0.5,
+        H/2
+    );
+    /* ЛИНИИ ДОРОГИ */
+    ctx.strokeStyle="#777";
+    ctx.lineWidth=3;
+    for(let i=1;i<10;i++){
+        const y =
+            H/2 +
+            i*(H/2)/10;
         ctx.beginPath();
         ctx.moveTo(0,y);
         ctx.lineTo(W,y);
         ctx.stroke();
     }
-    /* FPS стены */
-    const fov=Math.PI/3;
-    const rays=180;
-    const projection=
-        (W/2)/
-        Math.tan(fov/2);
-    for(let i=0;i<rays;i++){
-        const screenX=
-            i*W/rays;
-        const angle=
-            player.angle-
-            fov/2+
-            i/rays*fov;
-        let distance=ray(angle);
-        distance*=
-            Math.cos(
-                angle-player.angle
-            );
-        if(distance<1)
-            distance=1;
-        const height=
-            projection/
-            distance*
-            100;
-        const top=
-            H/2-height/2;
-        const light=
-            Math.max(
-                40,
-                180-distance/9
-            );
-        ctx.fillStyle=
-            "rgb("+
-            light+","+
-            light+","+
-            light+
-            ")";
-        ctx.fillRect(
-            screenX,
-            top,
-            W/rays+1,
-            height
-        );
-    }
-    /* =================================
-       ВРАГИ
-    ================================= */
-    for(let i=0;i<enemies.length;i++){
-        const enemy=enemies[i];
-        if(enemy.dead)
-            continue;
-        const dx=
-            enemy.x-player.x;
-        const dy=
-            enemy.y-player.y;
-        const distance=
-            Math.sqrt(
-                dx*dx+dy*dy
-            );
-        let relative=
-            Math.atan2(dy,dx)-
-            player.angle;
-        while(relative>Math.PI)
-            relative-=Math.PI*2;
-        while(relative<-Math.PI)
-            relative+=Math.PI*2;
-        if(
-            Math.abs(relative)<
-            fov/2
-        ){
-            const screenX=
-                W/2+
-                relative/
-                (fov/2)*
-                (W/2);
-            const size=
-                Math.max(
-                    30,
-                    50000/
-                    (distance+100)
-                );
-            /* тело */
-            ctx.fillStyle="#c52f38";
-            ctx.fillRect(
-                screenX-size*.3,
-                H/2-size*.4,
-                size*.6,
-                size*.8
-            );
-            /* голова */
-            ctx.fillStyle="#d9a17d";
-            ctx.beginPath();
-            ctx.arc(
-                screenX,
-                H/2-size*.57,
-                size*.2,
-                0,
-                Math.PI*2
-            );
-            ctx.fill();
-            /* здоровье */
-            ctx.fillStyle="#111";
-            ctx.fillRect(
-                screenX-size*.45,
-                H/2-size*.85,
-                size*.9,
-                5
-            );
-            ctx.fillStyle="#32d16b";
-            ctx.fillRect(
-                screenX-size*.45,
-                H/2-size*.85,
-                size*.9*
-                enemy.hp/100,
-                5
-            );
-        }
-    }
-    /* =================================
-       ОРУЖИЕ
-    ================================= */
+    /* ПРОСТЫЕ СТЕНЫ */
+    const shift =
+        Math.sin(camera)*80;
+    ctx.fillStyle="#555";
+    ctx.fillRect(
+        100+shift,
+        H/2-150,
+        180,
+        150
+    );
+    ctx.fillRect(
+        W-280+shift,
+        H/2-180,
+        180,
+        180
+    );
+    /* ЦЕНТРАЛЬНАЯ КОРОБКА */
+    ctx.fillStyle="#777";
+    ctx.fillRect(
+        W/2-70,
+        H/2-100,
+        140,
+        100
+    );
+    /* ОРУЖИЕ */
     ctx.fillStyle="#111";
     ctx.fillRect(
         W/2-55,
@@ -541,144 +312,51 @@ function draw(){
         W/2-10,
         H-135,
         20,
-        55
+        50
     );
-}
-/* =========================================
-   СТРЕЛЬБА
-========================================= */
-function shoot(){
-    if(ammo<=0){
-        reload();
-        return;
-    }
-    ammo--;
-    let target=null;
-    let closest=999999;
-    for(let i=0;i<enemies.length;i++){
-        const enemy=enemies[i];
-        if(enemy.dead)
-            continue;
-        const dx=
-            enemy.x-player.x;
-        const dy=
-            enemy.y-player.y;
-        const distance=
-            Math.sqrt(
-                dx*dx+dy*dy
-            );
-        let a=
-            Math.atan2(dy,dx)-
-            player.angle;
-        while(a>Math.PI)
-            a-=Math.PI*2;
-        while(a<-Math.PI)
-            a+=Math.PI*2;
-        if(
-            Math.abs(a)<0.12 &&
-            distance<1000 &&
-            distance<closest
-        ){
-            target=enemy;
-            closest=distance;
-        }
-    }
-    if(target){
-        target.hp-=50;
-        if(target.hp<=0){
-            target.hp=0;
-            target.dead=true;
-        }
-    }
-}
-document
-.getElementById("fire")
-.addEventListener(
-    "touchstart",
-    function(e){
-        e.preventDefault();
-        shoot();
-    },
-    {passive:false}
-);
-/* =========================================
-   ПЕРЕЗАРЯДКА
-========================================= */
-function reload(){
-    if(
-        ammo>=30 ||
-        reserve<=0
-    )
-        return;
-    const need=30-ammo;
-    const amount=
-        Math.min(
-            need,
-            reserve
-        );
-    ammo+=amount;
-    reserve-=amount;
-}
-document
-.getElementById("reload")
-.addEventListener(
-    "touchstart",
-    function(e){
-        e.preventDefault();
-        reload();
-    },
-    {passive:false}
-);
-/* =========================================
-   HUD
-========================================= */
-function updateHUD(){
-    document.getElementById("hp")
-        .textContent=
-        "HP "+
-        Math.max(
+    /* ИНДИКАТОР ДВИЖЕНИЯ */
+    if(active){
+        ctx.fillStyle="rgba(0,255,100,.8)";
+        ctx.beginPath();
+        ctx.arc(
+            W/2,
+            H/2,
+            8,
             0,
-            Math.floor(player.hp)
+            Math.PI*2
         );
-    document.getElementById("ammo")
-        .textContent=
-        ammo+
-        " / "+
-        reserve;
+        ctx.fill();
+    }
 }
-/* =========================================
-   ИГРОВОЙ ЦИКЛ
-========================================= */
-let last=performance.now();
+/* =========================
+   ИГРА
+========================= */
+let last =
+    performance.now();
 function loop(now){
-    const dt=
+    const dt =
         Math.min(
             0.05,
             (now-last)/1000
         );
     last=now;
-    updatePlayer(dt);
-    updateHUD();
+    /* движение */
+    playerX +=
+        joyX*200*dt;
+    playerY +=
+        joyY*200*dt;
+    /* обновляем текст */
+    document.getElementById("info")
+        .textContent =
+        "X: "+
+        Math.round(playerX)+
+        "  Y: "+
+        Math.round(playerY);
     draw();
     requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
 </script>
-<div style="
-position:fixed;
-z-index:9999;
-top:0;
-left:0;
-right:0;
-height:60px;
-background:red;
-color:white;
-font-size:25px;
-font-weight:bold;
-text-align:center;
-padding:15px;
-">
-RAHL1K CHECK 999
-</div> 
+    
 </body>
 </html>
