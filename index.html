@@ -23,17 +23,10 @@ html,body{
     inset:0;
     overflow:hidden;
 }
-/* =========================
-   НЕБО И ЗЕМЛЯ
-========================= */
 #sky{
     position:absolute;
     inset:0 0 45% 0;
-    background:
-    linear-gradient(
-        #397da8,
-        #8bb8ca
-    );
+    background:linear-gradient(#397da8,#8bb8ca);
 }
 #ground{
     position:absolute;
@@ -43,9 +36,6 @@ html,body{
     height:45%;
     background:#3c4144;
 }
-/* =========================
-   ДОРОГА
-========================= */
 #road{
     position:absolute;
     left:20%;
@@ -53,7 +43,6 @@ html,body{
     width:60%;
     height:1000px;
     background:#55595b;
-    transform-origin:center top;
 }
 .roadLine{
     position:absolute;
@@ -63,9 +52,6 @@ html,body{
     background:#ddd;
     transform:translateX(-50%);
 }
-/* =========================
-   ЗДАНИЯ
-========================= */
 .building{
     position:absolute;
     width:190px;
@@ -73,8 +59,8 @@ html,body{
     background:#76563c;
     border:5px solid #3e2d20;
     box-shadow:
-    inset 0 0 0 4px #98704f,
-    0 8px 15px #0008;
+        inset 0 0 0 4px #98704f,
+        0 8px 15px #0008;
 }
 .window{
     position:absolute;
@@ -83,9 +69,6 @@ html,body{
     background:#182c36;
     border:3px solid #222;
 }
-/* =========================
-   КОНТЕЙНЕРЫ
-========================= */
 .container{
     position:absolute;
     width:160px;
@@ -94,9 +77,6 @@ html,body{
     border:4px solid #29382b;
     box-shadow:0 7px 12px #0008;
 }
-/* =========================
-   ВРАГ
-========================= */
 .enemy{
     position:absolute;
     width:46px;
@@ -129,9 +109,7 @@ html,body{
     height:100%;
     background:#31d06b;
 }
-/* =========================
-   HUD
-========================= */
+/* HUD */
 #title{
     position:fixed;
     z-index:500;
@@ -173,9 +151,7 @@ html,body{
     font-weight:bold;
     text-shadow:0 2px 4px #000;
 }
-/* =========================
-   ПРИЦЕЛ
-========================= */
+/* Прицел */
 #crosshair{
     position:fixed;
     z-index:500;
@@ -183,8 +159,7 @@ html,body{
     top:50%;
     width:30px;
     height:30px;
-    transform:
-    translate(-50%,-50%);
+    transform:translate(-50%,-50%);
 }
 #crosshair:before{
     content:"";
@@ -206,9 +181,7 @@ html,body{
     background:white;
     box-shadow:0 0 3px #000;
 }
-/* =========================
-   ОРУЖИЕ
-========================= */
+/* Оружие */
 #gun{
     position:fixed;
     z-index:400;
@@ -216,11 +189,9 @@ html,body{
     bottom:-10px;
     width:120px;
     height:105px;
-    transform:
-    translateX(-50%);
+    transform:translateX(-50%);
     background:#151515;
-    border-radius:
-    25px 25px 0 0;
+    border-radius:25px 25px 0 0;
     box-shadow:0 -5px 15px #0008;
 }
 #barrel{
@@ -233,9 +204,7 @@ html,body{
     background:#555;
     border:3px solid #222;
 }
-/* =========================
-   ДЖОЙСТИК
-========================= */
+/* Джойстик */
 #joystick{
     position:fixed;
     z-index:600;
@@ -244,10 +213,8 @@ html,body{
     width:140px;
     height:140px;
     border-radius:50%;
-    background:
-    rgba(255,255,255,.13);
-    border:
-    3px solid rgba(255,255,255,.45);
+    background:rgba(255,255,255,.13);
+    border:3px solid rgba(255,255,255,.45);
     touch-action:none;
 }
 #stick{
@@ -257,14 +224,11 @@ html,body{
     width:60px;
     height:60px;
     border-radius:50%;
-    background:
-    rgba(255,255,255,.5);
+    background:rgba(255,255,255,.5);
     border:2px solid white;
     pointer-events:none;
 }
-/* =========================
-   КНОПКИ
-========================= */
+/* Кнопки */
 #fire{
     position:fixed;
     z-index:600;
@@ -274,8 +238,7 @@ html,body{
     height:85px;
     border-radius:50%;
     border:2px solid #ffffff88;
-    background:
-    rgba(170,35,35,.8);
+    background:rgba(170,35,35,.8);
     color:white;
     font-weight:bold;
     touch-action:none;
@@ -289,15 +252,21 @@ html,body{
     height:45px;
     border-radius:12px;
     border:1px solid #ffffff66;
-    background:
-    rgba(30,30,30,.8);
+    background:rgba(30,30,30,.8);
     color:white;
     font-weight:bold;
     touch-action:none;
 }
-/* =========================
-   ПОВОРОТ ТЕЛЕФОНА
-========================= */
+/* Граница карты */
+#mapBorder{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+}
+/* Поворот телефона */
 #rotate{
     display:none;
     position:fixed;
@@ -324,35 +293,26 @@ html,body{
     <div class="roadLine" style="top:610px"></div>
 </div>
 <!-- ЗДАНИЯ -->
-<div class="building"
-     id="building1"
+<div class="building" id="building1"
      style="left:8%;top:32%;">
     <div class="window"
-         style="left:25px;top:25px">
-    </div>
+         style="left:25px;top:25px"></div>
     <div class="window"
-         style="right:25px;top:25px">
-    </div>
+         style="right:25px;top:25px"></div>
 </div>
-<div class="building"
-     id="building2"
+<div class="building" id="building2"
      style="right:8%;top:36%;">
     <div class="window"
-         style="left:25px;top:25px">
-    </div>
+         style="left:25px;top:25px"></div>
     <div class="window"
-         style="right:25px;top:25px">
-    </div>
+         style="right:25px;top:25px"></div>
 </div>
-<div class="building"
-     id="building3"
+<div class="building" id="building3"
      style="left:42%;top:27%;">
     <div class="window"
-         style="left:25px;top:25px">
-    </div>
+         style="left:25px;top:25px"></div>
     <div class="window"
-         style="right:25px;top:25px">
-    </div>
+         style="right:25px;top:25px"></div>
 </div>
 <!-- КОНТЕЙНЕРЫ -->
 <div class="container"
@@ -372,12 +332,11 @@ html,body{
     </div>
 </div>
 </div>
-<!-- HUD -->
 <div id="title">
     RAHL1K FPS
 </div>
 <div id="info">
-    POS: 0 / 0 &nbsp; ANGLE: 0°
+    POS: 0 / 0 &nbsp;&nbsp; ANGLE: 0°
 </div>
 <div id="hp">
     HP 100
@@ -386,13 +345,12 @@ html,body{
     30 / 90
 </div>
 <div id="crosshair"></div>
-<!-- ОРУЖИЕ -->
 <div id="gun">
     <div id="barrel"></div>
 </div>
 <!-- ДЖОЙСТИК -->
 <div id="joystick">
-<div id="stick"></div>
+    <div id="stick"></div>
 </div>
 <button id="fire">
     FIRE
@@ -428,11 +386,20 @@ document.querySelectorAll(".container");
 ========================= */
 let playerX=0;
 let playerY=0;
-/*
-   Угол камеры.
-   0 = смотрим вперёд
-*/
 let angle=0;
+/*
+   Размер виртуальной карты.
+   Чем больше значения —
+   тем больше можно ходить.
+*/
+const MAP_WIDTH=3000;
+const MAP_HEIGHT=2000;
+/*
+   Границы игрока.
+   Игрок никогда не сможет
+   выйти за эти координаты.
+*/
+const BORDER=100;
 /* =========================
    ДЖОЙСТИК
 ========================= */
@@ -441,23 +408,31 @@ let joyY=0;
 let joyActive=false;
 let joyID=null;
 function updateJoystick(x,y){
-    const rect =
+    const rect=
     joystick.getBoundingClientRect();
-    const centerX =
-    rect.left+rect.width/2;
-    const centerY =
-    rect.top+rect.height/2;
-    let dx=x-centerX;
-    let dy=y-centerY;
+    const centerX=
+    rect.left+
+    rect.width/2;
+    const centerY=
+    rect.top+
+    rect.height/2;
+    let dx=
+    x-centerX;
+    let dy=
+    y-centerY;
     const max=40;
     const distance=
     Math.hypot(dx,dy);
     if(distance>max){
-        dx=dx/distance*max;
-        dy=dy/distance*max;
+        dx=
+        dx/distance*max;
+        dy=
+        dy/distance*max;
     }
-    joyX=dx/max;
-    joyY=dy/max;
+    joyX=
+    dx/max;
+    joyY=
+    dy/max;
     stick.style.left=
     (40+dx)+"px";
     stick.style.top=
@@ -477,9 +452,11 @@ function(e){
     e.preventDefault();
     if(joyActive)
         return;
-    const t=e.changedTouches[0];
+    const t=
+    e.changedTouches[0];
     joyActive=true;
-    joyID=t.identifier;
+    joyID=
+    t.identifier;
     updateJoystick(
         t.clientX,
         t.clientY
@@ -493,8 +470,12 @@ function(e){
     e.preventDefault();
     if(!joyActive)
         return;
-    for(const t of e.changedTouches){
-        if(t.identifier===joyID){
+    for(
+        const t of e.changedTouches
+    ){
+        if(
+            t.identifier===joyID
+        ){
             updateJoystick(
                 t.clientX,
                 t.clientY
@@ -507,13 +488,21 @@ function(e){
 joystick.addEventListener(
 "touchend",
 function(e){
-    for(const t of e.changedTouches){
-        if(t.identifier===joyID){
+    for(
+        const t of e.changedTouches
+    ){
+        if(
+            t.identifier===joyID
+        ){
             resetJoystick();
         }
     }
 },
 {passive:false}
+);
+joystick.addEventListener(
+"touchcancel",
+resetJoystick
 );
 /* =========================
    СВАЙП КАМЕРЫ
@@ -524,10 +513,9 @@ let lastLookX=0;
 document.addEventListener(
 "touchstart",
 function(e){
-    for(const t of e.changedTouches){
-        /*
-           Правая часть экрана
-        */
+    for(
+        const t of e.changedTouches
+    ){
         if(
             t.clientX >
             window.innerWidth*0.45
@@ -539,8 +527,10 @@ function(e){
             t.target!==document.getElementById("reload")
         ){
             lookActive=true;
-            lookID=t.identifier;
-            lastLookX=t.clientX;
+            lookID=
+            t.identifier;
+            lastLookX=
+            t.clientX;
         }
     }
 },
@@ -551,23 +541,26 @@ document.addEventListener(
 function(e){
     if(!lookActive)
         return;
-    for(const t of e.changedTouches){
-        if(t.identifier===lookID){
+    for(
+        const t of e.changedTouches
+    ){
+        if(
+            t.identifier===lookID
+        ){
             e.preventDefault();
             const dx=
             t.clientX-lastLookX;
             /*
-               Плавность поворота
+               Поворот камеры
             */
-            angle +=
+            angle+=
             dx*0.006;
             /*
-               Не даём углу
-               бесконечно расти
+               0...360°
             */
-            if(angle>Math.PI*2)
+            if(angle>=Math.PI*2)
                 angle-=Math.PI*2;
-            if(angle<-Math.PI*2)
+            if(angle<0)
                 angle+=Math.PI*2;
             lastLookX=
             t.clientX;
@@ -579,8 +572,12 @@ function(e){
 document.addEventListener(
 "touchend",
 function(e){
-    for(const t of e.changedTouches){
-        if(t.identifier===lookID){
+    for(
+        const t of e.changedTouches
+    ){
+        if(
+            t.identifier===lookID
+        ){
             lookActive=false;
             lookID=null;
         }
@@ -588,7 +585,7 @@ function(e){
 }
 );
 /* =========================
-   ДВИЖЕНИЕ
+   ДВИЖЕНИЕ И ГРАНИЦЫ
 ========================= */
 let lastTime=
 performance.now();
@@ -601,39 +598,89 @@ function gameLoop(now){
     lastTime=now;
     const speed=220;
     /*
-       Вперёд/назад
+       Вверх = вперёд
+       Вниз = назад
+       Влево = влево
+       Вправо = вправо
     */
     const forward=
     -joyY;
-    /*
-       Влево/вправо
-    */
     const strafe=
     joyX;
     /*
-       Движение зависит
-       от направления камеры
+       Правильное FPS-движение
     */
     const moveX=
     (
-        Math.cos(angle)*forward
-        -
-        Math.sin(angle)*strafe
-    )
-    *
+        Math.cos(angle)*
+        forward
+        +
+        Math.cos(
+            angle+
+            Math.PI/2
+        )*
+        strafe
+    )*
     speed*
     dt;
     const moveY=
     (
-        Math.sin(angle)*forward
+        Math.sin(angle)*
+        forward
         +
-        Math.cos(angle)*strafe
-    )
-    *
+        Math.sin(
+            angle+
+            Math.PI/2
+        )*
+        strafe
+    )*
     speed*
     dt;
-    playerX+=moveX;
-    playerY+=moveY;
+    /*
+       Новая позиция
+    */
+    let newX=
+    playerX+moveX;
+    let newY=
+    playerY+moveY;
+    /*
+       ГРАНИЦЫ КАРТЫ
+       Здесь самое главное:
+       игрок не может уйти
+       ниже/выше карты.
+    */
+    const minX=
+    -MAP_WIDTH/2+
+    BORDER;
+    const maxX=
+    MAP_WIDTH/2-
+    BORDER;
+    const minY=
+    -MAP_HEIGHT/2+
+    BORDER;
+    const maxY=
+    MAP_HEIGHT/2-
+    BORDER;
+    newX=
+    Math.max(
+        minX,
+        Math.min(
+            maxX,
+            newX
+        )
+    );
+    newY=
+    Math.max(
+        minY,
+        Math.min(
+            maxY,
+            newY
+        )
+    );
+    playerX=
+    newX;
+    playerY=
+    newY;
     updateWorld();
     requestAnimationFrame(
         gameLoop
@@ -643,40 +690,45 @@ requestAnimationFrame(
 gameLoop
 );
 /* =========================
-   ОТОБРАЖЕНИЕ МИРА
+   МИР
 ========================= */
 function updateWorld(){
     /*
-       Основное смещение
+       Двигаем окружение
+       относительно игрока.
     */
     const worldX=
     -playerX;
     const worldY=
     -playerY;
     /*
-       Поворот камеры
+       Угол камеры
     */
-    const lookX=
-    angle*180/Math.PI;
+    const degrees=
+    angle*
+    180/
+    Math.PI;
     /*
        Здания
     */
     buildings.forEach(
     function(el){
         const baseX=
-        el.dataset.baseX ||
-        el.offsetLeft;
+        Number(
+            el.dataset.baseX ||
+            el.offsetLeft
+        );
         const baseY=
-        el.dataset.baseY ||
-        el.offsetTop;
-        el.dataset.baseX=baseX;
-        el.dataset.baseY=baseY;
-        /*
-           Поворот имитируем
-           горизонтальным смещением
-        */
+        Number(
+            el.dataset.baseY ||
+            el.offsetTop
+        );
+        el.dataset.baseX=
+        baseX;
+        el.dataset.baseY=
+        baseY;
         const rotationOffset=
-        -lookX*2;
+        -degrees*2;
         el.style.transform=
         "translate("+
         (
@@ -696,7 +748,7 @@ function updateWorld(){
         "translate("+
         (
             worldX+
-            -lookX*3
+            -degrees*3
         )+
         "px,"+
         worldY+
@@ -709,7 +761,7 @@ function updateWorld(){
     "translate("+
     (
         worldX+
-        -lookX*3
+        -degrees*3
     )+
     "px,"+
     worldY+
@@ -721,7 +773,7 @@ function updateWorld(){
     "translate("+
     (
         worldX*.25+
-        -lookX
+        -degrees
     )+
     "px,"+
     worldY*.25+
@@ -729,17 +781,17 @@ function updateWorld(){
     /*
        HUD
     */
-    let degrees=
-    angle*180/Math.PI;
-    degrees=
-    ((degrees%360)+360)%360;
+    let shownDegrees=
+    degrees%360;
+    if(shownDegrees<0)
+        shownDegrees+=360;
     info.innerHTML=
     "POS: "+
     Math.round(playerX)+
     " / "+
     Math.round(playerY)+
     "&nbsp;&nbsp; ANGLE: "+
-    Math.round(degrees)+
+    Math.round(shownDegrees)+
     "°";
 }
 /* =========================
@@ -764,13 +816,15 @@ function shoot(){
         return;
     }
     ammo--;
-    document.getElementById("ammo")
-    .textContent=
-    ammo+" / "+reserve;
+    document.getElementById(
+        "ammo"
+    ).textContent=
+    ammo+
+    " / "+
+    reserve;
     /*
-       Простая проверка:
-       враг находится около
-       центра экрана
+       Попадание,
+       если враг под прицелом.
     */
     const rect=
     enemy.getBoundingClientRect();
@@ -786,19 +840,23 @@ function shoot(){
     ){
         enemyHP-=50;
         enemy
-        .querySelector(".enemyHP div")
+        .querySelector(
+            ".enemyHP div"
+        )
         .style.width=
         Math.max(
             0,
             enemyHP
-        )+"%";
+        )+
+        "%";
         if(enemyHP<=0){
-            enemy.style.display="none";
+            enemy.style.display=
+            "none";
         }
     }
 }
 /* =========================
-   RELOAD
+   ПЕРЕЗАРЯДКА
 ========================= */
 document
 .getElementById("reload")
@@ -825,12 +883,15 @@ function reload(){
     );
     ammo+=amount;
     reserve-=amount;
-    document.getElementById("ammo")
-    .textContent=
-    ammo+" / "+reserve;
+    document.getElementById(
+        "ammo"
+    ).textContent=
+    ammo+
+    " / "+
+    reserve;
 }
 /* =========================
-   ПОВОРОТ ТЕЛЕФОНА
+   ОРИЕНТАЦИЯ
 ========================= */
 function orientation(){
     document.getElementById(
@@ -847,7 +908,7 @@ orientation
 );
 orientation();
 /* =========================
-   ПЕРВОНАЧАЛЬНОЕ СОСТОЯНИЕ
+   СТАРТ
 ========================= */
 updateWorld();
 </script>
