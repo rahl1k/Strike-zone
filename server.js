@@ -14,7 +14,6 @@ const server = http.createServer((req, res) => {
     fs.readFile(filePath, (err, data) => {
 
       if (err) {
-
         res.writeHead(500, {
           "Content-Type": "text/plain; charset=utf-8"
         });
@@ -28,7 +27,6 @@ const server = http.createServer((req, res) => {
       });
 
       res.end(data);
-
     });
 
     return;
@@ -36,7 +34,6 @@ const server = http.createServer((req, res) => {
 
   res.writeHead(404);
   res.end("Not found");
-
 });
 
 
@@ -67,12 +64,70 @@ function safeSend(socket, data) {
 
 
 /* =========================
-ОТПРАВИТЬ СОСТОЯНИЕ ЛОББИ
+ИГРОКИ В ОДНОМ ЛОББИ
+========================= */
+
+function getLobbyPlayers(lobbyID) {
+
+  const result = [];
+
+  if (!lobbyID)
+    return result;
+
+  for (const player of players.values()) {
+
+    if (player.lobbyID === lobbyID) {
+
+      result.push(player);
+
+    }
+
+  }
+
+  return result;
+}
+
+
+/* =========================
+ОТПРАВИТЬ ВСЕМ В ЛОББИ
+========================= */
+
+function broadcastLobby(
+  lobbyID,
+  data,
+  exceptID = null
+) {
+
+  if (!lobbyID)
+    return;
+
+  for (const player of players.values()) {
+
+    if (
+      player.lobbyID === lobbyID &&
+      player.id !== exceptID
+    ) {
+
+      safeSend(
+        player.socket,
+        data
+      );
+
+    }
+
+  }
+
+}
+
+
+/* =========================
+СОСТОЯНИЕ ЛОББИ
 ========================= */
 
 function sendLobbyState(player) {
 
-  if (!player) return;
+  if (!player)
+    return;
 
   if (!player.lobbyID) {
 
@@ -85,39 +140,29 @@ function sendLobbyState(player) {
     return;
   }
 
-  const members = [];
-
-  for (const other of players.values()) {
-
-    if (
-      other.lobbyID ===
+  const lobbyPlayers =
+    getLobbyPlayers(
       player.lobbyID
-    ) {
+    );
 
-      members.push({
-        id: other.id,
-        nickname: other.nickname
-      });
+  const members =
+    lobbyPlayers.map(p => ({
+      id: p.id,
+      nickname: p.nickname
+    }));
 
-    }
 
-  }
+  for (const member of lobbyPlayers) {
 
-  for (const member of players.values()) {
-
-    if (
-      member.lobbyID ===
-      player.lobbyID
-    ) {
-
-      safeSend(member.socket, {
+    safeSend(
+      member.socket,
+      {
         type: "lobbyState",
         inLobby: true,
         lobbyID: player.lobbyID,
         members: members
-      });
-
-    }
+      }
+    );
 
   }
 
@@ -125,37 +170,36 @@ function sendLobbyState(player) {
 
 
 /* =========================
-УДАЛЕНИЕ ИГРОКА ИЗ ЛОББИ
+ПОКИНУТЬ ЛОББИ
 ========================= */
 
 function leaveLobby(player) {
 
-  if (!player.lobbyID) return;
+  if (!player.lobbyID)
+    return;
 
   const oldLobbyID =
     player.lobbyID;
 
   player.lobbyID = null;
 
-  const remaining = [];
+  player.inGame = false;
 
-  for (const other of players.values()) {
 
-    if (
-      other.lobbyID ===
-      oldLobbyID
-    ) {
-
-      remaining.push(other);
-
+  safeSend(
+    player.socket,
+    {
+      type: "lobbyState",
+      inLobby: false,
+      members: []
     }
+  );
 
-  }
 
-  /*
-  Если в лобби остался только один игрок,
-  он остаётся в своём лобби.
-  */
+  const remaining =
+    getLobbyPlayers(
+      oldLobbyID
+    );
 
   if (remaining.length > 0) {
 
@@ -165,12 +209,6 @@ function leaveLobby(player) {
 
   }
 
-  safeSend(player.socket, {
-    type: "lobbyState",
-    inLobby: false,
-    members: []
-  });
-
 }
 
 
@@ -178,7 +216,7 @@ function leaveLobby(player) {
 ПОДКЛЮЧЕНИЕ
 ========================= */
 
-wss.on("connection", (socket) => {
+wss.on("connection", socket => {
 
   const id = nextID++;
 
@@ -193,29 +231,35 @@ wss.on("connection", (socket) => {
 
     friends: [],
 
-    /*
-    ID лобби.
-    Обычно равен ID игрока,
-    который создал лобби.
-    */
+    lobbyID: null,
 
-    lobbyID: null
+    inGame: false,
+
+    state: {
+      x: 1500,
+      y: 1500,
+      angle: 0,
+      hp: 100,
+      weapon: "rifle"
+    }
 
   };
 
-  players.set(id, player);
+
+  players.set(
+    id,
+    player
+  );
 
 
-  safeSend(socket, {
-
-    type: "welcome",
-
-    id: id,
-
-    nickname:
-      player.nickname
-
-  });
+  safeSend(
+    socket,
+    {
+      type: "welcome",
+      id: id,
+      nickname: player.nickname
+    }
+  );
 
 
   console.log(
@@ -224,14 +268,14 @@ wss.on("connection", (socket) => {
   );
 
 
-  socket.on("message", (data) => {
+  socket.on("message", raw => {
 
     let message;
 
     try {
 
       message =
-        JSON.parse(data);
+        JSON.parse(raw);
 
     } catch {
 
@@ -270,24 +314,24 @@ wss.on("connection", (socket) => {
       player.nickname =
         nickname;
 
-      safeSend(socket, {
 
-        type:
-          "nicknameChanged",
+      safeSend(
+        socket,
+        {
+          type:
+            "nicknameChanged",
 
-        nickname:
-          nickname
+          nickname:
+            nickname
+        }
+      );
 
-      });
-
-      /*
-      Если игрок уже в лобби,
-      обновляем ник у всех.
-      */
 
       if (player.lobbyID) {
 
-        sendLobbyState(player);
+        sendLobbyState(
+          player
+        );
 
       }
 
@@ -308,38 +352,44 @@ wss.on("connection", (socket) => {
         Number(message.id);
 
       const target =
-        players.get(targetID);
+        players.get(
+          targetID
+        );
+
 
       if (!target) {
 
-        safeSend(socket, {
+        safeSend(
+          socket,
+          {
+            type:
+              "findResult",
 
-          type:
-            "findResult",
-
-          found:
-            false
-
-        });
+            found:
+              false
+          }
+        );
 
         return;
       }
 
-      safeSend(socket, {
 
-        type:
-          "findResult",
+      safeSend(
+        socket,
+        {
+          type:
+            "findResult",
 
-        found:
-          true,
+          found:
+            true,
 
-        id:
-          target.id,
+          id:
+            target.id,
 
-        nickname:
-          target.nickname
-
-      });
+          nickname:
+            target.nickname
+        }
+      );
 
       return;
     }
@@ -358,22 +408,26 @@ wss.on("connection", (socket) => {
         Number(message.id);
 
       const target =
-        players.get(targetID);
+        players.get(
+          targetID
+        );
+
 
       if (!target) {
 
-        safeSend(socket, {
+        safeSend(
+          socket,
+          {
+            type:
+              "friendResult",
 
-          type:
-            "friendResult",
+            success:
+              false,
 
-          success:
-            false,
-
-          message:
-            "Игрок не найден"
-
-        });
+            message:
+              "Игрок не найден"
+          }
+        );
 
         return;
       }
@@ -384,18 +438,19 @@ wss.on("connection", (socket) => {
         player.id
       ) {
 
-        safeSend(socket, {
+        safeSend(
+          socket,
+          {
+            type:
+              "friendResult",
 
-          type:
-            "friendResult",
+            success:
+              false,
 
-          success:
-            false,
-
-          message:
-            "Нельзя добавить себя"
-
-        });
+            message:
+              "Нельзя добавить себя"
+          }
+        );
 
         return;
       }
@@ -427,27 +482,27 @@ wss.on("connection", (socket) => {
       }
 
 
-      safeSend(socket, {
+      safeSend(
+        socket,
+        {
+          type:
+            "friendResult",
 
-        type:
-          "friendResult",
+          success:
+            true,
 
-        success:
-          true,
+          id:
+            target.id,
 
-        id:
-          target.id,
-
-        nickname:
-          target.nickname
-
-      });
+          nickname:
+            target.nickname
+        }
+      );
 
 
       safeSend(
         target.socket,
         {
-
           type:
             "friendAdded",
 
@@ -456,7 +511,6 @@ wss.on("connection", (socket) => {
 
           nickname:
             player.nickname
-
         }
       );
 
@@ -488,7 +542,6 @@ wss.on("connection", (socket) => {
         if (friend) {
 
           friends.push({
-
             id:
               friend.id,
 
@@ -497,29 +550,30 @@ wss.on("connection", (socket) => {
 
             online:
               true
-
           });
 
         }
 
       }
 
-      safeSend(socket, {
 
-        type:
-          "friendsList",
+      safeSend(
+        socket,
+        {
+          type:
+            "friendsList",
 
-        friends:
-          friends
-
-      });
+          friends:
+            friends
+        }
+      );
 
       return;
     }
 
 
     /* =========================
-    СОЗДАТЬ / ОТКРЫТЬ ЛОББИ
+    СОЗДАТЬ ЛОББИ
     ========================= */
 
     if (
@@ -534,14 +588,16 @@ wss.on("connection", (socket) => {
 
       }
 
-      sendLobbyState(player);
+      sendLobbyState(
+        player
+      );
 
       return;
     }
 
 
     /* =========================
-    ПРИГЛАСИТЬ В ЛОББИ
+    ПРИГЛАСИТЬ
     ========================= */
 
     if (
@@ -549,25 +605,26 @@ wss.on("connection", (socket) => {
       "inviteToLobby"
     ) {
 
-      const targetID =
-        Number(message.id);
-
       const target =
         players.get(
-          targetID
+          Number(
+            message.id
+          )
         );
+
 
       if (!target) {
 
-        safeSend(socket, {
+        safeSend(
+          socket,
+          {
+            type:
+              "lobbyMessage",
 
-          type:
-            "lobbyMessage",
-
-          message:
-            "Игрок не в сети"
-
-        });
+            message:
+              "Игрок не в сети"
+          }
+        );
 
         return;
       }
@@ -582,35 +639,26 @@ wss.on("connection", (socket) => {
       }
 
 
-      /*
-      Разрешаем приглашать
-      только друзей.
-      */
-
       if (
         !player.friends.includes(
           target.id
         )
       ) {
 
-        safeSend(socket, {
+        safeSend(
+          socket,
+          {
+            type:
+              "lobbyMessage",
 
-          type:
-            "lobbyMessage",
-
-          message:
-            "Сначала добавьте игрока в друзья"
-
-        });
+            message:
+              "Сначала добавьте игрока в друзья"
+          }
+        );
 
         return;
       }
 
-
-      /*
-      Если собственного лобби ещё нет,
-      создаём его.
-      */
 
       if (!player.lobbyID) {
 
@@ -620,40 +668,26 @@ wss.on("connection", (socket) => {
       }
 
 
-      /*
-      Пока максимум 2 игрока.
-      */
+      const lobbyPlayers =
+        getLobbyPlayers(
+          player.lobbyID
+        );
 
-      let lobbyPlayers = 0;
 
-      for (
-        const other
-        of players.values()
+      if (
+        lobbyPlayers.length >= 2
       ) {
 
-        if (
-          other.lobbyID ===
-          player.lobbyID
-        ) {
+        safeSend(
+          socket,
+          {
+            type:
+              "lobbyMessage",
 
-          lobbyPlayers++;
-
-        }
-
-      }
-
-
-      if (lobbyPlayers >= 2) {
-
-        safeSend(socket, {
-
-          type:
-            "lobbyMessage",
-
-          message:
-            "Лобби уже заполнено"
-
-        });
+            message:
+              "Лобби уже заполнено"
+          }
+        );
 
         return;
       }
@@ -662,7 +696,6 @@ wss.on("connection", (socket) => {
       safeSend(
         target.socket,
         {
-
           type:
             "lobbyInvite",
 
@@ -674,20 +707,20 @@ wss.on("connection", (socket) => {
 
           lobbyID:
             player.lobbyID
-
         }
       );
 
 
-      safeSend(socket, {
+      safeSend(
+        socket,
+        {
+          type:
+            "lobbyMessage",
 
-        type:
-          "lobbyMessage",
-
-        message:
-          "Приглашение отправлено"
-
-      });
+          message:
+            "Приглашение отправлено"
+        }
+      );
 
       return;
     }
@@ -702,27 +735,26 @@ wss.on("connection", (socket) => {
       "acceptLobbyInvite"
     ) {
 
-      const inviterID =
-        Number(
-          message.fromID
-        );
-
       const inviter =
         players.get(
-          inviterID
+          Number(
+            message.fromID
+          )
         );
+
 
       if (!inviter) {
 
-        safeSend(socket, {
+        safeSend(
+          socket,
+          {
+            type:
+              "lobbyMessage",
 
-          type:
-            "lobbyMessage",
-
-          message:
-            "Игрок уже не в сети"
-
-        });
+            message:
+              "Игрок уже не в сети"
+          }
+        );
 
         return;
       }
@@ -736,46 +768,35 @@ wss.on("connection", (socket) => {
       }
 
 
-      /*
-      Проверяем количество игроков.
-      */
+      const lobbyPlayers =
+        getLobbyPlayers(
+          inviter.lobbyID
+        );
 
-      let lobbyPlayers = 0;
 
-      for (
-        const other
-        of players.values()
+      if (
+        lobbyPlayers.length >= 2
       ) {
 
-        if (
-          other.lobbyID ===
-          inviter.lobbyID
-        ) {
+        safeSend(
+          socket,
+          {
+            type:
+              "lobbyMessage",
 
-          lobbyPlayers++;
-
-        }
-
-      }
-
-
-      if (lobbyPlayers >= 2) {
-
-        safeSend(socket, {
-
-          type:
-            "lobbyMessage",
-
-          message:
-            "Лобби уже заполнено"
-
-        });
+            message:
+              "Лобби уже заполнено"
+          }
+        );
 
         return;
       }
 
 
-      leaveLobby(player);
+      leaveLobby(
+        player
+      );
+
 
       player.lobbyID =
         inviter.lobbyID;
@@ -784,7 +805,6 @@ wss.on("connection", (socket) => {
       safeSend(
         inviter.socket,
         {
-
           type:
             "lobbyInviteAccepted",
 
@@ -793,7 +813,6 @@ wss.on("connection", (socket) => {
 
           nickname:
             player.nickname
-
         }
       );
 
@@ -807,7 +826,7 @@ wss.on("connection", (socket) => {
 
 
     /* =========================
-    ОТКЛОНИТЬ ПРИГЛАШЕНИЕ
+    ОТКЛОНИТЬ
     ========================= */
 
     if (
@@ -822,19 +841,18 @@ wss.on("connection", (socket) => {
           )
         );
 
+
       if (inviter) {
 
         safeSend(
           inviter.socket,
           {
-
             type:
               "lobbyMessage",
 
             message:
               player.nickname +
               " отклонил приглашение"
-
           }
         );
 
@@ -853,14 +871,16 @@ wss.on("connection", (socket) => {
       "leaveLobby"
     ) {
 
-      leaveLobby(player);
+      leaveLobby(
+        player
+      );
 
       return;
     }
 
 
     /* =========================
-    ЗАПУСК ИГРЫ ДЛЯ ЛОББИ
+    ЗАПУСК МАТЧА
     ========================= */
 
     if (
@@ -870,37 +890,39 @@ wss.on("connection", (socket) => {
 
       if (!player.lobbyID) {
 
-        player.lobbyID =
-          player.id;
+        return;
 
       }
 
 
-      const lobbyMembers = [];
+      const lobbyID =
+        player.lobbyID;
 
-      for (
-        const other
-        of players.values()
+
+      const lobbyMembers =
+        getLobbyPlayers(
+          lobbyID
+        );
+
+
+      if (
+        lobbyMembers.length < 2
       ) {
 
-        if (
-          other.lobbyID ===
-          player.lobbyID
-        ) {
+        safeSend(
+          socket,
+          {
+            type:
+              "lobbyMessage",
 
-          lobbyMembers.push(
-            other
-          );
+            message:
+              "Сначала пригласи друга"
+          }
+        );
 
-        }
-
+        return;
       }
 
-
-      /*
-      Время, когда реально стартует игра.
-      Даём 5 секунд на отсчёт.
-      */
 
       const startAt =
         Date.now() +
@@ -912,61 +934,285 @@ wss.on("connection", (socket) => {
         of lobbyMembers
       ) {
 
+        member.inGame =
+          false;
+
+        member.state = {
+          x:
+            member.id ===
+            lobbyMembers[0].id
+            ? 1450
+            : 1550,
+
+          y:
+            1500,
+
+          angle:
+            0,
+
+          hp:
+            100,
+
+          weapon:
+            "rifle"
+        };
+
+
         safeSend(
           member.socket,
           {
-
             type:
               "lobbyCountdown",
 
             startAt:
               startAt
-
           }
         );
 
       }
 
 
-      /*
-      Через 5 секунд сервер
-      запускает игру всем участникам.
-      */
-
       setTimeout(
         () => {
 
+          const currentMembers =
+            getLobbyPlayers(
+              lobbyID
+            );
+
+
           for (
             const member
-            of lobbyMembers
+            of currentMembers
           ) {
 
-            /*
-            Проверяем, что игрок
-            всё ещё в том же лобби.
-            */
+            member.inGame =
+              true;
 
-            if (
-              member.lobbyID ===
-              player.lobbyID
-            ) {
 
-              safeSend(
-                member.socket,
-                {
+            safeSend(
+              member.socket,
+              {
+                type:
+                  "startGame",
 
-                  type:
-                    "startGame"
+                spawn: {
+                  x:
+                    member.state.x,
 
-                }
-              );
+                  y:
+                    member.state.y,
 
-            }
+                  angle:
+                    member.state.angle
+                },
+
+                players:
+                  currentMembers.map(
+                    p => ({
+                      id:
+                        p.id,
+
+                      nickname:
+                        p.nickname,
+
+                      x:
+                        p.state.x,
+
+                      y:
+                        p.state.y,
+
+                      angle:
+                        p.state.angle,
+
+                      hp:
+                        p.state.hp,
+
+                      weapon:
+                        p.state.weapon
+                    })
+                  )
+              }
+            );
 
           }
 
         },
         5000
+      );
+
+      return;
+    }
+
+
+    /* =========================
+    СИНХРОНИЗАЦИЯ ИГРОКА
+    ========================= */
+
+    if (
+      message.type ===
+      "playerState"
+    ) {
+
+      if (
+        !player.lobbyID ||
+        !player.inGame
+      ) {
+
+        return;
+
+      }
+
+
+      const x =
+        Number(message.x);
+
+      const y =
+        Number(message.y);
+
+      const angle =
+        Number(message.angle);
+
+      const hp =
+        Number(message.hp);
+
+
+      if (
+        !Number.isFinite(x) ||
+        !Number.isFinite(y) ||
+        !Number.isFinite(angle)
+      ) {
+
+        return;
+
+      }
+
+
+      player.state.x =
+        Math.max(
+          0,
+          Math.min(
+            3000,
+            x
+          )
+        );
+
+
+      player.state.y =
+        Math.max(
+          0,
+          Math.min(
+            3000,
+            y
+          )
+        );
+
+
+      player.state.angle =
+        angle;
+
+
+      if (
+        Number.isFinite(hp)
+      ) {
+
+        player.state.hp =
+          Math.max(
+            0,
+            Math.min(
+              100,
+              hp
+            )
+          );
+
+      }
+
+
+      const allowedWeapons = [
+        "rifle",
+        "pistol",
+        "knife"
+      ];
+
+
+      if (
+        allowedWeapons.includes(
+          message.weapon
+        )
+      ) {
+
+        player.state.weapon =
+          message.weapon;
+
+      }
+
+
+      broadcastLobby(
+        player.lobbyID,
+        {
+          type:
+            "remotePlayerState",
+
+          id:
+            player.id,
+
+          nickname:
+            player.nickname,
+
+          x:
+            player.state.x,
+
+          y:
+            player.state.y,
+
+          angle:
+            player.state.angle,
+
+          hp:
+            player.state.hp,
+
+          weapon:
+            player.state.weapon
+        },
+        player.id
+      );
+
+      return;
+    }
+
+
+    /* =========================
+    ИГРОК ВЫСТРЕЛИЛ
+    ========================= */
+
+    if (
+      message.type ===
+      "playerShot"
+    ) {
+
+      if (
+        !player.lobbyID ||
+        !player.inGame
+      ) {
+
+        return;
+
+      }
+
+
+      broadcastLobby(
+        player.lobbyID,
+        {
+          type:
+            "remotePlayerShot",
+
+          id:
+            player.id,
+
+          weapon:
+            player.state.weapon
+        },
+        player.id
       );
 
       return;
@@ -984,7 +1230,11 @@ wss.on("connection", (socket) => {
     const oldLobbyID =
       player.lobbyID;
 
-    players.delete(id);
+
+    players.delete(
+      id
+    );
+
 
     console.log(
       "Игрок отключился:",
@@ -992,29 +1242,33 @@ wss.on("connection", (socket) => {
     );
 
 
-    /*
-    Если второй игрок остался
-    в лобби — обновляем ему экран.
-    */
-
     if (oldLobbyID) {
 
-      for (
-        const other
-        of players.values()
+      broadcastLobby(
+        oldLobbyID,
+        {
+          type:
+            "remotePlayerLeft",
+
+          id:
+            id
+        }
+      );
+
+
+      const remaining =
+        getLobbyPlayers(
+          oldLobbyID
+        );
+
+
+      if (
+        remaining.length > 0
       ) {
 
-        if (
-          other.lobbyID ===
-          oldLobbyID
-        ) {
-
-          sendLobbyState(
-            other
-          );
-
-          break;
-        }
+        sendLobbyState(
+          remaining[0]
+        );
 
       }
 
