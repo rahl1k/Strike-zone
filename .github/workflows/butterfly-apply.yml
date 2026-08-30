@@ -1,0 +1,32 @@
+name: Butterfly Apply
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply Butterfly Legacy patch
+        run: python3 tools/add_butterfly.py
+      - name: Commit index.html
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No index changes needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add Butterfly Legacy knife"
+          git push origin HEAD:main
