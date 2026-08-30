@@ -1,0 +1,46 @@
+name: Butterfly Final Fix
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/butterfly-final-fix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Repair and finalize Butterfly Legacy
+        run: python3 tools/fix_butterfly_final.py
+      - name: Validate structure
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text(encoding='utf-8')
+          assert s.count('<!-- RAHL1K BUTTERFLY LEGACY ADDON -->') == 1
+          assert s.rfind('<!-- RAHL1K BUTTERFLY LEGACY ADDON -->') > s.rfind('RAHL1K FPS — INVENTORY SYSTEM')
+          assert 'if(weapon==="butterfly")' in s
+          assert '"knife",\n        "butterfly"' in s
+          assert '<title>RAHL1K FPS v13 BUTTERFLY LEGACY</title>' in s
+          assert s.rstrip().endswith('</html>')
+          print('index.html validation OK')
+          PY
+      - name: Commit final index
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No changes needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Finalize Butterfly Legacy integration"
+          git push origin HEAD:main
