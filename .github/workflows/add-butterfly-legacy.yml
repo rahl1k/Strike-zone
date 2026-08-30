@@ -1,0 +1,179 @@
+name: Add Butterfly Legacy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-butterfly-legacy.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Patch index.html
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          marker = 'RAHL1K BUTTERFLY LEGACY ADDON'
+          if marker in s:
+              print('Already installed')
+              raise SystemExit(0)
+
+          addon = r'''
+
+<!-- RAHL1K BUTTERFLY LEGACY ADDON -->
+<style>
+#butterflyLegacy{display:none;position:absolute;left:50%;bottom:18px;width:110px;height:170px;transform:translateX(-50%) rotate(-10deg);transform-origin:50% 86%;filter:drop-shadow(0 8px 7px #0009)}
+#bfLegacyBlade{position:absolute;left:39px;top:0;width:32px;height:96px;background:linear-gradient(90deg,#6f4300 0%,#d99808 18%,#fff0a0 43%,#ffd653 56%,#ae7000 82%,#533100 100%);clip-path:polygon(52% 0,100% 18%,83% 100%,16% 100%,0 20%);border:1px solid #5d3900;transform-origin:50% 96%}
+.bfLegacyHandle{position:absolute;top:88px;width:24px;height:72px;border:2px solid #694100;border-radius:8px;background:linear-gradient(90deg,#614000,#d99c0d 22%,#ffe375 48%,#9e6500 80%,#4c2e00);transform-origin:50% 5px}
+.bfLegacyHandle:before{content:"";position:absolute;left:7px;top:11px;width:7px;height:43px;border-radius:4px;background:#674000;box-shadow:inset 1px 0 1px #ffd85c,0 12px 0 -2px #dfa20d}
+.bfLegacyHandle:after{content:"";position:absolute;left:7px;bottom:6px;width:7px;height:7px;border-radius:50%;background:#352000;border:1px solid #f3c43a}
+#bfLegacyHandleA{left:26px;transform:rotate(8deg)}
+#bfLegacyHandleB{left:59px;transform:rotate(-8deg)}
+#bfLegacyPivot{position:absolute;left:44px;top:82px;width:21px;height:21px;border-radius:50%;z-index:4;background:radial-gradient(circle,#fff4a6 0 16%,#ffd745 20% 45%,#865200 50% 72%,#edb61d 75%);border:1px solid #543200}
+
+#weapon.butterfly-draw{animation:bfDrawWeapon 1.18s cubic-bezier(.17,.8,.22,1) both}
+#weapon.butterfly-draw #butterflyLegacy{animation:bfDrawBody 1.18s linear both}
+#weapon.butterfly-draw #bfLegacyBlade{animation:bfDrawBlade 1.18s cubic-bezier(.2,.75,.2,1) both}
+#weapon.butterfly-draw #bfLegacyHandleA{animation:bfDrawHandleA 1.18s cubic-bezier(.15,.7,.2,1) both}
+#weapon.butterfly-draw #bfLegacyHandleB{animation:bfDrawHandleB 1.18s cubic-bezier(.15,.7,.2,1) both}
+@keyframes bfDrawWeapon{0%{transform:translateX(-50%) translate(42px,55px) rotate(22deg) scale(.78)}16%{transform:translateX(-50%) translate(12px,18px) rotate(-24deg) scale(.94)}35%{transform:translateX(-50%) translate(-4px,-13px) rotate(42deg) scale(1.06)}54%{transform:translateX(-50%) translate(7px,-17px) rotate(-38deg) scale(1.08)}73%{transform:translateX(-50%) translate(-3px,-9px) rotate(23deg) scale(1.04)}88%{transform:translateX(-50%) translate(2px,-3px) rotate(-7deg) scale(1.01)}100%{transform:translateX(-50%) translate(0,0) rotate(0) scale(1)}}
+@keyframes bfDrawBody{0%,8%{transform:translateX(-50%) rotate(82deg) scale(.82)}26%{transform:translateX(-50%) rotate(-105deg) scale(.96)}43%{transform:translateX(-50%) rotate(118deg)}60%{transform:translateX(-50%) rotate(-95deg)}77%{transform:translateX(-50%) rotate(62deg)}92%{transform:translateX(-50%) rotate(-13deg)}100%{transform:translateX(-50%) rotate(-10deg)}}
+@keyframes bfDrawBlade{0%,12%{transform:rotate(168deg) translateY(5px)}28%{transform:rotate(-28deg)}44%{transform:rotate(46deg)}61%{transform:rotate(-20deg)}77%{transform:rotate(20deg)}100%{transform:rotate(0)}}
+@keyframes bfDrawHandleA{0%,10%{transform:rotate(171deg)}25%{transform:rotate(-138deg)}40%{transform:rotate(126deg)}57%{transform:rotate(-112deg)}72%{transform:rotate(88deg)}88%{transform:rotate(-31deg)}100%{transform:rotate(8deg)}}
+@keyframes bfDrawHandleB{0%,10%{transform:rotate(-171deg)}25%{transform:rotate(142deg)}40%{transform:rotate(-131deg)}57%{transform:rotate(116deg)}72%{transform:rotate(-92deg)}88%{transform:rotate(28deg)}100%{transform:rotate(-8deg)}}
+
+#weapon.inspect-butterfly{animation:bfInspectWeapon 2.65s cubic-bezier(.18,.75,.22,1) both}
+#weapon.inspect-butterfly #butterflyLegacy{animation:bfInspectBody 2.65s linear both}
+#weapon.inspect-butterfly #bfLegacyBlade{animation:bfInspectBlade 2.65s ease-in-out both}
+#weapon.inspect-butterfly #bfLegacyHandleA{animation:bfInspectHandleA 2.65s ease-in-out both}
+#weapon.inspect-butterfly #bfLegacyHandleB{animation:bfInspectHandleB 2.65s ease-in-out both}
+@keyframes bfInspectWeapon{0%{transform:translateX(-50%) translateY(0) rotate(0) scale(1)}10%{transform:translateX(-50%) translate(-4px,-42px) rotate(-13deg) scale(1.08)}18%{transform:translateX(-50%) translate(8px,-63px) rotate(34deg) scale(1.15)}31%{transform:translateX(-50%) translate(-10px,-49px) rotate(-28deg) scale(1.16)}44%{transform:translateX(-50%) translate(8px,-58px) rotate(39deg) scale(1.18)}58%{transform:translateX(-50%) translate(-7px,-51px) rotate(-31deg) scale(1.18)}70%{transform:translateX(-50%) translate(10px,-56px) rotate(48deg) scale(1.2)}82%{transform:translateX(-50%) translate(-5px,-38px) rotate(-52deg) scale(1.14)}91%{transform:translateX(-50%) translate(3px,-13px) rotate(14deg) scale(1.05)}100%{transform:translateX(-50%) translateY(0) rotate(0) scale(1)}}
+@keyframes bfInspectBody{0%{transform:translateX(-50%) rotate(-10deg)}13%{transform:translateX(-50%) rotate(95deg)}25%{transform:translateX(-50%) rotate(-170deg)}37%{transform:translateX(-50%) rotate(160deg)}49%{transform:translateX(-50%) rotate(-155deg)}61%{transform:translateX(-50%) rotate(175deg)}73%{transform:translateX(-50%) rotate(-210deg)}84%{transform:translateX(-50%) rotate(245deg)}93%{transform:translateX(-50%) rotate(-28deg)}100%{transform:translateX(-50%) rotate(-10deg)}}
+@keyframes bfInspectBlade{0%,8%{transform:rotate(0)}20%{transform:rotate(72deg)}32%{transform:rotate(-36deg)}45%{transform:rotate(128deg)}57%{transform:rotate(44deg)}69%{transform:rotate(-58deg)}81%{transform:rotate(142deg)}91%{transform:rotate(-24deg)}100%{transform:rotate(0)}}
+@keyframes bfInspectHandleA{0%{transform:rotate(8deg)}12%{transform:rotate(142deg)}24%{transform:rotate(-155deg)}36%{transform:rotate(173deg)}48%{transform:rotate(-135deg)}60%{transform:rotate(154deg)}72%{transform:rotate(-182deg)}84%{transform:rotate(205deg)}93%{transform:rotate(-35deg)}100%{transform:rotate(8deg)}}
+@keyframes bfInspectHandleB{0%{transform:rotate(-8deg)}12%{transform:rotate(-146deg)}24%{transform:rotate(160deg)}36%{transform:rotate(-178deg)}48%{transform:rotate(140deg)}60%{transform:rotate(-159deg)}72%{transform:rotate(187deg)}84%{transform:rotate(-210deg)}93%{transform:rotate(32deg)}100%{transform:rotate(-8deg)}}
+
+#weapon.butterfly-attack{animation:bfAttack .3s cubic-bezier(.2,.75,.2,1) both}
+@keyframes bfAttack{0%{transform:translateX(-50%) rotate(0)}42%{transform:translateX(-50%) translate(45px,-30px) rotate(58deg) scale(1.08)}70%{transform:translateX(-50%) translate(-15px,-15px) rotate(-18deg) scale(1.04)}100%{transform:translateX(-50%) rotate(0)}}
+
+.bfInvCard{position:relative;min-width:150px;height:185px;border:1px solid #3c4658;border-radius:12px;background:linear-gradient(160deg,#171c25,#0d1016);padding:12px;box-sizing:border-box;cursor:pointer;overflow:hidden}
+.bfInvCard.selected{outline:2px solid #eabf37}
+.bfInvName{position:absolute;left:10px;right:10px;bottom:10px;font-weight:800;font-size:12px;text-align:center;color:#ffd95a}
+.bfInvType{font-size:10px;color:#9ca7b7;letter-spacing:.8px}
+.bfInvChecks{position:absolute;right:8px;top:8px;display:flex;gap:5px}.bfInvCheck{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:900;opacity:.28}.bfInvCheck.on{opacity:1}.bfInvCheck.t{background:#d27620}.bfInvCheck.ct{background:#2479d8}
+.bfInvIcon{position:absolute;left:50%;top:47%;width:82px;height:105px;transform:translate(-50%,-50%) rotate(-12deg)}
+.bfInvBlade{position:absolute;left:30px;top:0;width:22px;height:58px;background:linear-gradient(90deg,#8a5700,#ffd85a 40%,#fff0a0 55%,#8d5900);clip-path:polygon(52% 0,100% 19%,83% 100%,16% 100%,0 19%)}
+.bfInvHandle{position:absolute;top:52px;width:15px;height:47px;border:2px solid #684100;border-radius:5px;background:linear-gradient(90deg,#755000,#ffd65a,#865400);transform-origin:50% 3px}.bfInvHandle.a{left:22px;transform:rotate(7deg)}.bfInvHandle.b{left:46px;transform:rotate(-7deg)}
+.bfInvActions{display:none;position:absolute;left:50%;bottom:48px;transform:translateX(-50%);width:142px;gap:6px}.bfInvCard.selected .bfInvActions{display:flex}.bfInvBtn{flex:1;border:0;border-radius:7px;padding:7px 4px;font-size:9px;font-weight:800;color:white;background:#242c3a}.bfInvBtn.onT{background:#9d5316}.bfInvBtn.onCT{background:#185b9f}
+</style>
+<script>
+(function(){
+'use strict';
+const KEY='rahl1k_butterfly_legacy_loadout_v1';
+function load(){try{return Object.assign({ct:true,t:true},JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){return{ct:true,t:true}}}
+function save(v){localStorage.setItem(KEY,JSON.stringify(v))}
+function side(){try{return (typeof myTeam!=='undefined'&&String(myTeam).toUpperCase()==='T')?'t':'ct'}catch(e){return'ct'}}
+function bfAllowed(){return !!load()[side()]}
+
+const weapon=document.getElementById('weapon');
+if(!weapon)return;
+if(!document.getElementById('butterflyLegacy')){
+ const el=document.createElement('div'); el.id='butterflyLegacy';
+ el.innerHTML='<div id="bfLegacyBlade"></div><div id="bfLegacyHandleA" class="bfLegacyHandle"></div><div id="bfLegacyHandleB" class="bfLegacyHandle"></div><div id="bfLegacyPivot"></div>';
+ weapon.appendChild(el);
+}
+function model(){return document.getElementById('butterflyLegacy')}
+function hideBase(){['gun','barrel','pistol','knife'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none'})}
+function showButterfly(){hideBase();const b=model();if(b)b.style.display='block';const a=document.getElementById('ammo');if(a)a.style.display='none';const r=document.getElementById('reload');if(r)r.style.display='none';const f=document.getElementById('fire');if(f){f.style.display='block';f.textContent='ATTACK'}const i=document.getElementById('weaponSwipeIcon');if(i)i.textContent='🦋'}
+function playDraw(){weapon.classList.remove('butterfly-draw','inspect-butterfly','butterfly-attack');void weapon.offsetWidth;weapon.classList.add('butterfly-draw');setTimeout(()=>weapon.classList.remove('butterfly-draw'),1240)}
+function setButterfly(){if(!bfAllowed())return false;try{if(typeof cancelInspect==='function')cancelInspect()}catch(e){}try{currentWeapon='butterfly'}catch(e){}showButterfly();playDraw();return true}
+
+const oldShow=window.showWeapon;
+window.showWeapon=function(type){if(type==='butterfly'){showButterfly();return}const b=model();if(b)b.style.display='none';return oldShow?oldShow.apply(this,arguments):undefined};
+
+const oldSwitch=window.switchWeapon;
+window.switchWeapon=function(type){
+ if(type==='butterfly')return setButterfly();
+ if(type==='knife'&&bfAllowed()){
+   try{if(currentWeapon==='knife')return setButterfly();if(currentWeapon==='butterfly')return oldSwitch?oldSwitch.call(this,'knife'):undefined}catch(e){}
+ }
+ const b=model();if(b)b.style.display='none';
+ return oldSwitch?oldSwitch.apply(this,arguments):undefined;
+};
+
+const oldCancel=window.cancelInspect;
+window.cancelInspect=function(){weapon.classList.remove('inspect-butterfly');return oldCancel?oldCancel.apply(this,arguments):undefined};
+
+const oldInspect=window.inspectWeapon;
+window.inspectWeapon=function(){
+ try{if(currentWeapon!=='butterfly')return oldInspect?oldInspect.apply(this,arguments):undefined}catch(e){return}
+ try{
+  if(!gameStarted||respawning||matchEnded||matchMenuOpen||player.hp<=0||inspectingWeapon||knifeAttackAnimating)return;
+  inspectingWeapon=true;weapon.classList.remove('inspect-butterfly','butterfly-draw','butterfly-attack');void weapon.offsetWidth;weapon.classList.add('inspect-butterfly');
+  if(inspectTimer)clearTimeout(inspectTimer);inspectTimer=setTimeout(()=>{weapon.classList.remove('inspect-butterfly');inspectingWeapon=false;inspectTimer=null},2730);
+ }catch(e){console.warn(e)}
+};
+
+const oldReload=window.reload;
+window.reload=function(){try{if(currentWeapon==='butterfly')return}catch(e){}return oldReload?oldReload.apply(this,arguments):undefined};
+
+const oldShoot=window.shoot;
+window.shoot=function(){
+ try{
+  if(currentWeapon==='butterfly'){
+   if(player.hp<=0||respawning||matchEnded||matchMenuOpen||inspectingWeapon)return;
+   weapon.classList.remove('butterfly-attack','butterfly-draw');void weapon.offsetWidth;weapon.classList.add('butterfly-attack');setTimeout(()=>weapon.classList.remove('butterfly-attack'),330);
+   if(typeof knifeAttack==='function')knifeAttack();
+   return;
+  }
+ }catch(e){}
+ return oldShoot?oldShoot.apply(this,arguments):undefined;
+};
+
+function mountInventory(){
+ const page=document.getElementById('inventoryPage');if(!page||document.getElementById('bfInventoryCard'))return;
+ const hosts=[...page.querySelectorAll('div')].filter(e=>e.children&&e.children.length>=2&&[...e.children].some(c=>c.classList&&c.classList.contains('inventoryWeaponCard')));
+ const host=hosts[0]||page;
+ const card=document.createElement('div');card.id='bfInventoryCard';card.className='bfInvCard';
+ card.innerHTML='<div class="bfInvType">НОЖ-БАБОЧКА</div><div class="bfInvChecks"><div class="bfInvCheck t">✓</div><div class="bfInvCheck ct">✓</div></div><div class="bfInvIcon"><div class="bfInvBlade"></div><div class="bfInvHandle a"></div><div class="bfInvHandle b"></div></div><div class="bfInvActions"><button class="bfInvBtn tBtn"></button><button class="bfInvBtn ctBtn"></button></div><div class="bfInvName">BUTTERFLY LEGACY</div>';
+ host.appendChild(card);
+ function render(){const st=load();card.querySelector('.bfInvCheck.t').classList.toggle('on',!!st.t);card.querySelector('.bfInvCheck.ct').classList.toggle('on',!!st.ct);const tb=card.querySelector('.tBtn');const cb=card.querySelector('.ctBtn');tb.textContent=st.t?'Снять с T':'Применить за T';cb.textContent=st.ct?'Снять с CT':'Применить за CT';tb.classList.toggle('onT',!!st.t);cb.classList.toggle('onCT',!!st.ct)}
+ card.addEventListener('click',e=>{if(e.target.closest('button'))return;card.classList.toggle('selected')});
+ card.querySelector('.tBtn').addEventListener('click',e=>{e.stopPropagation();const st=load();st.t=!st.t;save(st);render()});
+ card.querySelector('.ctBtn').addEventListener('click',e=>{e.stopPropagation();const st=load();st.ct=!st.ct;save(st);render()});
+ render();
+}
+mountInventory();
+setTimeout(mountInventory,300);setTimeout(mountInventory,1200);
+
+window.RAHL1K_BUTTERFLY={select:setButterfly,allowed:bfAllowed};
+})();
+</script>
+'''
+          if '</body>' not in s:
+              raise RuntimeError('No </body> tag')
+          s = s.replace('</body>', addon + '\n</body>', 1)
+          s = s.replace('<title>RAHL1K FPS v12 CANVAS WORLD</title>','<title>RAHL1K FPS v13 BUTTERFLY LEGACY</title>',1)
+          p.write_text(s, encoding='utf-8')
+
+      - name: Commit changes
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add Butterfly Legacy knife"
+          git push origin HEAD:main
