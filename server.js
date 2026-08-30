@@ -121,19 +121,6 @@ JSON.stringify(data)
 
 
 /* ==========================
-НАЙТИ ИГРОКА
-========================== */
-
-function getPlayerByID(id) {
-
-return players.get(
-Number(id)
-);
-
-}
-
-
-/* ==========================
 ИГРОКИ ЛОББИ
 ========================== */
 
@@ -142,7 +129,9 @@ lobbyID
 ) {
 
 const lobby =
-lobbies.get(lobbyID);
+lobbies.get(
+lobbyID
+);
 
 if (!lobby) {
 return [];
@@ -185,6 +174,7 @@ getLobbyPlayers(
 lobbyID
 );
 
+
 for (
 const member
 of members
@@ -195,8 +185,11 @@ exceptID !== null &&
 Number(member.id) ===
 Number(exceptID)
 ) {
+
 continue;
+
 }
+
 
 safeSend(
 member.socket,
@@ -209,7 +202,44 @@ data
 
 
 /* ==========================
-ОТПРАВИТЬ СОСТОЯНИЕ ЛОББИ
+ПУБЛИЧНЫЙ СПИСОК ИГРОКОВ
+========================== */
+
+function getPublicLobbyMembers(
+lobbyID
+) {
+
+const lobby =
+lobbies.get(
+lobbyID
+);
+
+if (!lobby) {
+return [];
+}
+
+
+return getLobbyPlayers(
+lobbyID
+).map(
+player => ({
+id:
+player.id,
+
+nickname:
+player.nickname,
+
+team:
+lobby.teams[player.id] ||
+null
+})
+);
+
+}
+
+
+/* ==========================
+СОСТОЯНИЕ ЛОББИ
 ========================== */
 
 function sendLobbyState(
@@ -226,43 +256,35 @@ return;
 }
 
 
-const members =
-getLobbyPlayers(
-lobbyID
-);
-
-
-const publicMembers =
-members.map(
-player => ({
-id: player.id,
-nickname: player.nickname
-})
-);
-
-
-for (
-const member
-of members
-) {
-
-safeSend(
-member.socket,
+broadcastLobby(
+lobbyID,
 {
-type: "lobbyState",
-inLobby: true,
+type:
+"lobbyState",
 
-/* КТО ЛИДЕР */
+inLobby:
+true,
 
 leaderID:
 lobby.leaderID,
 
+/* НОВОЕ */
+
+botsEnabled:
+lobby.botsEnabled,
+
+teamSelectionOpen:
+lobby.teamSelectionOpen,
+
+teams:
+lobby.teams,
+
 members:
-publicMembers
+getPublicLobbyMembers(
+lobbyID
+)
 }
 );
-
-}
 
 }
 
@@ -279,7 +301,9 @@ if (
 !player ||
 !player.lobbyID
 ) {
+
 return;
+
 }
 
 
@@ -304,6 +328,8 @@ return;
 }
 
 
+/* Убираем игрока */
+
 lobby.members =
 lobby.members.filter(
 id =>
@@ -312,11 +338,14 @@ Number(player.id)
 );
 
 
-/*
-Если лидер вышел,
-назначаем лидером
-оставшегося игрока.
-*/
+/* Убираем его команду */
+
+delete lobby.teams[
+player.id
+];
+
+
+/* Если ушёл лидер */
 
 if (
 Number(lobby.leaderID) ===
@@ -340,10 +369,7 @@ null;
 }
 
 
-/*
-Если никого не осталось —
-удаляем лобби.
-*/
+/* Пустое лобби */
 
 if (
 lobby.members.length === 0
@@ -358,10 +384,22 @@ return;
 }
 
 
-/*
-Сообщаем оставшимся,
-что игрок вышел.
-*/
+/* Отмена выбора команд */
+
+if (
+lobby.teamSelectionOpen
+) {
+
+lobby.teamSelectionOpen =
+false;
+
+lobby.teams =
+{};
+
+}
+
+
+/* Сообщаем оставшемуся */
 
 broadcastLobby(
 lobbyID,
@@ -383,6 +421,354 @@ lobbyID
 
 
 /* ==========================
+ТОЧКИ ПОЯВЛЕНИЯ
+========================== */
+
+function getTeamSpawn(
+team
+) {
+
+
+/*
+СПЕЦНАЗ:
+верхний левый угол карты
+*/
+
+if (
+team ===
+"ct"
+) {
+
+return {
+
+x:
+360,
+
+y:
+360,
+
+angle:
+0.25
+
+};
+
+}
+
+
+/*
+ТЕРРОРИСТЫ:
+нижний правый угол
+*/
+
+return {
+
+x:
+2640,
+
+y:
+2640,
+
+angle:
+Math.PI +
+0.25
+
+};
+
+}
+
+
+/* ==========================
+НОРМАЛИЗАЦИЯ УГЛА
+========================== */
+
+function normalizeAngle(
+angle
+) {
+
+return Math.atan2(
+Math.sin(angle),
+Math.cos(angle)
+);
+
+}
+
+
+/* ==========================
+НАЧАТЬ МАТЧ
+========================== */
+
+function startMatch(
+lobby
+) {
+
+if (
+!lobby ||
+lobby.starting
+) {
+
+return;
+
+}
+
+
+const lobbyMembers =
+getLobbyPlayers(
+lobby.id
+);
+
+
+if (
+lobbyMembers.length < 2
+) {
+
+return;
+
+}
+
+
+/*
+Проверяем:
+оба выбрали команду.
+*/
+
+const memberTeams =
+lobbyMembers.map(
+member =>
+lobby.teams[
+member.id
+]
+);
+
+
+if (
+memberTeams.some(
+team =>
+team !== "ct" &&
+team !== "t"
+)
+) {
+
+return;
+
+}
+
+
+/*
+В 1v1 нельзя выбрать
+одинаковую сторону.
+*/
+
+if (
+new Set(
+memberTeams
+).size !==
+lobbyMembers.length
+) {
+
+return;
+
+}
+
+
+lobby.starting =
+true;
+
+lobby.teamSelectionOpen =
+false;
+
+
+/* ==========================
+ОБЩИЙ ОТСЧЁТ
+========================== */
+
+const startAt =
+Date.now() +
+5000;
+
+
+broadcastLobby(
+lobby.id,
+{
+type:
+"lobbyCountdown",
+
+startAt:
+startAt
+}
+);
+
+
+/* ==========================
+ПОЗИЦИИ
+========================== */
+
+for (
+const member
+of lobbyMembers
+) {
+
+const team =
+lobby.teams[
+member.id
+];
+
+const spawn =
+getTeamSpawn(
+team
+);
+
+
+member.inGame =
+false;
+
+
+member.state = {
+
+x:
+spawn.x,
+
+y:
+spawn.y,
+
+angle:
+spawn.angle,
+
+hp:
+100,
+
+weapon:
+"rifle"
+
+};
+
+}
+
+
+/* ==========================
+СТАРТ ЧЕРЕЗ 5 СЕКУНД
+========================== */
+
+setTimeout(
+() => {
+
+const currentLobby =
+lobbies.get(
+lobby.id
+);
+
+
+if (!currentLobby) {
+return;
+}
+
+
+const currentMembers =
+getLobbyPlayers(
+lobby.id
+);
+
+
+if (
+currentMembers.length < 2
+) {
+
+currentLobby.starting =
+false;
+
+return;
+
+}
+
+
+for (
+const member
+of currentMembers
+) {
+
+member.inGame =
+true;
+
+
+safeSend(
+member.socket,
+{
+type:
+"startGame",
+
+/* НОВОЕ */
+
+botsEnabled:
+currentLobby.botsEnabled,
+
+team:
+currentLobby.teams[
+member.id
+],
+
+spawn: {
+
+x:
+member.state.x,
+
+y:
+member.state.y,
+
+angle:
+member.state.angle
+
+},
+
+players:
+currentMembers.map(
+p => ({
+
+id:
+p.id,
+
+nickname:
+p.nickname,
+
+x:
+p.state.x,
+
+y:
+p.state.y,
+
+angle:
+p.state.angle,
+
+hp:
+p.state.hp,
+
+weapon:
+p.state.weapon,
+
+team:
+currentLobby.teams[
+p.id
+] ||
+null
+
+})
+)
+
+}
+);
+
+}
+
+
+currentLobby.starting =
+false;
+
+},
+5000
+);
+
+}
+
+
+/* ==========================
 ПОДКЛЮЧЕНИЕ
 ========================== */
 
@@ -390,35 +776,50 @@ wss.on(
 "connection",
 socket => {
 
+
 const id =
 nextID++;
 
+
 const player = {
+
+id:
 
 id,
 
 nickname:
-"Игрок " + id,
+"Игрок " +
+id,
+
+socket:
 
 socket,
 
-friends: [],
+friends:
+
+[],
 
 lobbyID:
+
 null,
 
 inGame:
+
 false,
 
 state: {
 
-x: 1500,
+x:
+1500,
 
-y: 1500,
+y:
+1500,
 
-angle: 0,
+angle:
+0,
 
-hp: 100,
+hp:
+100,
 
 weapon:
 "rifle"
@@ -461,7 +862,9 @@ socket.on(
 "message",
 raw => {
 
+
 let data;
+
 
 try {
 
@@ -488,15 +891,18 @@ data.type ===
 
 let nickname =
 String(
-data.nickname || ""
+data.nickname ||
+""
 )
 .trim();
+
 
 nickname =
 nickname.slice(
 0,
 16
 );
+
 
 if (!nickname) {
 return;
@@ -529,6 +935,7 @@ player.lobbyID
 
 }
 
+
 return;
 
 }
@@ -547,6 +954,7 @@ const targetID =
 Number(
 data.id
 );
+
 
 const target =
 players.get(
@@ -593,6 +1001,7 @@ target.nickname
 }
 );
 
+
 return;
 
 }
@@ -611,6 +1020,7 @@ const targetID =
 Number(
 data.id
 );
+
 
 const target =
 players.get(
@@ -688,9 +1098,7 @@ return;
 }
 
 
-/*
-Добавляем обоим.
-*/
+/* Добавляем обоим */
 
 player.friends.push(
 target.id
@@ -736,6 +1144,7 @@ player.nickname
 }
 );
 
+
 return;
 
 }
@@ -752,6 +1161,7 @@ data.type ===
 
 const list = [];
 
+
 for (
 const friendID
 of player.friends
@@ -762,12 +1172,14 @@ players.get(
 friendID
 );
 
+
 if (!friend) {
 continue;
 }
 
 
 list.push({
+
 id:
 friend.id,
 
@@ -776,6 +1188,7 @@ friend.nickname,
 
 online:
 true
+
 });
 
 }
@@ -792,6 +1205,7 @@ list
 }
 );
 
+
 return;
 
 }
@@ -806,9 +1220,10 @@ data.type ===
 "createLobby"
 ) {
 
+
 /*
-Если игрок уже в лобби,
-просто отправляем его состояние.
+Если уже в лобби,
+не создаём новое.
 */
 
 if (
@@ -828,12 +1243,6 @@ const lobbyID =
 nextLobbyID++;
 
 
-/*
-ВАЖНО:
-создатель автоматически
-становится лидером.
-*/
-
 const lobby = {
 
 id:
@@ -844,7 +1253,23 @@ player.id,
 
 members: [
 player.id
-]
+],
+
+/* ==========================
+НОВЫЕ НАСТРОЙКИ
+========================== */
+
+botsEnabled:
+true,
+
+teams:
+{},
+
+teamSelectionOpen:
+false,
+
+starting:
+false
 
 };
 
@@ -866,6 +1291,93 @@ sendLobbyState(
 lobbyID
 );
 
+
+return;
+
+}
+
+
+/* ==========================
+ВКЛ / ВЫКЛ БОТОВ
+========================== */
+
+if (
+data.type ===
+"setBotsEnabled"
+) {
+
+if (
+!player.lobbyID
+) {
+
+return;
+
+}
+
+
+const lobby =
+lobbies.get(
+player.lobbyID
+);
+
+
+if (!lobby) {
+return;
+}
+
+
+/*
+Только лидер может
+менять настройку.
+*/
+
+if (
+Number(lobby.leaderID) !==
+Number(player.id)
+) {
+
+safeSend(
+socket,
+{
+type:
+"lobbyMessage",
+
+message:
+"Только лидер может менять настройку ботов"
+}
+);
+
+return;
+
+}
+
+
+/*
+Во время старта
+уже менять нельзя.
+*/
+
+if (
+lobby.starting ||
+lobby.teamSelectionOpen
+) {
+
+return;
+
+}
+
+
+lobby.botsEnabled =
+Boolean(
+data.enabled
+);
+
+
+sendLobbyState(
+lobby.id
+);
+
+
 return;
 
 }
@@ -884,6 +1396,7 @@ const targetID =
 Number(
 data.id
 );
+
 
 const target =
 players.get(
@@ -908,11 +1421,6 @@ return;
 
 }
 
-
-/*
-У приглашающего должно быть
-своё лобби.
-*/
 
 if (
 !player.lobbyID
@@ -945,10 +1453,7 @@ return;
 }
 
 
-/*
-Только лидер может
-приглашать.
-*/
+/* Только лидер приглашает */
 
 if (
 Number(lobby.leaderID) !==
@@ -971,9 +1476,7 @@ return;
 }
 
 
-/*
-Максимум два игрока.
-*/
+/* Максимум два игрока */
 
 if (
 lobby.members.length >= 2
@@ -1041,6 +1544,7 @@ message:
 }
 );
 
+
 return;
 
 }
@@ -1059,6 +1563,7 @@ const inviterID =
 Number(
 data.fromID
 );
+
 
 const inviter =
 players.get(
@@ -1112,8 +1617,8 @@ return;
 
 
 /*
-Проверяем, что приглашающий
-действительно лидер.
+Приглашающий должен
+оставаться лидером.
 */
 
 if (
@@ -1157,11 +1662,6 @@ return;
 }
 
 
-/*
-Если игрок был в другом лобби,
-сначала выходит.
-*/
-
 if (
 player.lobbyID
 ) {
@@ -1193,13 +1693,6 @@ player.id
 }
 
 
-/*
-ЛИДЕР НЕ МЕНЯЕТСЯ.
-Им остаётся тот,
-кто отправил приглашение.
-*/
-
-
 safeSend(
 inviter.socket,
 {
@@ -1219,6 +1712,7 @@ sendLobbyState(
 lobby.id
 );
 
+
 return;
 
 }
@@ -1237,6 +1731,7 @@ const inviterID =
 Number(
 data.fromID
 );
+
 
 const inviter =
 players.get(
@@ -1260,6 +1755,7 @@ player.nickname +
 
 }
 
+
 return;
 
 }
@@ -1278,6 +1774,7 @@ leaveLobby(
 player
 );
 
+
 safeSend(
 socket,
 {
@@ -1290,10 +1787,20 @@ false,
 leaderID:
 null,
 
+botsEnabled:
+true,
+
+teamSelectionOpen:
+false,
+
+teams:
+{},
+
 members:
 []
 }
 );
+
 
 return;
 
@@ -1301,13 +1808,14 @@ return;
 
 
 /* ==========================
-ЗАПУСК МАТЧА
+НАЖАТИЕ "ИГРАТЬ"
 ========================== */
 
 if (
 data.type ===
 "startLobbyGame"
 ) {
+
 
 if (
 !player.lobbyID
@@ -1340,9 +1848,7 @@ return;
 }
 
 
-/* ==========================
-ТОЛЬКО ЛИДЕР МОЖЕТ НАЧАТЬ
-========================== */
+/* Только лидер */
 
 if (
 Number(player.id) !==
@@ -1391,158 +1897,266 @@ return;
 }
 
 
+if (
+lobby.starting
+) {
+
+return;
+
+}
+
+
 /*
-Общий момент старта.
+Вместо мгновенного старта
+открываем выбор команд.
 */
 
-const startAt =
-Date.now() +
-5000;
+lobby.teams =
+{};
 
+lobby.teamSelectionOpen =
+true;
+
+
+/* Открываем окно обоим */
 
 broadcastLobby(
 lobby.id,
 {
 type:
-"lobbyCountdown",
+"teamSelectionStart",
 
-startAt:
-startAt
+botsEnabled:
+lobby.botsEnabled
 }
 );
 
 
-/*
-Начальные позиции игроков.
-*/
+/* Отправляем пустой выбор */
 
-lobbyMembers.forEach(
-(member, index) => {
+broadcastLobby(
+lobby.id,
+{
+type:
+"teamState",
 
-member.inGame =
-false;
+teams:
+lobby.teams,
 
-
-member.state = {
-
-x:
-index === 0
-?1450
-:1550,
-
-y:
-1500,
-
-angle:
-0,
-
-hp:
-100,
-
-weapon:
-"rifle"
-
-};
-
+members:
+getPublicLobbyMembers(
+lobby.id
+)
 }
 );
 
 
-/*
-Через 5 секунд
-реально начинаем матч.
-*/
-
-setTimeout(
-() => {
-
-const currentLobby =
-lobbies.get(
+sendLobbyState(
 lobby.id
 );
 
-if (!currentLobby) {
+
 return;
+
 }
 
 
-const currentMembers =
+/* ==========================
+ВЫБОР КОМАНДЫ
+========================== */
+
+if (
+data.type ===
+"selectTeam"
+) {
+
+if (
+!player.lobbyID
+) {
+
+return;
+
+}
+
+
+const lobby =
+lobbies.get(
+player.lobbyID
+);
+
+
+if (
+!lobby ||
+!lobby.teamSelectionOpen ||
+lobby.starting
+) {
+
+return;
+
+}
+
+
+const team =
+String(
+data.team ||
+""
+);
+
+
+/* Только 2 команды */
+
+if (
+team !== "ct" &&
+team !== "t"
+) {
+
+return;
+
+}
+
+
+/*
+Проверяем:
+не занял ли друг
+эту сторону.
+*/
+
+for (
+const id
+of lobby.members
+) {
+
+if (
+Number(id) ===
+Number(player.id)
+) {
+
+continue;
+
+}
+
+
+if (
+lobby.teams[id] ===
+team
+) {
+
+safeSend(
+socket,
+{
+type:
+"teamSelectError",
+
+message:
+team === "ct"
+?
+"Спецназ уже выбрал другой игрок"
+:
+"Террористы уже выбрал другой игрок"
+}
+);
+
+return;
+
+}
+
+}
+
+
+/* Сохраняем выбор */
+
+lobby.teams[
+player.id
+] =
+team;
+
+
+/* Отправляем выбор обоим */
+
+broadcastLobby(
+lobby.id,
+{
+type:
+"teamState",
+
+teams:
+lobby.teams,
+
+members:
+getPublicLobbyMembers(
+lobby.id
+)
+}
+);
+
+
+/*
+Проверяем,
+выбрали ли оба.
+*/
+
+const lobbyMembers =
 getLobbyPlayers(
 lobby.id
 );
 
 
+const ready =
+lobbyMembers.length >= 2 &&
+lobbyMembers.every(
+member => {
+
+const selected =
+lobby.teams[
+member.id
+];
+
+return (
+selected === "ct" ||
+selected === "t"
+);
+
+}
+);
+
+
+/*
+Проверяем,
+что команды разные.
+*/
+
+const selectedTeams =
+lobbyMembers.map(
+member =>
+lobby.teams[
+member.id
+]
+);
+
+
+const differentTeams =
+new Set(
+selectedTeams
+).size ===
+lobbyMembers.length;
+
+
+/*
+Когда оба готовы —
+начинается 5 → 0.
+*/
+
 if (
-currentMembers.length < 2
-) {
-return;
-}
-
-
-for (
-const member
-of currentMembers
+ready &&
+differentTeams
 ) {
 
-member.inGame =
-true;
-
-
-safeSend(
-member.socket,
-{
-type:
-"startGame",
-
-spawn: {
-
-x:
-member.state.x,
-
-y:
-member.state.y,
-
-angle:
-member.state.angle
-
-},
-
-players:
-currentMembers.map(
-p => ({
-
-id:
-p.id,
-
-nickname:
-p.nickname,
-
-x:
-p.state.x,
-
-y:
-p.state.y,
-
-angle:
-p.state.angle,
-
-hp:
-p.state.hp,
-
-weapon:
-p.state.weapon
-
-})
-)
-
-}
+startMatch(
+lobby
 );
 
 }
 
-},
-5000
-);
 
 return;
 
@@ -1558,11 +2172,14 @@ data.type ===
 "playerState"
 ) {
 
+
 if (
 !player.lobbyID ||
 !player.inGame
 ) {
+
 return;
+
 }
 
 
@@ -1571,14 +2188,11 @@ lobbies.get(
 player.lobbyID
 );
 
+
 if (!lobby) {
 return;
 }
 
-
-/*
-Координаты.
-*/
 
 const x =
 Number(
@@ -1600,6 +2214,10 @@ Number(
 data.hp
 );
 
+
+/* ==========================
+КООРДИНАТЫ
+========================== */
 
 if (
 Number.isFinite(x)
@@ -1643,6 +2261,11 @@ angle;
 }
 
 
+/*
+HP от клиента оставляем
+для совместимости с ботами.
+*/
+
 if (
 Number.isFinite(hp)
 ) {
@@ -1659,9 +2282,9 @@ hp
 }
 
 
-/*
-Оружие.
-*/
+/* ==========================
+ОРУЖИЕ
+========================== */
 
 if (
 [
@@ -1680,9 +2303,9 @@ data.weapon;
 }
 
 
-/*
-Отправляем другому игроку.
-*/
+/* ==========================
+СИНХРОНИЗАЦИЯ ДРУГУ
+========================== */
 
 broadcastLobby(
 player.lobbyID,
@@ -1709,10 +2332,18 @@ hp:
 player.state.hp,
 
 weapon:
-player.state.weapon
+player.state.weapon,
+
+team:
+lobby.teams[
+player.id
+] ||
+null
+
 },
 player.id
 );
+
 
 return;
 
@@ -1720,7 +2351,7 @@ return;
 
 
 /* ==========================
-ВЫСТРЕЛ
+ВЫСТРЕЛ / УДАР НОЖОМ
 ========================== */
 
 if (
@@ -1728,13 +2359,29 @@ data.type ===
 "playerShot"
 ) {
 
+
 if (
 !player.lobbyID ||
 !player.inGame
 ) {
+
+return;
+
+}
+
+
+const lobby =
+lobbies.get(
+player.lobbyID
+);
+
+
+if (!lobby) {
 return;
 }
 
+
+/* Анимация выстрела у друга */
 
 broadcastLobby(
 player.lobbyID,
@@ -1751,6 +2398,293 @@ player.state.weapon
 player.id
 );
 
+
+/* ==========================
+PVP УРОН
+========================== */
+
+const shooterTeam =
+lobby.teams[
+player.id
+];
+
+
+const lobbyPlayers =
+getLobbyPlayers(
+player.lobbyID
+);
+
+
+let closestTarget =
+null;
+
+let closestDistance =
+Infinity;
+
+
+for (
+const target
+of lobbyPlayers
+) {
+
+
+if (
+target.id ===
+player.id
+) {
+
+continue;
+
+}
+
+
+if (
+!target.inGame ||
+target.state.hp <= 0
+) {
+
+continue;
+
+}
+
+
+/* Свои не получают урон */
+
+const targetTeam =
+lobby.teams[
+target.id
+];
+
+
+if (
+shooterTeam &&
+targetTeam &&
+shooterTeam ===
+targetTeam
+) {
+
+continue;
+
+}
+
+
+const dx =
+target.state.x -
+player.state.x;
+
+const dy =
+target.state.y -
+player.state.y;
+
+
+const distance =
+Math.hypot(
+dx,
+dy
+);
+
+
+const weapon =
+player.state.weapon;
+
+
+/* Дальность */
+
+const maxDistance =
+weapon === "knife"
+?
+180
+:
+3000;
+
+
+if (
+distance >
+maxDistance
+) {
+
+continue;
+
+}
+
+
+/* Угол до противника */
+
+const targetAngle =
+Math.atan2(
+dy,
+dx
+);
+
+
+const difference =
+Math.abs(
+normalizeAngle(
+targetAngle -
+player.state.angle
+)
+);
+
+
+/* Точность */
+
+const allowedAngle =
+weapon === "knife"
+?
+0.28
+:
+0.12;
+
+
+if (
+difference >
+allowedAngle
+) {
+
+continue;
+
+}
+
+
+if (
+distance <
+closestDistance
+) {
+
+closestDistance =
+distance;
+
+closestTarget =
+target;
+
+}
+
+}
+
+
+/* ==========================
+ПОПАДАНИЕ
+========================== */
+
+if (
+closestTarget
+) {
+
+let damage;
+
+
+/*
+Нож — 100.
+Автомат / пистолет
+пока как раньше — 50.
+*/
+
+if (
+player.state.weapon ===
+"knife"
+) {
+
+damage =
+100;
+
+} else {
+
+damage =
+50;
+
+}
+
+
+closestTarget.state.hp =
+Math.max(
+0,
+closestTarget.state.hp -
+damage
+);
+
+
+/* Стрелявшему — hitmarker */
+
+safeSend(
+player.socket,
+{
+type:
+"hitConfirmed",
+
+targetID:
+closestTarget.id,
+
+hp:
+closestTarget.state.hp,
+
+killed:
+closestTarget.state.hp <= 0
+}
+);
+
+
+/* Получившему урон */
+
+safeSend(
+closestTarget.socket,
+{
+type:
+"playerDamaged",
+
+fromID:
+player.id,
+
+damage:
+damage,
+
+hp:
+closestTarget.state.hp
+}
+);
+
+
+/* Обновляем HP противника */
+
+broadcastLobby(
+player.lobbyID,
+{
+type:
+"remotePlayerState",
+
+id:
+closestTarget.id,
+
+nickname:
+closestTarget.nickname,
+
+x:
+closestTarget.state.x,
+
+y:
+closestTarget.state.y,
+
+angle:
+closestTarget.state.angle,
+
+hp:
+closestTarget.state.hp,
+
+weapon:
+closestTarget.state.weapon,
+
+team:
+lobby.teams[
+closestTarget.id
+] ||
+null
+
+},
+closestTarget.id
+);
+
+}
+
+
 return;
 
 }
@@ -1766,6 +2700,7 @@ return;
 socket.on(
 "close",
 () => {
+
 
 if (
 player.lobbyID
