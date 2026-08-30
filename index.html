@@ -92,28 +92,17 @@ transform-origin:center top;
 transform:perspective(500px) rotateX(12deg) scaleY(2);
 }
 
-.roadV,
-.roadH,
-.mark,
-.building{
+.roadV,.roadH,.mark,.building{
 display:none!important;
 }
 
-/* =====================
-МЕНЮ
-===================== */
+/* MENU */
 
 #menu{
 position:fixed;
 z-index:1000;
 inset:0;
-background:
-linear-gradient(
-to bottom,
-#182635,
-#263746 55%,
-#111820
-);
+background:linear-gradient(to bottom,#182635,#263746 55%,#111820);
 display:flex;
 align-items:center;
 justify-content:center;
@@ -264,8 +253,7 @@ height:95px;
 background:#202722;
 }
 
-#armLeft,
-#armRight{
+#armLeft,#armRight{
 position:absolute;
 top:105px;
 width:38px;
@@ -285,8 +273,7 @@ right:5px;
 transform:rotate(-8deg);
 }
 
-#legLeft,
-#legRight{
+#legLeft,#legRight{
 position:absolute;
 top:225px;
 width:45px;
@@ -296,13 +283,8 @@ border:4px solid #151b18;
 border-radius:8px;
 }
 
-#legLeft{
-left:28px;
-}
-
-#legRight{
-right:28px;
-}
+#legLeft{left:28px}
+#legRight{right:28px}
 
 #menuName{
 position:absolute;
@@ -315,9 +297,7 @@ font-size:18px;
 white-space:nowrap;
 }
 
-/* =====================
-ПРОФИЛЬ
-===================== */
+/* PROFILE */
 
 #profileBox{
 position:absolute;
@@ -381,9 +361,7 @@ border-radius:15px;
 background:#22b94b;
 color:white;
 font-weight:bold;
-box-shadow:
-0 5px 0 #13732e,
-0 8px 18px #0008;
+box-shadow:0 5px 0 #13732e,0 8px 18px #0008;
 }
 
 #playButton{
@@ -420,9 +398,7 @@ font-size:24px;
 font-weight:bold;
 }
 
-/* =====================
-ВКЛАДКИ
-===================== */
+/* TABS */
 
 #menuTabs{
 position:absolute;
@@ -484,27 +460,13 @@ border-radius:14px 14px 5px 5px;
 background:#c7cdd1;
 }
 
-.person.p1{
-left:0;
-top:5px;
-}
+.person.p1{left:0;top:5px}
+.person.p2{left:17px;top:0}
+.person.p3{right:0;top:5px}
 
-.person.p2{
-left:17px;
-top:0;
-}
+/* FRIENDS / LOBBY */
 
-.person.p3{
-right:0;
-top:5px;
-}
-
-/* =====================
-ДРУЗЬЯ
-===================== */
-
-#friendsPage,
-#lobbyPage{
+#friendsPage,#lobbyPage{
 display:none;
 position:absolute;
 z-index:900;
@@ -512,8 +474,7 @@ inset:0;
 color:white;
 }
 
-#friendsPage.active,
-#lobbyPage.active{
+#friendsPage.active,#lobbyPage.active{
 display:block;
 }
 
@@ -523,8 +484,7 @@ padding-right:25px;
 padding-top:115px;
 }
 
-#friendsTitle,
-#lobbyPageTitle{
+#friendsTitle,#lobbyPageTitle{
 position:absolute;
 top:45px;
 left:50%;
@@ -616,10 +576,6 @@ background:#202d38;
 color:#46dc73;
 font-size:12px;
 }
-
-/* =====================
-ЛОББИ
-===================== */
 
 #lobbyPage{
 padding-left:120px;
@@ -740,13 +696,8 @@ border:3px solid #151b18;
 border-radius:14px;
 }
 
-.partyArm.left{
-left:2px;
-}
-
-.partyArm.right{
-right:2px;
-}
+.partyArm.left{left:2px}
+.partyArm.right{right:2px}
 
 .partyLeg{
 position:absolute;
@@ -757,13 +708,8 @@ background:#202723;
 border:3px solid #151b18;
 }
 
-.partyLeg.left{
-left:24px;
-}
-
-.partyLeg.right{
-right:24px;
-}
+.partyLeg.left{left:24px}
+.partyLeg.right{right:24px}
 
 .partyPlayerName{
 position:absolute;
@@ -884,8 +830,7 @@ display:flex;
 gap:10px;
 }
 
-#acceptLobbyInvite,
-#declineLobbyInvite{
+#acceptLobbyInvite,#declineLobbyInvite{
 flex:1;
 height:44px;
 border:0;
@@ -894,17 +839,10 @@ color:white;
 font-weight:bold;
 }
 
-#acceptLobbyInvite{
-background:#22b94b;
-}
+#acceptLobbyInvite{background:#22b94b}
+#declineLobbyInvite{background:#a53737}
 
-#declineLobbyInvite{
-background:#a53737;
-}
-
-/* =====================
-HUD
-===================== */
+/* HUD */
 
 #title{
 position:fixed;
@@ -917,8 +855,7 @@ font-size:23px;
 font-weight:bold;
 }
 
-#info,
-#score{
+#info,#score{
 position:fixed;
 z-index:100;
 left:15px;
@@ -926,15 +863,8 @@ color:white;
 font-weight:bold;
 }
 
-#info{
-top:44px;
-font-size:14px;
-}
-
-#score{
-top:68px;
-color:#ffd84d;
-}
+#info{top:44px;font-size:14px}
+#score{top:68px;color:#ffd84d}
 
 #healthBox{
 position:fixed;
@@ -1056,9 +986,7 @@ color:white;
 font-weight:bold;
 }
 
-/* =====================
-ОРУЖИЕ
-===================== */
+/* WEAPON */
 
 #weapon{
 position:fixed;
@@ -1069,6 +997,69 @@ width:170px;
 height:130px;
 transform:translateX(-50%);
 transition:transform .07s;
+}
+
+/* АНИМАЦИЯ АВТОМАТА/ПИСТОЛЕТА */
+
+#weapon.weaponSwitching{
+animation:weaponDraw .42s ease-out;
+}
+
+@keyframes weaponDraw{
+0%{
+transform:translateX(-50%) translateY(150px) rotate(8deg);
+opacity:0;
+}
+45%{
+transform:translateX(-50%) translateY(35px) rotate(-3deg);
+opacity:1;
+}
+75%{
+transform:translateX(-50%) translateY(-8px) rotate(1deg);
+}
+100%{
+transform:translateX(-50%) translateY(0) rotate(0deg);
+opacity:1;
+}
+}
+
+/* НОЖ: ПОДБРОС + ВРАЩЕНИЕ + ЛОВЛЯ */
+
+#weapon.knifeDraw{
+animation:knifeDraw .85s cubic-bezier(.2,.75,.25,1);
+}
+
+@keyframes knifeDraw{
+0%{
+transform:translateX(-50%) translateY(180px) rotate(-35deg);
+opacity:0;
+}
+12%{
+transform:translateX(-50%) translateY(125px) rotate(-20deg);
+opacity:1;
+}
+25%{
+transform:translateX(-50%) translateY(45px) rotate(35deg);
+}
+40%{
+transform:translateX(-50%) translateY(-75px) rotate(180deg);
+}
+55%{
+transform:translateX(-50%) translateY(-105px) rotate(360deg);
+}
+68%{
+transform:translateX(-50%) translateY(-65px) rotate(540deg);
+}
+80%{
+transform:translateX(-50%) translateY(-15px) rotate(690deg);
+}
+91%{
+transform:translateX(-50%) translateY(5px) rotate(770deg);
+}
+100%{
+transform:translateX(-50%) translateY(0) rotate(720deg);
+opacity:1;
+}
 }
 
 #gun{
@@ -1176,16 +1167,7 @@ bottom:125px;
 width:35px;
 height:35px;
 background:#ffd34d;
-clip-path:polygon(
-50% 0,
-65% 35%,
-100% 50%,
-65% 65%,
-50% 100%,
-35% 65%,
-0 50%,
-35% 35%
-);
+clip-path:polygon(50% 0,65% 35%,100% 50%,65% 65%,50% 100%,35% 65%,0 50%,35% 35%);
 }
 
 #weaponSwitch{
@@ -1211,12 +1193,9 @@ color:#ffffff99;
 white-space:nowrap;
 }
 
-/* =====================
-БОТЫ + ОНЛАЙН ИГРОК
-===================== */
+/* ENEMIES / REMOTE */
 
-.enemy,
-.remotePlayer{
+.enemy,.remotePlayer{
 position:absolute;
 z-index:30;
 width:60px;
@@ -1224,8 +1203,7 @@ height:120px;
 transform:translate(-50%,-50%);
 }
 
-.enemyBody,
-.remotePlayerBody{
+.enemyBody,.remotePlayerBody{
 position:absolute;
 left:20%;
 bottom:0;
@@ -1234,8 +1212,7 @@ height:63%;
 border-radius:8px;
 }
 
-.enemyHead,
-.remotePlayerHead{
+.enemyHead,.remotePlayerHead{
 position:absolute;
 left:50%;
 top:0;
@@ -1246,8 +1223,7 @@ border-radius:50%;
 background:#d49a78;
 }
 
-.enemyGun,
-.remotePlayerGun{
+.enemyGun,.remotePlayerGun{
 position:absolute;
 left:65%;
 top:47%;
@@ -1256,8 +1232,7 @@ height:8%;
 background:#161818;
 }
 
-.enemyHP,
-.remotePlayerHP{
+.enemyHP,.remotePlayerHP{
 position:absolute;
 left:0;
 top:-10px;
@@ -1266,20 +1241,14 @@ height:5px;
 background:#111;
 }
 
-.enemyHPInner,
-.remotePlayerHPInner{
+.enemyHPInner,.remotePlayerHPInner{
 height:100%;
 width:100%;
 background:#39d36b;
 }
 
-.enemy.normal .enemyBody{
-background:#a92f38;
-}
-
-.enemy.fast .enemyBody{
-background:#8b35b8;
-}
+.enemy.normal .enemyBody{background:#a92f38}
+.enemy.fast .enemyBody{background:#8b35b8}
 
 .remotePlayer{
 z-index:35;
@@ -1357,9 +1326,7 @@ border-radius:8px;
 overflow:hidden;
 }
 
-#playerDot,
-.enemyDot,
-.remotePlayerDot{
+#playerDot,.enemyDot,.remotePlayerDot{
 position:absolute;
 border-radius:50%;
 transform:translate(-50%,-50%);
@@ -1422,9 +1389,7 @@ font-size:24px;
 }
 
 @media(max-width:700px) and (orientation:portrait){
-#rotate{
-display:flex;
-}
+#rotate{display:flex}
 }
 </style>
 </head>
@@ -1434,313 +1399,168 @@ display:flex;
 <div id="menu">
 
 <div id="menuTabs">
-
-<button class="menuTab active" id="gameTab">
-▶
-</button>
-
-<button class="menuTab" id="lobbyTab">
-🛡️
-</button>
-
+<button class="menuTab active" id="gameTab">▶</button>
+<button class="menuTab" id="lobbyTab">🛡️</button>
 <button class="menuTab" id="friendsTab">
-
 <div class="friendsIcon">
 <div class="person p1"></div>
 <div class="person p2"></div>
 <div class="person p3"></div>
 </div>
-
 </button>
-
 </div>
 
 <div id="profileBox">
-
-<div id="profileStatus">
-СОЕДИНЕНИЕ С СЕРВЕРОМ...
-</div>
-
-<div id="profileID">
-ID: —
-</div>
-
+<div id="profileStatus">СОЕДИНЕНИЕ С СЕРВЕРОМ...</div>
+<div id="profileID">ID: —</div>
 <div id="nicknameRow">
-
-<input
-id="nicknameInput"
-maxlength="16"
-placeholder="Введите ник"
->
-
-<button id="saveNickname">
-✓
-</button>
-
+<input id="nicknameInput" maxlength="16" placeholder="Введите ник">
+<button id="saveNickname">✓</button>
 </div>
-
 </div>
 
 <div id="lobbyPage">
-
-<div id="lobbyPageTitle">
-ЛОББИ
-</div>
+<div id="lobbyPageTitle">ЛОББИ</div>
 
 <div id="partyArea">
-
 <div class="partySlot" id="partySlot1"></div>
-
 <div class="partySlot empty" id="partySlot2"></div>
-
 </div>
 
 <div id="lobbyFriendsPanel">
-
 <b>ДРУЗЬЯ</b>
-
-<div id="lobbyFriendsList">
-Загрузка...
-</div>
-
+<div id="lobbyFriendsList">Загрузка...</div>
 </div>
 
 <div id="lobbyMessage"></div>
 
-<button id="lobbyPlayButton">
-ИГРАТЬ
-</button>
-
-<button id="lobbyLeaveButton">
-ПОКИНУТЬ ЛОББИ
-</button>
-
+<button id="lobbyPlayButton">ИГРАТЬ</button>
+<button id="lobbyLeaveButton">ПОКИНУТЬ ЛОББИ</button>
 </div>
 
 <div id="lobbyInvitePopup">
-
-<h3>
-ПРИГЛАШЕНИЕ В ЛОББИ
-</h3>
-
+<h3>ПРИГЛАШЕНИЕ В ЛОББИ</h3>
 <div id="lobbyInviteText"></div>
-
 <br>
-
 <div id="inviteButtons">
-
-<button id="acceptLobbyInvite">
-ПРИНЯТЬ
-</button>
-
-<button id="declineLobbyInvite">
-ОТКЛОНИТЬ
-</button>
-
+<button id="acceptLobbyInvite">ПРИНЯТЬ</button>
+<button id="declineLobbyInvite">ОТКЛОНИТЬ</button>
 </div>
-
 </div>
 
 <div id="friendsPage">
-
-<div id="friendsTitle">
-ДРУЗЬЯ
-</div>
+<div id="friendsTitle">ДРУЗЬЯ</div>
 
 <div id="friendSearchBox">
-
 <div id="friendSearchRow">
-
-<input
-id="friendIDInput"
-inputmode="numeric"
-placeholder="Введите ID игрока"
->
-
-<button id="findFriendButton">
-НАЙТИ
-</button>
-
+<input id="friendIDInput" inputmode="numeric" placeholder="Введите ID игрока">
+<button id="findFriendButton">НАЙТИ</button>
 </div>
 
 <div id="friendResult"></div>
-
-<button id="addFriendButton">
-ДОБАВИТЬ В ДРУЗЬЯ
-</button>
+<button id="addFriendButton">ДОБАВИТЬ В ДРУЗЬЯ</button>
 
 <div id="friendsMessage"></div>
 
-<b>
-МОИ ДРУЗЬЯ
-</b>
-
+<b>МОИ ДРУЗЬЯ</b>
 <div id="friendsList"></div>
-
+</div>
 </div>
 
-</div>
-
-<div id="menuTitle">
-RAHL1K FPS
-</div>
-
-<div id="menuSubtitle">
-LOBBY
-</div>
+<div id="menuTitle">RAHL1K FPS</div>
+<div id="menuSubtitle">LOBBY</div>
 
 <div id="lobby">
-
 <div id="character">
 
 <div id="characterHead"></div>
-
 <div id="helmet"></div>
-
 <div id="helmetFront"></div>
-
 <div id="characterNeck"></div>
 
 <div id="armLeft"></div>
-
 <div id="armRight"></div>
 
 <div id="characterBody"></div>
 
 <div id="vest">
-
 <div id="vestPlate"></div>
-
 <div id="vestStrap1"></div>
-
 <div id="vestStrap2"></div>
-
 </div>
 
 <div id="legLeft"></div>
-
 <div id="legRight"></div>
 
-<div id="menuName">
-RAHL1K
-</div>
+<div id="menuName">RAHL1K</div>
 
 </div>
-
 </div>
 
-<button id="playButton">
-ИГРАТЬ
-</button>
+<button id="playButton">ИГРАТЬ</button>
 
-<div id="countdown">
-5
-</div>
-
-<div id="countdownText">
-ПРИГОТОВЬСЯ
-</div>
-
+<div id="countdown">5</div>
+<div id="countdownText">ПРИГОТОВЬСЯ</div>
 </div>
 
 <div id="game">
-
 <div id="sky"></div>
-
 <div id="ground"></div>
-
 </div>
 
-<div id="title">
-RAHL1K FPS v6 ONLINE
-</div>
+<div id="title">RAHL1K FPS v6 ONLINE</div>
 
 <div id="info">
 POS: 1500 / 1500 &nbsp;&nbsp; ANGLE: 0°
 </div>
 
-<div id="score">
-KILLS: 0
-</div>
+<div id="score">KILLS: 0</div>
 
 <div id="weaponSwitch">
-
-<div id="weaponSwipeIcon">
-🔫
-</div>
-
+<div id="weaponSwipeIcon">🔫</div>
 <div id="weaponSwipeHint">
 ← НОЖ &nbsp; ↓ АВТО &nbsp; ПИСТОЛЕТ →
 </div>
-
 </div>
 
 <div id="healthBox">
-
 <div id="healthBar"></div>
-
-<div id="healthText">
-HP 100
+<div id="healthText">HP 100</div>
 </div>
 
-</div>
-
-<div id="ammo">
-30 / 90
-</div>
+<div id="ammo">30 / 90</div>
 
 <div id="crosshair"></div>
-
-<div id="hitmark">
-×
-</div>
+<div id="hitmark">×</div>
 
 <div id="minimap">
-
 <div id="playerDot"></div>
-
 </div>
 
 <div id="joystick">
-
 <div id="stick"></div>
-
 </div>
 
-<button id="fire">
-FIRE
-</button>
-
-<button id="reload">
-RELOAD
-</button>
+<button id="fire">FIRE</button>
+<button id="reload">RELOAD</button>
 
 <div id="weapon">
 
 <div id="muzzle"></div>
 
 <div id="barrel"></div>
-
 <div id="gun"></div>
 
 <div id="pistol">
-
 <div id="pistolBarrel"></div>
-
 <div id="pistolSlide"></div>
-
 <div id="pistolHandle"></div>
-
 </div>
 
 <div id="knife">
-
 <div id="knifeBlade"></div>
-
 <div id="knifeGuard"></div>
-
 <div id="knifeHandle"></div>
-
 </div>
 
 </div>
@@ -1748,37 +1568,22 @@ RELOAD
 <div id="damage"></div>
 
 <div id="gameover">
-
 GAME OVER
-
 <div id="finalScore"></div>
-
-<button id="restart">
-ИГРАТЬ СНОВА
-</button>
-
+<button id="restart">ИГРАТЬ СНОВА</button>
 </div>
 
 <div id="rotate">
-
 ↔️
 <br>
 Поверни телефон горизонтально
-
 </div>
 
 <script>
 
-/* ==========================
-ОНЛАЙН
-========================== */
-
 let onlineSocket=null;
-
 let myOnlineID=null;
-
 let myNickname="";
-
 let foundFriendID=null;
 
 let cachedFriends=[];
@@ -1786,6 +1591,10 @@ let cachedFriends=[];
 let incomingLobbyFromID=null;
 
 let currentLobbyMembers=[];
+
+/* НОВОЕ: ID ЛИДЕРА */
+
+let lobbyLeaderID=null;
 
 let lobbyCountdownTimer=null;
 
@@ -1802,89 +1611,40 @@ id=>
 document.getElementById(id);
 
 
-const profileStatus=
-$("profileStatus");
+const profileStatus=$("profileStatus");
+const profileID=$("profileID");
 
-const profileID=
-$("profileID");
+const nicknameInput=$("nicknameInput");
+const saveNickname=$("saveNickname");
 
-const nicknameInput=
-$("nicknameInput");
+const friendIDInput=$("friendIDInput");
+const findFriendButton=$("findFriendButton");
+const friendResult=$("friendResult");
+const addFriendButton=$("addFriendButton");
+const friendsMessage=$("friendsMessage");
+const friendsList=$("friendsList");
 
-const saveNickname=
-$("saveNickname");
+const lobbyFriendsList=$("lobbyFriendsList");
+const lobbyMessage=$("lobbyMessage");
 
-const friendIDInput=
-$("friendIDInput");
+const lobbyInvitePopup=$("lobbyInvitePopup");
+const lobbyInviteText=$("lobbyInviteText");
 
-const findFriendButton=
-$("findFriendButton");
+const acceptLobbyInvite=$("acceptLobbyInvite");
+const declineLobbyInvite=$("declineLobbyInvite");
 
-const friendResult=
-$("friendResult");
-
-const addFriendButton=
-$("addFriendButton");
-
-const friendsMessage=
-$("friendsMessage");
-
-const friendsList=
-$("friendsList");
-
-const lobbyFriendsList=
-$("lobbyFriendsList");
-
-const lobbyMessage=
-$("lobbyMessage");
-
-const lobbyInvitePopup=
-$("lobbyInvitePopup");
-
-const lobbyInviteText=
-$("lobbyInviteText");
-
-const acceptLobbyInvite=
-$("acceptLobbyInvite");
-
-const declineLobbyInvite=
-$("declineLobbyInvite");
-
-const lobbyPlayButton=
-$("lobbyPlayButton");
-
-const lobbyLeaveButton=
-$("lobbyLeaveButton");
+const lobbyPlayButton=$("lobbyPlayButton");
+const lobbyLeaveButton=$("lobbyLeaveButton");
 
 
 function escapeHTML(t){
 
 return String(t)
-
-.replaceAll(
-"&",
-"&amp;"
-)
-
-.replaceAll(
-"<",
-"&lt;"
-)
-
-.replaceAll(
-">",
-"&gt;"
-)
-
-.replaceAll(
-'"',
-"&quot;"
-)
-
-.replaceAll(
-"'",
-"&#039;"
-);
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
 
 }
 
@@ -1917,7 +1677,7 @@ return false;
 
 
 /* ==========================
-ПОДКЛЮЧЕНИЕ
+ONLINE
 ========================== */
 
 function connectOnline(){
@@ -1929,9 +1689,7 @@ location.protocol==="https:"
 
 onlineSocket=
 new WebSocket(
-protocol+
-"//"+
-location.host
+protocol+"//"+location.host
 );
 
 
@@ -2002,7 +1760,7 @@ return;
 }
 
 
-/* ID */
+/* WELCOME */
 
 if(
 data.type===
@@ -2019,10 +1777,12 @@ profileID.textContent=
 "ID: "+
 myOnlineID;
 
+
 const saved=
 localStorage.getItem(
 "rahl1kNickname"
 );
+
 
 if(saved){
 
@@ -2047,7 +1807,7 @@ myNickname;
 }
 
 
-/* НИК */
+/* NICK */
 
 if(
 data.type===
@@ -2075,7 +1835,7 @@ currentLobbyMembers
 }
 
 
-/* ПОИСК */
+/* FIND */
 
 if(
 data.type===
@@ -2105,9 +1865,7 @@ friendResult.style.display=
 
 friendResult.innerHTML=
 "<b>"+
-escapeHTML(
-data.nickname
-)+
+escapeHTML(data.nickname)+
 "</b><br>ID: "+
 data.id;
 
@@ -2119,7 +1877,7 @@ addFriendButton.style.display=
 }
 
 
-/* ДОБАВЛЕНИЕ */
+/* FRIEND RESULT */
 
 if(
 data.type===
@@ -2129,10 +1887,8 @@ data.type===
 friendsMessage.textContent=
 data.success
 ?"Игрок добавлен в друзья"
-:(
-data.message ||
-"Не удалось добавить"
-);
+:(data.message||"Не удалось добавить");
+
 
 if(data.success){
 
@@ -2148,7 +1904,7 @@ type:"getFriends"
 }
 
 
-/* НАС ДОБАВИЛИ */
+/* FRIEND ADDED */
 
 if(
 data.type===
@@ -2166,7 +1922,7 @@ type:"getFriends"
 }
 
 
-/* СПИСОК */
+/* FRIENDS LIST */
 
 if(
 data.type===
@@ -2174,7 +1930,7 @@ data.type===
 ){
 
 cachedFriends=
-data.friends || [];
+data.friends||[];
 
 renderFriends(
 cachedFriends
@@ -2187,7 +1943,7 @@ cachedFriends
 }
 
 
-/* ЛОББИ */
+/* LOBBY MESSAGE */
 
 if(
 data.type===
@@ -2195,10 +1951,12 @@ data.type===
 ){
 
 lobbyMessage.textContent=
-data.message || "";
+data.message||"";
 
 }
 
+
+/* INVITE */
 
 if(
 data.type===
@@ -2218,6 +1976,8 @@ lobbyInvitePopup.style.display=
 }
 
 
+/* ACCEPT */
+
 if(
 data.type===
 "lobbyInviteAccepted"
@@ -2230,17 +1990,25 @@ data.nickname+
 }
 
 
+/* LOBBY STATE */
+
 if(
 data.type===
 "lobbyState"
 ){
 
 currentLobbyMembers=
-data.members || [];
+data.members||[];
+
+lobbyLeaderID=
+data.leaderID??null;
 
 renderLobbyMembers(
 currentLobbyMembers
 );
+
+updateLobbyLeaderControls();
+
 
 if(data.inLobby){
 
@@ -2254,7 +2022,7 @@ currentLobbyMembers.length>=2
 }
 
 
-/* ОТСЧЁТ */
+/* COUNTDOWN */
 
 if(
 data.type===
@@ -2262,17 +2030,13 @@ data.type===
 ){
 
 showLobbyCountdown(
-Number(
-data.startAt
-)
+Number(data.startAt)
 );
 
 }
 
 
-/* ==========================
-СТАРТ ОНЛАЙН МАТЧА
-========================== */
+/* START ONLINE */
 
 if(
 data.type===
@@ -2284,33 +2048,26 @@ true;
 
 clearRemotePlayers();
 
+
 if(data.spawn){
 
 player.x=
-Number(
-data.spawn.x
-) || 1500;
+Number(data.spawn.x)||1500;
 
 player.y=
-Number(
-data.spawn.y
-) || 1500;
+Number(data.spawn.y)||1500;
 
 player.angle=
-Number(
-data.spawn.angle
-) || 0;
+Number(data.spawn.angle)||0;
 
-player.hp=
-100;
+player.hp=100;
 
 }
 
 
 for(
 const p
-of
-(data.players || [])
+of (data.players||[])
 ){
 
 if(
@@ -2332,9 +2089,7 @@ launchLobbyGame();
 }
 
 
-/* ==========================
-ПОЗИЦИЯ ДРУГОГО ИГРОКА
-========================== */
+/* REMOTE STATE */
 
 if(
 data.type===
@@ -2348,9 +2103,7 @@ data
 }
 
 
-/* ==========================
-ДРУГОЙ ИГРОК ВЫСТРЕЛИЛ
-========================== */
+/* REMOTE SHOT */
 
 if(
 data.type===
@@ -2364,9 +2117,7 @@ data.id
 }
 
 
-/* ==========================
-ИГРОК ВЫШЕЛ
-========================== */
+/* REMOTE LEFT */
 
 if(
 data.type===
@@ -2388,13 +2139,9 @@ data.id
 connectOnline();
 
 
-/* ==========================
-ДРУЗЬЯ
-========================== */
+/* FRIENDS */
 
-function renderFriends(
-friends
-){
+function renderFriends(friends){
 
 friendsList.innerHTML="";
 
@@ -2407,10 +2154,8 @@ return;
 
 }
 
-for(
-const f
-of friends
-){
+
+for(const f of friends){
 
 const item=
 document.createElement(
@@ -2421,19 +2166,14 @@ item.className=
 "friendItem";
 
 item.innerHTML=
-
 '<div><b>'+
-escapeHTML(
-f.nickname
-)+
+escapeHTML(f.nickname)+
 '</b><br>'+
 '<span style="font-size:11px;color:#ffffff88">'+
 'ID: '+
 f.id+
 '</span></div>'+
-'<div class="friendOnline">'+
-'● ONLINE'+
-'</div>';
+'<div class="friendOnline">● ONLINE</div>';
 
 friendsList.appendChild(
 item
@@ -2444,13 +2184,7 @@ item
 }
 
 
-/* ==========================
-ДРУЗЬЯ В ЛОББИ
-========================== */
-
-function renderLobbyFriends(
-friends
-){
+function renderLobbyFriends(friends){
 
 lobbyFriendsList.innerHTML="";
 
@@ -2464,10 +2198,7 @@ return;
 }
 
 
-for(
-const f
-of friends
-){
+for(const f of friends){
 
 const item=
 document.createElement(
@@ -2477,30 +2208,17 @@ document.createElement(
 item.className=
 "lobbyFriendItem";
 
-
 item.innerHTML=
-
 '<div class="lobbyFriendTop">'+
-
 '<div>'+
-
 '<div class="lobbyFriendName">'+
-escapeHTML(
-f.nickname
-)+
+escapeHTML(f.nickname)+
 '</div>'+
-
-'<div style="font-size:10px;color:#ffffff77">'+
-'ID: '+
+'<div style="font-size:10px;color:#ffffff77">ID: '+
 f.id+
 '</div>'+
-
 '</div>'+
-
-'<div class="lobbyFriendStatus">'+
-'● ONLINE'+
-'</div>'+
-
+'<div class="lobbyFriendStatus">● ONLINE</div>'+
 '</div>';
 
 
@@ -2521,7 +2239,6 @@ button.addEventListener(
 e=>{
 
 e.preventDefault();
-
 e.stopPropagation();
 
 sendOnline({
@@ -2552,6 +2269,7 @@ return;
 
 e.preventDefault();
 
+
 document
 .querySelectorAll(
 ".lobbyFriendItem"
@@ -2562,6 +2280,7 @@ x.classList.remove(
 "selected"
 )
 );
+
 
 item.classList.add(
 "selected"
@@ -2581,13 +2300,9 @@ item
 }
 
 
-/* ==========================
-БОЕЦ ЛОББИ
-========================== */
+/* PARTY SOLDIER */
 
-function createPartySoldier(
-nickname
-){
+function createPartySoldier(nickname){
 
 const s=
 document.createElement(
@@ -2598,7 +2313,6 @@ s.className=
 "partySoldier";
 
 s.innerHTML=
-
 '<div class="partyHead"></div>'+
 '<div class="partyHelmet"></div>'+
 '<div class="partyHelmetFront"></div>'+
@@ -2610,9 +2324,7 @@ s.innerHTML=
 '<div class="partyLeg left"></div>'+
 '<div class="partyLeg right"></div>'+
 '<div class="partyPlayerName">'+
-escapeHTML(
-nickname
-)+
+escapeHTML(nickname)+
 '</div>';
 
 return s;
@@ -2620,9 +2332,7 @@ return s;
 }
 
 
-function renderLobbyMembers(
-members
-){
+function renderLobbyMembers(members){
 
 const a=
 $("partySlot1");
@@ -2643,10 +2353,10 @@ b.classList.remove(
 
 
 const first=
-members[0] ||
+members[0]||
 {
 nickname:
-myNickname ||
+myNickname||
 "Игрок"
 };
 
@@ -2681,8 +2391,79 @@ b.innerHTML=
 
 
 /* ==========================
-КНОПКИ ПРОФИЛЯ
+ЛИДЕР ЛОББИ
 ========================== */
+
+function isLobbyLeader(){
+
+return(
+lobbyLeaderID!==null &&
+Number(lobbyLeaderID)===
+Number(myOnlineID)
+);
+
+}
+
+
+function updateLobbyLeaderControls(){
+
+if(
+currentLobbyMembers.length<2
+){
+
+lobbyPlayButton.disabled=
+false;
+
+lobbyPlayButton.style.opacity=
+"1";
+
+lobbyPlayButton.style.background=
+"#22b94b";
+
+lobbyPlayButton.textContent=
+"ИГРАТЬ";
+
+return;
+
+}
+
+
+if(
+isLobbyLeader()
+){
+
+lobbyPlayButton.disabled=
+false;
+
+lobbyPlayButton.style.opacity=
+"1";
+
+lobbyPlayButton.style.background=
+"#22b94b";
+
+lobbyPlayButton.textContent=
+"ИГРАТЬ";
+
+}else{
+
+lobbyPlayButton.disabled=
+true;
+
+lobbyPlayButton.style.opacity=
+".55";
+
+lobbyPlayButton.style.background=
+"#56615a";
+
+lobbyPlayButton.textContent=
+"ЖДЁМ ЛИДЕРА";
+
+}
+
+}
+
+
+/* PROFILE BUTTONS */
 
 saveNickname.addEventListener(
 "touchstart",
@@ -2691,9 +2472,7 @@ e=>{
 e.preventDefault();
 
 const n=
-nicknameInput
-.value
-.trim();
+nicknameInput.value.trim();
 
 if(n){
 
@@ -2760,9 +2539,7 @@ e=>{
 
 e.preventDefault();
 
-if(
-incomingLobbyFromID
-){
+if(incomingLobbyFromID){
 
 sendOnline({
 type:"acceptLobbyInvite",
@@ -2790,9 +2567,7 @@ e=>{
 
 e.preventDefault();
 
-if(
-incomingLobbyFromID
-){
+if(incomingLobbyFromID){
 
 sendOnline({
 type:"declineLobbyInvite",
@@ -2818,6 +2593,7 @@ e=>{
 
 e.preventDefault();
 
+
 if(
 currentLobbyMembers.length<2
 ){
@@ -2829,9 +2605,26 @@ return;
 
 }
 
+
+if(
+!isLobbyLeader()
+){
+
+lobbyMessage.textContent=
+"Только лидер лобби может начать матч";
+
+return;
+
+}
+
+
 sendOnline({
 type:"startLobbyGame"
 });
+
+
+lobbyMessage.textContent=
+"Запускаем матч...";
 
 },
 {passive:false}
@@ -2850,16 +2643,18 @@ type:"leaveLobby"
 
 currentLobbyMembers=[];
 
+lobbyLeaderID=null;
+
 renderLobbyMembers([]);
+
+updateLobbyLeaderControls();
 
 },
 {passive:false}
 );
 
 
-/* ==========================
-ИГРОК
-========================== */
+/* PLAYER */
 
 const player={
 x:1500,
@@ -2869,38 +2664,29 @@ hp:100
 };
 
 const MAP_W=3000;
-
 const MAP_H=3000;
 
 let cameraPitch=0;
-
 const MAX_PITCH=65;
 
 
-function blocked(
-x,
-y
-){
+function blocked(x,y){
 
 const r=28;
 
 return(
-x<r ||
-y<r ||
-x>MAP_W-r ||
+x<r||
+y<r||
+x>MAP_W-r||
 y>MAP_H-r
 );
 
 }
 
 
-/* ==========================
-ВТОРОЙ ИГРОК
-========================== */
+/* REMOTE PLAYER */
 
-function makeRemoteElement(
-p
-){
+function makeRemoteElement(p){
 
 const el=
 document.createElement(
@@ -2911,24 +2697,19 @@ el.className=
 "remotePlayer";
 
 el.innerHTML=
-
 '<div class="remotePlayerName">'+
 escapeHTML(
-p.nickname ||
-"Игрок"
+p.nickname||"Игрок"
 )+
 '</div>'+
-
 '<div class="remotePlayerHP">'+
 '<div class="remotePlayerHPInner"></div>'+
 '</div>'+
-
 '<div class="remotePlayerHelmet"></div>'+
 '<div class="remotePlayerHead"></div>'+
 '<div class="remotePlayerBody"></div>'+
 '<div class="remotePlayerGun"></div>'+
 '<div class="remotePlayerWeapon">🔫</div>';
-
 
 $("game").appendChild(
 el
@@ -2939,9 +2720,7 @@ return el;
 }
 
 
-function upsertRemotePlayer(
-p
-){
+function upsertRemotePlayer(p){
 
 if(
 Number(p.id)===
@@ -2959,40 +2738,15 @@ Number(p.id)
 if(!r){
 
 r={
-
-id:
-Number(p.id),
-
-nickname:
-p.nickname ||
-"Игрок",
-
-x:
-Number(p.x) ||
-1500,
-
-y:
-Number(p.y) ||
-1500,
-
-angle:
-Number(p.angle) ||
-0,
-
-hp:
-Number(p.hp) ||
-100,
-
-weapon:
-p.weapon ||
-"rifle",
-
-el:
-makeRemoteElement(p),
-
-shotFlash:
-0
-
+id:Number(p.id),
+nickname:p.nickname||"Игрок",
+x:Number(p.x)||1500,
+y:Number(p.y)||1500,
+angle:Number(p.angle)||0,
+hp:Number(p.hp)||100,
+weapon:p.weapon||"rifle",
+el:makeRemoteElement(p),
+shotFlash:0
 };
 
 
@@ -3004,7 +2758,7 @@ r
 }else{
 
 r.nickname=
-p.nickname ||
+p.nickname||
 r.nickname;
 
 r.x=
@@ -3015,6 +2769,7 @@ Number(p.y);
 
 r.angle=
 Number(p.angle);
+
 
 if(
 Number.isFinite(
@@ -3027,8 +2782,9 @@ Number(p.hp);
 
 }
 
+
 r.weapon=
-p.weapon ||
+p.weapon||
 r.weapon;
 
 }
@@ -3036,9 +2792,7 @@ r.weapon;
 }
 
 
-function removeRemotePlayer(
-id
-){
+function removeRemotePlayer(id){
 
 const r=
 remotePlayers.get(
@@ -3046,7 +2800,7 @@ Number(id)
 );
 
 if(
-r &&
+r&&
 r.el
 ){
 
@@ -3081,9 +2835,7 @@ remotePlayers.clear();
 }
 
 
-function remoteShotEffect(
-id
-){
+function remoteShotEffect(id){
 
 const r=
 remotePlayers.get(
@@ -3100,9 +2852,7 @@ performance.now()+
 }
 
 
-/* ==========================
-ОТОБРАЖЕНИЕ ДРУГА
-========================== */
+/* DISPLAY REMOTE */
 
 function updateRemotePlayers(){
 
@@ -3141,7 +2891,7 @@ Math.cos(rel)
 
 if(
 Math.abs(rel)>
-Math.PI/2 ||
+Math.PI/2||
 d<25
 ){
 
@@ -3172,10 +2922,8 @@ Math.min(
 r.el.style.display=
 "block";
 
-
 r.el.style.left=
 sx+"px";
-
 
 r.el.style.top=
 (
@@ -3183,41 +2931,32 @@ innerHeight*.57+
 cameraPitch*4
 )+"px";
 
-
 r.el.style.width=
 size+"px";
 
-
 r.el.style.height=
-(
-size*2
-)+"px";
+size*2+
+"px";
 
 
-r.el
-.querySelector(
+r.el.querySelector(
 ".remotePlayerName"
-)
-.textContent=
+).textContent=
 r.nickname;
 
 
-r.el
-.querySelector(
+r.el.querySelector(
 ".remotePlayerHPInner"
-)
-.style.width=
+).style.width=
 Math.max(
 0,
 r.hp
 )+"%";
 
 
-r.el
-.querySelector(
+r.el.querySelector(
 ".remotePlayerWeapon"
-)
-.textContent=
+).textContent=
 r.weapon==="knife"
 ?"🔪"
 :"🔫";
@@ -3234,17 +2973,13 @@ r.shotFlash
 }
 
 
-/* ==========================
-ОТПРАВКА НАШЕЙ ПОЗИЦИИ
-========================== */
+/* SEND PLAYER */
 
-function sendPlayerState(
-now
-){
+function sendPlayerState(now){
 
 if(
-!multiplayerMatch ||
-!gameStarted ||
+!multiplayerMatch||
+!gameStarted||
 now-lastStateSend<50
 )
 return;
@@ -3255,97 +2990,59 @@ now;
 
 
 sendOnline({
-
-type:
-"playerState",
-
-x:
-player.x,
-
-y:
-player.y,
-
-angle:
-player.angle,
-
-hp:
-player.hp,
-
-weapon:
-currentWeapon
-
+type:"playerState",
+x:player.x,
+y:player.y,
+angle:player.angle,
+hp:player.hp,
+weapon:currentWeapon
 });
 
 }
 
 
-/* ==========================
-ДЖОЙСТИК
-========================== */
+/* JOYSTICK */
 
-const joystick=
-$("joystick");
-
-const stick=
-$("stick");
+const joystick=$("joystick");
+const stick=$("stick");
 
 let joyX=0;
-
 let joyY=0;
-
 let joyID=null;
 
 
-function setJoy(
-x,
-y
-){
+function setJoy(x,y){
 
 const r=
-joystick
-.getBoundingClientRect();
+joystick.getBoundingClientRect();
 
 const cx=
-r.left+
-r.width/2;
+r.left+r.width/2;
 
 const cy=
-r.top+
-r.height/2;
+r.top+r.height/2;
 
-let dx=
-x-cx;
-
-let dy=
-y-cy;
+let dx=x-cx;
+let dy=y-cy;
 
 const max=40;
 
 const dist=
-Math.hypot(
-dx,
-dy
-);
+Math.hypot(dx,dy);
 
-if(
-dist>max
-){
+
+if(dist>max){
 
 dx=
-dx/dist*
-max;
+dx/dist*max;
 
 dy=
-dy/dist*
-max;
+dy/dist*max;
 
 }
 
-joyX=
-dx/max;
-
-joyY=
-dy/max;
+joyX=dx/max;
+joyY=dy/max;
 
 stick.style.left=
 40+dx+"px";
@@ -3359,16 +3056,11 @@ stick.style.top=
 function resetJoy(){
 
 joyX=0;
-
 joyY=0;
-
 joyID=null;
 
-stick.style.left=
-"40px";
-
-stick.style.top=
-"40px";
+stick.style.left="40px";
+stick.style.top="40px";
 
 }
 
@@ -3379,9 +3071,7 @@ e=>{
 
 e.preventDefault();
 
-if(
-joyID!==null
-)
+if(joyID!==null)
 return;
 
 const t=
@@ -3406,10 +3096,7 @@ e=>{
 
 e.preventDefault();
 
-for(
-const t
-of e.changedTouches
-){
+for(const t of e.changedTouches){
 
 if(
 t.identifier===
@@ -3434,10 +3121,7 @@ joystick.addEventListener(
 "touchend",
 e=>{
 
-for(
-const t
-of e.changedTouches
-){
+for(const t of e.changedTouches){
 
 if(
 t.identifier===
@@ -3460,14 +3144,10 @@ resetJoy
 );
 
 
-/* ==========================
-КАМЕРА
-========================== */
+/* CAMERA */
 
 let lookID=null;
-
 let lastLookX=0;
-
 let lastLookY=0;
 
 
@@ -3475,10 +3155,7 @@ document.addEventListener(
 "touchstart",
 e=>{
 
-for(
-const t
-of e.changedTouches
-){
+for(const t of e.changedTouches){
 
 if(
 t.clientX>
@@ -3488,14 +3165,9 @@ innerWidth*.42 &&
 )
 ){
 
-lookID=
-t.identifier;
-
-lastLookX=
-t.clientX;
-
-lastLookY=
-t.clientY;
+lookID=t.identifier;
+lastLookX=t.clientX;
+lastLookY=t.clientY;
 
 }
 
@@ -3510,15 +3182,10 @@ document.addEventListener(
 "touchmove",
 e=>{
 
-if(
-lookID===null
-)
+if(lookID===null)
 return;
 
-for(
-const t
-of e.changedTouches
-){
+for(const t of e.changedTouches){
 
 if(
 t.identifier===
@@ -3531,16 +3198,14 @@ player.angle+=
 (
 t.clientX-
 lastLookX
-)*
-.008;
+)*.008;
 
 
 cameraPitch-=
 (
 t.clientY-
 lastLookY
-)*
-.35;
+)*.35;
 
 
 cameraPitch=
@@ -3553,11 +3218,8 @@ cameraPitch
 );
 
 
-lastLookX=
-t.clientX;
-
-lastLookY=
-t.clientY;
+lastLookX=t.clientX;
+lastLookY=t.clientY;
 
 }
 
@@ -3572,10 +3234,7 @@ document.addEventListener(
 "touchend",
 e=>{
 
-for(
-const t
-of e.changedTouches
-){
+for(const t of e.changedTouches){
 
 if(
 t.identifier===
@@ -3593,64 +3252,53 @@ lookID=null;
 
 
 /* ==========================
-ОРУЖИЕ
+WEAPONS
 ========================== */
 
 let currentWeapon=
 "rifle";
 
 let ammo=30;
-
 let reserve=90;
-
 let kills=0;
 
 
-function showWeapon(
-type
-){
+function showWeapon(type){
 
 $("gun").style.display=
 type==="rifle"
 ?"block"
 :"none";
 
-
 $("barrel").style.display=
 type==="rifle"
 ?"block"
 :"none";
-
 
 $("pistol").style.display=
 type==="pistol"
 ?"block"
 :"none";
 
-
 $("knife").style.display=
 type==="knife"
 ?"block"
 :"none";
-
 
 $("ammo").style.display=
 type==="knife"
 ?"none"
 :"block";
 
-
 $("reload").style.display=
 type==="knife"
 ?"none"
 :"block";
 
-
 $("fire").textContent=
 type==="knife"
 ?"ATTACK"
 :"FIRE";
-
 
 $("weaponSwipeIcon").textContent=
 type==="knife"
@@ -3660,9 +3308,11 @@ type==="knife"
 }
 
 
-function switchWeapon(
-type
-){
+/* ==========================
+АНИМИРОВАННОЕ ПЕРЕКЛЮЧЕНИЕ
+========================== */
+
+function switchWeapon(type){
 
 if(
 type===
@@ -3670,11 +3320,87 @@ currentWeapon
 )
 return;
 
+
 currentWeapon=
 type;
 
+
+const weapon=
+$("weapon");
+
+
+weapon.classList.remove(
+"weaponSwitching"
+);
+
+weapon.classList.remove(
+"knifeDraw"
+);
+
+
+/* ПЕРЕЗАПУСК АНИМАЦИИ */
+
+void weapon.offsetWidth;
+
+
 showWeapon(
 type
+);
+
+
+/* НОЖ */
+
+if(
+type==="knife"
+){
+
+weapon.classList.add(
+"knifeDraw"
+);
+
+}else{
+
+/* АВТОМАТ + ПИСТОЛЕТ */
+
+weapon.classList.add(
+"weaponSwitching"
+);
+
+}
+
+
+/* СРАЗУ СООБЩАЕМ СЕРВЕРУ НОВОЕ ОРУЖИЕ */
+
+if(
+multiplayerMatch &&
+gameStarted
+){
+
+sendOnline({
+type:"playerState",
+x:player.x,
+y:player.y,
+angle:player.angle,
+hp:player.hp,
+weapon:currentWeapon
+});
+
+}
+
+
+setTimeout(
+()=>{
+
+weapon.classList.remove(
+"weaponSwitching"
+);
+
+weapon.classList.remove(
+"knifeDraw"
+);
+
+},
+900
 );
 
 }
@@ -3685,17 +3411,13 @@ showWeapon(
 );
 
 
-/* ==========================
-СВАЙП ОРУЖИЯ
-========================== */
+/* SWIPE WEAPON */
 
 const weaponSwitch=
 $("weaponSwitch");
 
 let weaponSwipeID=null;
-
 let sx0=0;
-
 let sy0=0;
 
 
@@ -3728,10 +3450,7 @@ e=>{
 
 e.preventDefault();
 
-for(
-const t
-of e.changedTouches
-){
+for(const t of e.changedTouches){
 
 if(
 t.identifier!==
@@ -3789,68 +3508,40 @@ weaponSwipeID=null;
 );
 
 
-/* ==========================
-ДВИЖЕНИЕ
-========================== */
+/* MOVE */
 
-function updatePlayer(
-dt
-){
+function updatePlayer(dt){
 
-if(
-player.hp<=0
-)
+if(player.hp<=0)
 return;
-
 
 const speed=270;
 
-const forward=
--joyY;
-
-const strafe=
-joyX;
-
+const forward=-joyY;
+const strafe=joyX;
 
 const dx=
 (
-Math.cos(
-player.angle
-)*
-forward
--
-Math.sin(
-player.angle
-)*
-strafe
+Math.cos(player.angle)*forward-
+Math.sin(player.angle)*strafe
 )*
 speed*
 dt;
 
-
 const dy=
 (
-Math.sin(
-player.angle
-)*
-forward
-+
-Math.cos(
-player.angle
-)*
-strafe
+Math.sin(player.angle)*forward+
+Math.cos(player.angle)*strafe
 )*
 speed*
 dt;
 
 
 const nx=
-player.x+
-dx;
+player.x+dx;
 
 const ny=
-player.y+
-dy;
+player.y+dy;
 
 
 if(
@@ -3860,8 +3551,7 @@ player.y
 )
 ){
 
-player.x=
-nx;
+player.x=nx;
 
 }
 
@@ -3873,74 +3563,27 @@ ny
 )
 ){
 
-player.y=
-ny;
+player.y=ny;
 
 }
 
 }
 
 
-/* ==========================
-БОТЫ
-========================== */
+/* BOTS */
 
 const enemies=[
-
-{
-x:500,
-y:700,
-hp:100,
-el:null,
-attack:0,
-type:"normal"
-},
-
-{
-x:2500,
-y:700,
-hp:100,
-el:null,
-attack:0,
-type:"normal"
-},
-
-{
-x:500,
-y:2400,
-hp:100,
-el:null,
-attack:0,
-type:"fast"
-},
-
-{
-x:2500,
-y:2400,
-hp:100,
-el:null,
-attack:0,
-type:"fast"
-},
-
-{
-x:1500,
-y:2500,
-hp:100,
-el:null,
-attack:0,
-type:"normal"
-}
-
+{x:500,y:700,hp:100,el:null,attack:0,type:"normal"},
+{x:2500,y:700,hp:100,el:null,attack:0,type:"normal"},
+{x:500,y:2400,hp:100,el:null,attack:0,type:"fast"},
+{x:2500,y:2400,hp:100,el:null,attack:0,type:"fast"},
+{x:1500,y:2500,hp:100,el:null,attack:0,type:"normal"}
 ];
 
 
 function createEnemies(){
 
-for(
-const e
-of enemies
-){
+for(const e of enemies){
 
 const el=
 document.createElement(
@@ -3952,22 +3595,18 @@ el.className=
 e.type;
 
 el.innerHTML=
-
 '<div class="enemyHP">'+
 '<div class="enemyHPInner"></div>'+
 '</div>'+
-
 '<div class="enemyHead"></div>'+
 '<div class="enemyBody"></div>'+
 '<div class="enemyGun"></div>';
-
 
 $("game").appendChild(
 el
 );
 
-e.el=
-el;
+e.el=el;
 
 }
 
@@ -3977,28 +3616,19 @@ el;
 createEnemies();
 
 
-function respawnEnemy(
-e
-){
+function respawnEnemy(e){
 
 e.x=
 150+
 Math.random()*
-(
-MAP_W-
-300
-);
+(MAP_W-300);
 
 e.y=
 150+
 Math.random()*
-(
-MAP_H-
-300
-);
+(MAP_H-300);
 
 e.hp=100;
-
 e.attack=0;
 
 e.type=
@@ -4025,14 +3655,9 @@ e.hp<=0
 )
 ){
 
-for(
-const e
-of enemies
-){
+for(const e of enemies){
 
-respawnEnemy(
-e
-);
+respawnEnemy(e);
 
 }
 
@@ -4041,36 +3666,20 @@ e
 }
 
 
-/* ==========================
-ПОКАЗ БОТА
-========================== */
-
-function showEnemy(
-e
-){
+function showEnemy(e){
 
 const dx=
-e.x-
-player.x;
+e.x-player.x;
 
 const dy=
-e.y-
-player.y;
+e.y-player.y;
 
 const d=
-Math.hypot(
-dx,
-dy
-);
-
+Math.hypot(dx,dy);
 
 let rel=
-Math.atan2(
-dy,
-dx
-)-
+Math.atan2(dy,dx)-
 player.angle;
-
 
 rel=
 Math.atan2(
@@ -4128,11 +3737,9 @@ size*2+
 "px";
 
 
-e.el
-.querySelector(
+e.el.querySelector(
 ".enemyHPInner"
-)
-.style.width=
+).style.width=
 Math.max(
 0,
 e.hp
@@ -4140,10 +3747,6 @@ e.hp
 
 }
 
-
-/* ==========================
-БОТЫ ДВИГАЮТСЯ
-========================== */
 
 function damageEffect(){
 
@@ -4153,8 +3756,7 @@ $("damage").style.opacity=
 setTimeout(
 ()=>{
 
-$("damage").style.opacity=
-0;
+$("damage").style.opacity=0;
 
 },
 120
@@ -4163,21 +3765,13 @@ $("damage").style.opacity=
 }
 
 
-function updateEnemies(
-dt
-){
+function updateEnemies(dt){
 
-for(
-const e
-of enemies
-){
+for(const e of enemies){
 
-if(
-e.hp<=0
-){
+if(e.hp<=0){
 
-e.el.style.display=
-"none";
+e.el.style.display="none";
 
 continue;
 
@@ -4185,18 +3779,13 @@ continue;
 
 
 const dx=
-player.x-
-e.x;
+player.x-e.x;
 
 const dy=
-player.y-
-e.y;
+player.y-e.y;
 
 const d=
-Math.hypot(
-dx,
-dy
-);
+Math.hypot(dx,dy);
 
 
 if(
@@ -4216,7 +3805,6 @@ dx/d*
 sp*
 dt;
 
-
 const ny=
 e.y+
 dy/d*
@@ -4224,29 +3812,12 @@ sp*
 dt;
 
 
-if(
-!blocked(
-nx,
-e.y
-)
-){
-
-e.x=
-nx;
-
+if(!blocked(nx,e.y)){
+e.x=nx;
 }
 
-
-if(
-!blocked(
-e.x,
-ny
-)
-){
-
-e.y=
-ny;
-
+if(!blocked(e.x,ny)){
+e.y=ny;
 }
 
 }
@@ -4256,8 +3827,7 @@ if(
 d<750
 ){
 
-e.attack-=
-dt;
+e.attack-=dt;
 
 if(
 e.attack<=0
@@ -4290,18 +3860,12 @@ damageEffect();
 }
 
 
-showEnemy(
-e
-);
+showEnemy(e);
 
 }
 
 }
 
-
-/* ==========================
-ПОПАДАНИЕ
-========================== */
 
 function showHit(){
 
@@ -4321,51 +3885,33 @@ $("hitmark").style.opacity=
 }
 
 
-/* ==========================
-НОЖ
-========================== */
+/* KNIFE */
 
 function knifeAttack(){
 
 let t=null;
-
-let c=
-Infinity;
+let c=Infinity;
 
 
-for(
-const e
-of enemies
-){
+for(const e of enemies){
 
-if(
-e.hp<=0
-)
+if(e.hp<=0)
 continue;
 
 
 const dx=
-e.x-
-player.x;
+e.x-player.x;
 
 const dy=
-e.y-
-player.y;
+e.y-player.y;
 
 const d=
-Math.hypot(
-dx,
-dy
-);
+Math.hypot(dx,dy);
 
 
 let a=
-Math.atan2(
-dy,
-dx
-)-
+Math.atan2(dy,dx)-
 player.angle;
-
 
 a=
 Math.atan2(
@@ -4381,7 +3927,6 @@ d<c
 ){
 
 t=e;
-
 c=d;
 
 }
@@ -4396,9 +3941,7 @@ t.hp-=100;
 showHit();
 
 
-if(
-t.hp<=0
-){
+if(t.hp<=0){
 
 kills++;
 
@@ -4417,15 +3960,11 @@ checkWave();
 }
 
 
-/* ==========================
-СТРЕЛЬБА
-========================== */
+/* SHOOT */
 
 function shoot(){
 
-if(
-player.hp<=0
-)
+if(player.hp<=0)
 return;
 
 
@@ -4437,9 +3976,7 @@ currentWeapon===
 knifeAttack();
 
 
-if(
-multiplayerMatch
-){
+if(multiplayerMatch){
 
 sendOnline({
 type:"playerShot"
@@ -4452,9 +3989,7 @@ return;
 }
 
 
-if(
-ammo<=0
-){
+if(ammo<=0){
 
 reload();
 
@@ -4469,7 +4004,6 @@ ammo--;
 $("muzzle").style.display=
 "block";
 
-
 setTimeout(
 ()=>{
 
@@ -4481,9 +4015,7 @@ $("muzzle").style.display=
 );
 
 
-if(
-multiplayerMatch
-){
+if(multiplayerMatch){
 
 sendOnline({
 type:"playerShot"
@@ -4493,44 +4025,28 @@ type:"playerShot"
 
 
 let t=null;
-
-let c=
-Infinity;
+let c=Infinity;
 
 
-for(
-const e
-of enemies
-){
+for(const e of enemies){
 
-if(
-e.hp<=0
-)
+if(e.hp<=0)
 continue;
 
 
 const dx=
-e.x-
-player.x;
+e.x-player.x;
 
 const dy=
-e.y-
-player.y;
+e.y-player.y;
 
 const d=
-Math.hypot(
-dx,
-dy
-);
+Math.hypot(dx,dy);
 
 
 let a=
-Math.atan2(
-dy,
-dx
-)-
+Math.atan2(dy,dx)-
 player.angle;
-
 
 a=
 Math.atan2(
@@ -4546,7 +4062,6 @@ d<c
 ){
 
 t=e;
-
 c=d;
 
 }
@@ -4561,9 +4076,7 @@ t.hp-=50;
 showHit();
 
 
-if(
-t.hp<=0
-){
+if(t.hp<=0){
 
 kills++;
 
@@ -4582,15 +4095,13 @@ checkWave();
 }
 
 
-/* ==========================
-ПЕРЕЗАРЯДКА
-========================== */
+/* RELOAD */
 
 function reload(){
 
 if(
-currentWeapon==="knife" ||
-ammo>=30 ||
+currentWeapon==="knife"||
+ammo>=30||
 reserve<=0
 )
 return;
@@ -4603,18 +4114,12 @@ reserve
 );
 
 ammo+=a;
-
 reserve-=a;
 
 }
 
 
-/* ==========================
-FIRE
-========================== */
-
 let fireHeld=false;
-
 let fireTimer=null;
 
 
@@ -4624,9 +4129,7 @@ e=>{
 
 e.preventDefault();
 
-if(
-fireHeld
-)
+if(fireHeld)
 return;
 
 fireHeld=true;
@@ -4638,12 +4141,8 @@ fireTimer=
 setInterval(
 ()=>{
 
-if(
-fireHeld
-){
-
+if(fireHeld){
 shoot();
-
 }
 
 },
@@ -4700,9 +4199,7 @@ reload();
 );
 
 
-/* ==========================
-МИНИКАРТА
-========================== */
+/* MINIMAP */
 
 function updateMinimap(){
 
@@ -4717,16 +4214,11 @@ map.clientHeight;
 
 
 $("playerDot").style.left=
-player.x/
-MAP_W*
-w+
+player.x/MAP_W*w+
 "px";
 
-
 $("playerDot").style.top=
-player.y/
-MAP_H*
-h+
+player.y/MAP_H*h+
 "px";
 
 
@@ -4735,21 +4227,14 @@ document
 ".enemyDot,.remotePlayerDot"
 )
 .forEach(
-x=>
-x.remove()
+x=>x.remove()
 );
 
 
-for(
-const e
-of enemies
-){
+for(const e of enemies){
 
-if(
-e.hp<=0
-)
+if(e.hp<=0)
 continue;
-
 
 const d=
 document.createElement(
@@ -4759,34 +4244,20 @@ document.createElement(
 d.className=
 "enemyDot";
 
-
 d.style.left=
-e.x/
-MAP_W*
-w+
+e.x/MAP_W*w+
 "px";
-
 
 d.style.top=
-e.y/
-MAP_H*
-h+
+e.y/MAP_H*h+
 "px";
 
-
-map.appendChild(
-d
-);
+map.appendChild(d);
 
 }
 
 
-/* ЗЕЛЁНАЯ ТОЧКА ДРУГА */
-
-for(
-const r
-of remotePlayers.values()
-){
+for(const r of remotePlayers.values()){
 
 const d=
 document.createElement(
@@ -4796,33 +4267,22 @@ document.createElement(
 d.className=
 "remotePlayerDot";
 
-
 d.style.left=
-r.x/
-MAP_W*
-w+
+r.x/MAP_W*w+
 "px";
-
 
 d.style.top=
-r.y/
-MAP_H*
-h+
+r.y/MAP_H*h+
 "px";
 
-
-map.appendChild(
-d
-);
+map.appendChild(d);
 
 }
 
 }
 
 
-/* ==========================
-HUD
-========================== */
+/* HUD */
 
 function updateHUD(){
 
@@ -4838,19 +4298,12 @@ Math.PI%
 
 
 $("info").innerHTML=
-
 "POS: "+
-Math.round(
-player.x
-)+
+Math.round(player.x)+
 " / "+
-Math.round(
-player.y
-)+
+Math.round(player.y)+
 " &nbsp;&nbsp; ANGLE: "+
-Math.round(
-a
-)+
+Math.round(a)+
 "°";
 
 
@@ -4870,9 +4323,7 @@ $("healthText").textContent=
 "HP "+
 Math.max(
 0,
-Math.round(
-player.hp
-)
+Math.round(player.hp)
 );
 
 
@@ -4884,39 +4335,22 @@ reserve;
 }
 
 
-/* ==========================
-ВКЛАДКИ
-========================== */
+/* TABS */
 
-const gameTab=
-$("gameTab");
+const gameTab=$("gameTab");
+const lobbyTab=$("lobbyTab");
+const friendsTab=$("friendsTab");
 
-const lobbyTab=
-$("lobbyTab");
+const friendsPage=$("friendsPage");
+const lobbyPage=$("lobbyPage");
 
-const friendsTab=
-$("friendsTab");
+const lobby=$("lobby");
 
-const friendsPage=
-$("friendsPage");
+const menuTitle=$("menuTitle");
+const menuSubtitle=$("menuSubtitle");
 
-const lobbyPage=
-$("lobbyPage");
-
-const lobby=
-$("lobby");
-
-const menuTitle=
-$("menuTitle");
-
-const menuSubtitle=
-$("menuSubtitle");
-
-const profileBox=
-$("profileBox");
-
-const playButton=
-$("playButton");
+const profileBox=$("profileBox");
+const playButton=$("playButton");
 
 
 function hideAllMenuPages(){
@@ -4933,18 +4367,13 @@ x.classList.remove(
 )
 );
 
-
-friendsPage
-.classList.remove(
+friendsPage.classList.remove(
 "active"
 );
 
-
-lobbyPage
-.classList.remove(
+lobbyPage.classList.remove(
 "active"
 );
-
 
 lobby.style.display=
 "none";
@@ -4968,8 +4397,7 @@ function showGamePage(){
 
 hideAllMenuPages();
 
-gameTab
-.classList.add(
+gameTab.classList.add(
 "active"
 );
 
@@ -4995,13 +4423,11 @@ function showLobbyPage(){
 
 hideAllMenuPages();
 
-lobbyTab
-.classList.add(
+lobbyTab.classList.add(
 "active"
 );
 
-lobbyPage
-.classList.add(
+lobbyPage.classList.add(
 "active"
 );
 
@@ -5020,6 +4446,8 @@ renderLobbyMembers(
 currentLobbyMembers
 );
 
+updateLobbyLeaderControls();
+
 }
 
 
@@ -5027,13 +4455,11 @@ function showFriendsPage(){
 
 hideAllMenuPages();
 
-friendsTab
-.classList.add(
+friendsTab.classList.add(
 "active"
 );
 
-friendsPage
-.classList.add(
+friendsPage.classList.add(
 "active"
 );
 
@@ -5084,37 +4510,26 @@ showFriendsPage();
 );
 
 
-/* ==========================
-ОБЫЧНАЯ ИГРА
-========================== */
+/* START SOLO */
 
-const menu=
-$("menu");
-
-const countdown=
-$("countdown");
-
-const countdownText=
-$("countdownText");
+const menu=$("menu");
+const countdown=$("countdown");
+const countdownText=$("countdownText");
 
 let gameStarted=false;
 
 
 function startGame(){
 
-if(
-gameStarted
-)
+if(gameStarted)
 return;
 
+multiplayerMatch=false;
 
-multiplayerMatch=
-false;
-
+clearRemotePlayers();
 
 playButton.style.display=
 "none";
-
 
 countdown.style.display=
 "block";
@@ -5122,11 +4537,9 @@ countdown.style.display=
 countdownText.style.display=
 "block";
 
-
 let n=5;
 
-countdown.textContent=
-n;
+countdown.textContent=n;
 
 
 const t=
@@ -5135,25 +4548,13 @@ setInterval(
 
 n--;
 
-
-if(
-n>=0
-){
-
-countdown.textContent=
-n;
-
+if(n>=0){
+countdown.textContent=n;
 }
 
+if(n<0){
 
-if(
-n<0
-){
-
-clearInterval(
-t
-);
-
+clearInterval(t);
 
 countdown.style.display=
 "none";
@@ -5164,8 +4565,7 @@ countdownText.style.display=
 menu.style.display=
 "none";
 
-gameStarted=
-true;
+gameStarted=true;
 
 }
 
@@ -5189,17 +4589,11 @@ startGame();
 );
 
 
-/* ==========================
-СИНХРОННЫЙ ОТСЧЁТ
-========================== */
+/* LOBBY COUNTDOWN */
 
-function showLobbyCountdown(
-startAt
-){
+function showLobbyCountdown(startAt){
 
-if(
-lobbyCountdownTimer
-){
+if(lobbyCountdownTimer){
 
 clearInterval(
 lobbyCountdownTimer
@@ -5225,8 +4619,7 @@ Math.ceil(
 (
 startAt-
 Date.now()
-)/
-1000
+)/1000
 );
 
 
@@ -5240,8 +4633,7 @@ n
 );
 
 
-countdown.textContent=
-n;
+countdown.textContent=n;
 
 }
 
@@ -5258,15 +4650,11 @@ update,
 }
 
 
-/* ==========================
-СТАРТ С СЕРВЕРА
-========================== */
+/* SERVER START */
 
 function launchLobbyGame(){
 
-if(
-lobbyCountdownTimer
-){
+if(lobbyCountdownTimer){
 
 clearInterval(
 lobbyCountdownTimer
@@ -5291,8 +4679,7 @@ countdownText.style.display=
 menu.style.display=
 "none";
 
-gameStarted=
-true;
+gameStarted=true;
 
 },
 120
@@ -5301,23 +4688,18 @@ true;
 }
 
 
-/* ==========================
-GAME OVER
-========================== */
+/* GAME OVER */
 
 function gameOver(){
 
 if(
-$("gameover")
-.style.display===
+$("gameover").style.display===
 "flex"
 )
 return;
 
-
 $("gameover").style.display=
 "flex";
-
 
 $("finalScore").textContent=
 "KILLS: "+
@@ -5336,65 +4718,42 @@ location.reload();
 );
 
 
-/* ==========================
-GAME LOOP
-========================== */
+/* GAME LOOP */
 
 let last=
 performance.now();
 
 
-function loop(
-now
-){
+function loop(now){
 
 const dt=
 Math.min(
 .05,
-(
-now-last
-)/
-1000
+(now-last)/1000
 );
 
-
-last=
-now;
+last=now;
 
 
 if(
-gameStarted &&
+gameStarted&&
 player.hp>0
 ){
 
-updatePlayer(
-dt
-);
+updatePlayer(dt);
 
-updateEnemies(
-dt
-);
-
-/* ДРУГОЙ ИГРОК */
+updateEnemies(dt);
 
 updateRemotePlayers();
 
-/* КАРТА */
-
 updateMinimap();
-
-/* HUD */
 
 updateHUD();
 
-/* ОТПРАВКА КООРДИНАТ */
-
-sendPlayerState(
-now
-);
+sendPlayerState(now);
 
 }else if(
-gameStarted &&
+gameStarted&&
 player.hp<=0
 ){
 
@@ -5415,6 +4774,5 @@ loop
 );
 
 </script>
-
 </body>
 </html>
