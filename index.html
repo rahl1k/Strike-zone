@@ -5031,216 +5031,100 @@ const sakura=
 selectedMap===
 "sakura";
 
+/* Ground must meet building bottoms exactly. */
 const horizon=
 canvasH*
-.52+
+.58+
 cameraPitch*
 4;
 
 /* sky */
-
-const sky=
-worldCtx.createLinearGradient(
-0,
-0,
-0,
-Math.max(
-1,
-horizon
-)
-);
-
-if(
-sakura
-){
-
-sky.addColorStop(
-0,
-"#e98ab7"
-);
-
-sky.addColorStop(
-.58,
-"#f5b2cf"
-);
-
-sky.addColorStop(
-1,
-"#ffe0ed"
-);
-
+const sky=worldCtx.createLinearGradient(0,0,0,Math.max(1,horizon));
+if(sakura){
+  sky.addColorStop(0,"#e98ab7");
+  sky.addColorStop(.58,"#f5b2cf");
+  sky.addColorStop(1,"#ffe0ed");
 }else{
+  sky.addColorStop(0,"#4d98cd");
+  sky.addColorStop(.58,"#79bce2");
+  sky.addColorStop(1,"#c2e3f1");
+}
+worldCtx.fillStyle=sky;
+worldCtx.fillRect(0,0,canvasW,Math.max(0,horizon));
 
-sky.addColorStop(
-0,
-"#4d98cd"
-);
+/* Real visible floor */
+const ground=worldCtx.createLinearGradient(0,horizon,0,canvasH);
+if(sakura){
+  ground.addColorStop(0,"#66565d");
+  ground.addColorStop(.35,"#4d4448");
+  ground.addColorStop(1,"#262527");
+}else{
+  ground.addColorStop(0,"#5e625f");
+  ground.addColorStop(.35,"#464a47");
+  ground.addColorStop(1,"#232625");
+}
+worldCtx.fillStyle=ground;
+worldCtx.fillRect(0,horizon,canvasW,canvasH-horizon);
 
-sky.addColorStop(
-.58,
-"#79bce2"
-);
+/* Strong curb/contact seam under buildings. */
+worldCtx.fillStyle=sakura?"#352b30":"#303432";
+worldCtx.fillRect(0,horizon-3,canvasW,7);
 
-sky.addColorStop(
-1,
-"#c2e3f1"
-);
-
+/* Large perspective paving slabs. */
+const cx=canvasW/2;
+const rows=12;
+const cols=14;
+for(let r=0;r<rows;r++){
+  const t0=r/rows;
+  const t1=(r+1)/rows;
+  const y0=horizon+(canvasH-horizon)*(t0*t0);
+  const y1=horizon+(canvasH-horizon)*(t1*t1);
+  for(let c=-cols;c<cols;c++){
+    const spread0=(y0-horizon)/Math.max(1,canvasH-horizon);
+    const spread1=(y1-horizon)/Math.max(1,canvasH-horizon);
+    const unit=canvasW/8;
+    const x00=cx+c*unit*spread0;
+    const x01=cx+(c+1)*unit*spread0;
+    const x10=cx+c*unit*spread1;
+    const x11=cx+(c+1)*unit*spread1;
+    if(((r+c)&1)===0){
+      worldCtx.fillStyle=sakura?"rgba(255,230,238,.045)":"rgba(255,255,255,.045)";
+      worldCtx.beginPath();
+      worldCtx.moveTo(x00,y0);worldCtx.lineTo(x01,y0);worldCtx.lineTo(x11,y1);worldCtx.lineTo(x10,y1);worldCtx.closePath();worldCtx.fill();
+    }
+  }
 }
 
-worldCtx.fillStyle=
-sky;
-
-worldCtx.fillRect(
-0,
-0,
-canvasW,
-Math.max(
-0,
-horizon
-)
-);
-
-/* ground */
-
-const ground=
-worldCtx.createLinearGradient(
-0,
-horizon,
-0,
-canvasH
-);
-
-if(
-sakura
-){
-
-ground.addColorStop(
-0,
-"#9f7085"
-);
-
-ground.addColorStop(
-1,
-"#624553"
-);
-
-}else{
-
-ground.addColorStop(
-0,
-"#686d70"
-);
-
-ground.addColorStop(
-1,
-"#393d40"
-);
-
-}
-
-worldCtx.fillStyle=
-ground;
-
-worldCtx.fillRect(
-0,
-horizon,
-canvasW,
-canvasH-
-horizon
-);
-
-/*
-Простая перспектива пола.
-Canvas-линии намного легче,
-чем CSS-текстуры.
-*/
-
+/* Tile joints */
 worldCtx.save();
-
-worldCtx.globalAlpha=
-sakura
-?
-.13
-:
-.1;
-
-worldCtx.strokeStyle=
-"#ffffff";
-
-worldCtx.lineWidth=
-1;
-
-const center=
-canvasW/
-2;
-
-for(
-let i=-8;
-i<=8;
-i++
-){
-
-const bottomX=
-center+
-i*
-canvasW*
-.15;
-
-worldCtx.beginPath();
-
-worldCtx.moveTo(
-center,
-horizon
-);
-
-worldCtx.lineTo(
-bottomX,
-canvasH
-);
-
-worldCtx.stroke();
-
+worldCtx.strokeStyle=sakura?"rgba(235,207,217,.25)":"rgba(220,225,221,.22)";
+worldCtx.lineWidth=1;
+for(let i=-12;i<=12;i++){
+  const xb=cx+i*(canvasW/9);
+  worldCtx.beginPath();
+  worldCtx.moveTo(cx,horizon);
+  worldCtx.lineTo(xb,canvasH);
+  worldCtx.stroke();
+}
+for(let i=1;i<=15;i++){
+  const t=i/15;
+  const y=horizon+(canvasH-horizon)*(t*t);
+  worldCtx.beginPath();
+  worldCtx.moveTo(0,y);
+  worldCtx.lineTo(canvasW,y);
+  worldCtx.stroke();
 }
 
-for(
-let i=1;
-i<=11;
-i++
-){
-
-const t=
-i/
-11;
-
-const eased=
-t*
-t;
-
-const y=
-horizon+
-eased*
-(
-canvasH-
-horizon
-);
-
-worldCtx.beginPath();
-
-worldCtx.moveTo(
-0,
-y
-);
-
-worldCtx.lineTo(
-canvasW,
-y
-);
-
-worldCtx.stroke();
-
+/* Near-camera roughness/speckles so it reads as solid asphalt/stone. */
+worldCtx.globalAlpha=.20;
+for(let i=0;i<120;i++){
+  const rx=(i*97)%Math.max(1,Math.floor(canvasW));
+  const ry=horizon+((i*53)%Math.max(1,Math.floor(canvasH-horizon)));
+  const a=(ry-horizon)/Math.max(1,canvasH-horizon);
+  if(a<.32) continue;
+  worldCtx.fillStyle=(i%3===0)?"#111":"#fff";
+  worldCtx.fillRect(rx,ry,1+(i%2),1+(i%2));
 }
-
 worldCtx.restore();
 
 }
@@ -17048,7 +16932,6 @@ const baseInspect=inspectWeapon;inspectWeapon=function(){if(currentWeapon!=='but
 const baseReload=reload;reload=function(){if(currentWeapon==='butterfly')return;return baseReload&&baseReload.apply(this,arguments)};
 const baseShoot=shoot;shoot=function(){if(currentWeapon!=='butterfly')return baseShoot&&baseShoot.apply(this,arguments);if(player.hp<=0||respawning||matchEnded||matchMenuOpen||inspectingWeapon)return;w.classList.remove('bf-attack');void w.offsetWidth;w.classList.add('bf-attack');setTimeout(()=>w.classList.remove('bf-attack'),340);try{window.RAHL1K_SFX&&window.RAHL1K_SFX.knife&&window.RAHL1K_SFX.knife()}catch{}if(typeof knifeAttack==='function')knifeAttack()};
 function mount(){const page=document.getElementById('inventoryPage');if(!page||document.getElementById('bfInventoryCard'))return;const cards=[...page.querySelectorAll('.inventoryWeaponCard')];const host=document.getElementById('inventoryWeapons')||(cards.length?cards[0].parentElement:page);const c=document.createElement('div');c.id='bfInventoryCard';c.innerHTML='<div class="bfInvType">НОЖ-БАБОЧКА</div><div class="bfChecks"><div class="bfCheck ct">✓</div><div class="bfCheck t">✓</div></div><div class="bfInvIcon"><div class="bfInvBlade"></div><div class="bfInvHandle a"></div><div class="bfInvHandle b"></div></div><div class="bfActions"><button class="bfBtn ctBtn"></button><button class="bfBtn tBtn"></button></div><div class="bfInvName">BUTTERFLY LEGACY</div>';host.appendChild(c);function render(){
-  drawRahlGroundV9();
 const st=get();c.querySelector('.bfCheck.ct').classList.toggle('on',st.ct);c.querySelector('.bfCheck.t').classList.toggle('on',st.t);const cb=c.querySelector('.ctBtn'),tb=c.querySelector('.tBtn');cb.textContent=st.ct?'Снять с CT':'Применить за CT';tb.textContent=st.t?'Снять с T':'Применить за T';cb.classList.toggle('onCT',st.ct);tb.classList.toggle('onT',st.t)}c.addEventListener('pointerup',e=>{if(!e.target.closest('button'))c.classList.toggle('sel')});c.querySelector('.ctBtn').addEventListener('pointerup',e=>{e.stopPropagation();const st=get();st.ct=!st.ct;put(st);render()});c.querySelector('.tBtn').addEventListener('pointerup',e=>{e.stopPropagation();const st=get();st.t=!st.t;put(st);render()});render()}
 mount();setTimeout(mount,250);setTimeout(mount,800);window.RAHL1K_BUTTERFLY={select:selectBF,allowed};
 })();
@@ -17154,41 +17037,6 @@ mount();setTimeout(mount,250);setTimeout(mount,800);window.RAHL1K_BUTTERFLY={sel
 </script>
 
 
-/* RAHL1K VISIBLE FLOOR V9 START */
-function drawRahlGroundV9(){
- const W=canvas.width,H=canvas.height;
- const horizon=Math.floor(H*0.445);
- const sakura=(typeof selectedMap!=='undefined' && String(selectedMap).toLowerCase()==='sakura');
- ctx.save();
- // Strong, clearly separate ground material.
- const g=ctx.createLinearGradient(0,horizon,0,H);
- if(sakura){g.addColorStop(0,'#6f5962');g.addColorStop(.35,'#55474e');g.addColorStop(1,'#29272b');}
- else{g.addColorStop(0,'#626765');g.addColorStop(.35,'#484d4b');g.addColorStop(1,'#242827');}
- ctx.fillStyle=g;ctx.fillRect(0,horizon,W,H-horizon);
- // curb/contact line
- ctx.fillStyle=sakura?'#44343b':'#343938';ctx.fillRect(0,horizon-3,W,7);
- ctx.strokeStyle=sakura?'rgba(238,206,218,.34)':'rgba(220,225,221,.30)';
- ctx.lineWidth=Math.max(1,W/1500);
- const vanX=W*.5;
- // paving rays
- for(let i=-18;i<=18;i++){
-   const xb=vanX+i*(W/15);
-   ctx.beginPath();ctx.moveTo(vanX,horizon);ctx.lineTo(xb,H);ctx.stroke();
- }
- // paving rows with perspective spacing
- for(let i=1;i<=18;i++){
-   const t=i/18,y=horizon+(H-horizon)*t*t;
-   ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();
- }
- // broad slabs to make floor unmistakable
- ctx.globalAlpha=.09;ctx.fillStyle='#fff';
- for(let i=0;i<7;i++){
-   const t0=i/7,t1=(i+1)/7;
-   const y0=horizon+(H-horizon)*t0*t0,y1=horizon+(H-horizon)*t1*t1;
-   if(i%2===0)ctx.fillRect(0,y0,W,y1-y0);
- }
- ctx.restore();
-}
-/* RAHL1K VISIBLE FLOOR V9 END */
+
 </body>
 </html>
