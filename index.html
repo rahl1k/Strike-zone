@@ -17053,59 +17053,71 @@ mount();setTimeout(mount,250);setTimeout(mount,800);window.RAHL1K_BUTTERFLY={sel
 
 
 
-<!-- RAHL1K VIEWMODEL HANDS V12 -->
-<style>
-/* First-person viewmodel: fully visible, right-side biased like mobile FPS */
-#weapon,#weaponModel,#gun,#knife,#knifeModel,#butterflyKnife,#m9Knife{
-  overflow:visible!important;
-  transform-origin:72% 78%!important;
-}
-/* Existing weapon container gets room so inspect/draw animations do not clip the model. */
-#weaponContainer,#weaponView,#viewModel,#weaponLayer{
-  overflow:visible!important;
-  clip-path:none!important;
-}
-/* Procedural arms are attached to the HUD and stay behind the actual weapon. */
-#rahlViewHands{position:fixed;inset:0;z-index:24;pointer-events:none;overflow:hidden;display:none}
-body.rahl-in-game #rahlViewHands{display:block}
-.rahlArm{position:absolute;bottom:-8vh;height:31vh;width:9.2vh;background:linear-gradient(90deg,#8b5d45,#c98f6c 48%,#e2aa83);border:2px solid #3a2923;border-radius:5vh 5vh 1.5vh 1.5vh;box-shadow:0 5px 12px #0007;transform-origin:50% 100%}
-.rahlGlove{position:absolute;width:9.8vh;height:10.5vh;background:linear-gradient(135deg,#171b1c,#303638 55%,#101314);border:2px solid #090b0c;border-radius:3.2vh 3.2vh 2.3vh 2.3vh;top:-6vh;left:-.3vh;box-shadow:inset 0 0 0 2px #ffffff10}
-#rahlRightArm{right:15vw;transform:rotate(-17deg)}
-#rahlLeftArm{right:32vw;transform:rotate(23deg)}
-#rahlViewHands.knifeMode #rahlLeftArm{opacity:.28;transform:translate(-8vw,7vh) rotate(36deg)}
-#rahlViewHands.knifeMode #rahlRightArm{right:19vw;transform:rotate(-13deg)}
-#rahlViewHands.inspectMode{transform:translate(-3vw,-1vh) scale(.92);transform-origin:75% 80%}
-</style>
 
+<!-- RAHL1K HELD VIEWMODEL V13 -->
+<style>
+/* Weapon stays fully visible on the right, like a normal FPS viewmodel. */
+#weapon{overflow:visible!important;z-index:40!important;transform-origin:72% 88%!important}
+#weapon,#weapon *{box-sizing:border-box}
+#weapon #gun,#weapon #barrel,#weapon #pistol,#weapon #knife{overflow:visible!important}
+
+/* Hands are now mounted INSIDE #weapon, so they sit on the gun instead of floating separately. */
+#rahlWeaponHands{position:absolute;inset:0;pointer-events:none;z-index:60;overflow:visible}
+.rwForearm{position:absolute;width:58px;height:190px;border:2px solid #090b0c;border-radius:30px 30px 12px 12px;background:linear-gradient(90deg,#111618 0 20%,#2c3235 47%,#171c1e 80%,#090c0d);box-shadow:0 7px 13px #0008;transform-origin:50% 100%}
+.rwHand{position:absolute;width:65px;height:74px;border:2px solid #080a0b;border-radius:27px 29px 20px 20px;background:linear-gradient(135deg,#171b1d,#343a3d 50%,#0c1011);box-shadow:inset 0 0 0 2px #ffffff0c,0 4px 9px #0008}
+.rwHand:before,.rwHand:after{content:"";position:absolute;background:#242a2d;border:1px solid #090b0c;border-radius:12px}
+.rwHand:before{width:42px;height:14px;left:8px;top:8px;transform:rotate(-8deg)}
+.rwHand:after{width:39px;height:13px;left:12px;top:25px;transform:rotate(4deg)}
+
+/* Rifle: right hand on pistol grip, left hand supports the front. */
+#weapon .rwRight{right:24px;bottom:-115px;transform:rotate(-20deg)}
+#weapon .rwRight .rwHand{left:-8px;top:-38px;transform:rotate(11deg)}
+#weapon .rwLeft{right:150px;bottom:-128px;transform:rotate(31deg)}
+#weapon .rwLeft .rwHand{left:-8px;top:-38px;transform:rotate(-22deg)}
+
+/* Pistol: two hands together around the grip. */
+#weapon.weapon-pistol .rwRight,#weapon.equip-pistol .rwRight{right:48px;bottom:-118px;transform:rotate(-16deg)}
+#weapon.weapon-pistol .rwLeft,#weapon.equip-pistol .rwLeft{right:92px;bottom:-135px;transform:rotate(20deg)}
+
+/* Knife: right hand actually wraps around handle; left hand is open and visible to the left like the reference. */
+#weapon.weapon-knife .rwRight,#weapon.equip-knife .rwRight{right:40px;bottom:-105px;transform:rotate(-11deg)}
+#weapon.weapon-knife .rwRight .rwHand,#weapon.equip-knife .rwRight .rwHand{top:-46px;left:-7px;transform:rotate(7deg)}
+#weapon.weapon-knife .rwLeft,#weapon.equip-knife .rwLeft{right:235px;bottom:-135px;transform:rotate(53deg)}
+#weapon.weapon-knife .rwLeft .rwHand,#weapon.equip-knife .rwLeft .rwHand{transform:rotate(-35deg);border-radius:34px 24px 30px 22px}
+
+/* Keep the entire model on screen and biased to the right. */
+#weapon.equip-rifle{right:4vw!important;left:auto!important}
+#weapon.equip-pistol{right:9vw!important;left:auto!important}
+#weapon.equip-knife{right:8vw!important;left:auto!important}
+
+/* During inspect, give extra room instead of clipping weapon/hands. */
+#weapon.inspecting,#weapon.weapon-inspecting,#weapon.inspect-rifle,#weapon.inspect-pistol,#weapon.inspect-knife{overflow:visible!important;right:12vw!important}
+@media (max-height:520px){
+ .rwForearm{height:155px;width:49px}.rwHand{width:57px;height:65px}
+ #weapon .rwLeft{right:132px}#weapon.equip-knife .rwLeft{right:205px}
+}
+</style>
 <script>
 (function(){
- function mountHands(){
-  if(document.getElementById('rahlViewHands'))return;
-  var h=document.createElement('div');h.id='rahlViewHands';
-  h.innerHTML='<div class="rahlArm" id="rahlLeftArm"><div class="rahlGlove"></div></div><div class="rahlArm" id="rahlRightArm"><div class="rahlGlove"></div></div>';
-  document.body.appendChild(h);
+ function mount(){
+  var w=document.getElementById('weapon');
+  if(!w||document.getElementById('rahlWeaponHands'))return;
+  var h=document.createElement('div');h.id='rahlWeaponHands';
+  h.innerHTML='<div class="rwForearm rwLeft"><div class="rwHand"></div></div><div class="rwForearm rwRight"><div class="rwHand"></div></div>';
+  w.appendChild(h);
  }
- function visible(el){if(!el)return false;var st=getComputedStyle(el);return st.display!=='none'&&st.visibility!=='hidden'&&parseFloat(st.opacity||1)>.03;}
- function tick(){
-  mountHands();
-  var game=document.getElementById('game');
-  var menu=document.getElementById('menu');
-  var inGame=visible(game)&&!visible(menu);
-  document.body.classList.toggle('rahl-in-game',inGame);
-  var hands=document.getElementById('rahlViewHands');if(!hands)return;
-  var knife=false,inspect=false;
-  var ids=['knife','knifeModel','butterflyKnife','m9Knife'];
-  for(var i=0;i<ids.length;i++){var e=document.getElementById(ids[i]);if(visible(e)){knife=true;break;}}
-  // fallback from common current weapon state/text
-  try{if(typeof currentWeapon!=='undefined'&&/knife|butterfly|m9/i.test(String(currentWeapon)))knife=true;}catch(e){}
-  var all=document.querySelectorAll('[class*="inspect"],[id*="inspect" i]');
-  for(var j=0;j<all.length;j++){if(visible(all[j])&&(/active|playing|inspect/i.test(all[j].className+' '+all[j].id))){inspect=true;break;}}
-  hands.classList.toggle('knifeMode',knife);
-  hands.classList.toggle('inspectMode',inspect);
+ function sync(){
+  mount();var w=document.getElementById('weapon');if(!w)return;
+  var kind='rifle';
+  try{if(typeof currentWeapon!=='undefined')kind=String(currentWeapon).toLowerCase();}catch(e){}
+  w.classList.toggle('weapon-knife',/knife|butterfly|m9/.test(kind));
+  w.classList.toggle('weapon-pistol',/pistol/.test(kind));
+  w.classList.toggle('weapon-rifle',!/knife|butterfly|m9|pistol/.test(kind));
  }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mountHands);else mountHands();
- setInterval(tick,80);
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+ setInterval(sync,80);
 })();
 </script>
+
 </body>
 </html>
