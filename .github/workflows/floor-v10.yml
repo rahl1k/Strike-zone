@@ -1,0 +1,25 @@
+name: Real Floor V10
+on:
+  push:
+    paths:
+      - '.github/workflows/floor-v10.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/floor_v10.py
+      - run: |
+          grep -q 'Real visible floor' index.html
+          grep -q 'Ground must meet building bottoms exactly' index.html
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Replace grid with solid textured floor on both maps'
+          git push
