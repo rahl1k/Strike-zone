@@ -1,0 +1,26 @@
+name: Special Knives V19
+on:
+  push:
+    paths:
+      - '.github/workflows/special-knives-v19.yml'
+permissions:
+  contents: write
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/rebuild_special_knives_v19.py
+      - run: |
+          grep -q 'RAHL1K SPECIAL KNIVES V19' index.html
+          ! grep -q 'RAHL1K KARAMBIT V13' index.html
+          ! grep -q 'RAHL1K INVENTORY SHARED PANEL V17' index.html
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Rebuild Karambit and Butterfly inventory behavior'
+          git push
