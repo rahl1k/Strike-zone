@@ -1,0 +1,27 @@
+name: Inventory Unified V24
+on:
+  push:
+    paths:
+      - '.github/workflows/inventory-unified-v24.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/inventory_unified_v24.py
+      - run: |
+          grep -q 'RAHL1K INVENTORY UNIFIED V24' index.html
+          ! grep -q 'RAHL1K INVENTORY SPECIAL FIX V23' index.html
+          grep -q 'kBlade' index.html
+          grep -q 'v24checks' index.html
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Unify inventory selection checks and knife apply'
+          git push
