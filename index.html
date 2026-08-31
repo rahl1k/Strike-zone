@@ -12835,6 +12835,29 @@ loop
 <!-- =========================================================
      RAHL1K FPS — SOUNDS + MENU ANIMATIONS ADDON
      ВСТАВИТЬ ПЕРЕД 
+
+<!-- RAHL1K FRIEND INVITE DIRECT FIX V2 -->
+<style>
+.lobbyFriendItem .inviteLobbyButton{display:none!important}
+.lobbyFriendItem.selected .inviteLobbyButton{display:block!important}
+</style>
+<script>
+(function(){
+ const list=document.getElementById('lobbyFriendsList');
+ if(!list)return;
+ function selectFriend(e){
+   const row=e.target.closest('.lobbyFriendItem');
+   if(!row||!list.contains(row)||e.target.closest('.inviteLobbyButton'))return;
+   e.preventDefault();
+   list.querySelectorAll('.lobbyFriendItem').forEach(x=>x.classList.remove('selected'));
+   row.classList.add('selected');
+ }
+ list.addEventListener('pointerdown',selectFriend,{passive:false});
+ list.addEventListener('click',selectFriend,{passive:false});
+ list.addEventListener('touchend',selectFriend,{passive:false});
+})();
+</script>
+
 </body>
 ========================================================= -->
 
@@ -14596,7 +14619,30 @@ window.RAHL1K_SFX=
 
 <!-- =========================================================
      RAHL1K FPS — INVENTORY SYSTEM
-     ВСТАВИТЬ ПЕРЕД </body>
+     ВСТАВИТЬ ПЕРЕД 
+<!-- RAHL1K FRIEND INVITE DIRECT FIX V2 -->
+<style>
+.lobbyFriendItem .inviteLobbyButton{display:none!important}
+.lobbyFriendItem.selected .inviteLobbyButton{display:block!important}
+</style>
+<script>
+(function(){
+ const list=document.getElementById('lobbyFriendsList');
+ if(!list)return;
+ function selectFriend(e){
+   const row=e.target.closest('.lobbyFriendItem');
+   if(!row||!list.contains(row)||e.target.closest('.inviteLobbyButton'))return;
+   e.preventDefault();
+   list.querySelectorAll('.lobbyFriendItem').forEach(x=>x.classList.remove('selected'));
+   row.classList.add('selected');
+ }
+ list.addEventListener('pointerdown',selectFriend,{passive:false});
+ list.addEventListener('click',selectFriend,{passive:false});
+ list.addEventListener('touchend',selectFriend,{passive:false});
+})();
+</script>
+
+</body>
 ========================================================= -->
 
 <style>
@@ -16966,6 +17012,29 @@ const baseReload=reload;reload=function(){if(currentWeapon==='butterfly')return;
 const baseShoot=shoot;shoot=function(){if(currentWeapon!=='butterfly')return baseShoot&&baseShoot.apply(this,arguments);if(player.hp<=0||respawning||matchEnded||matchMenuOpen||inspectingWeapon)return;w.classList.remove('bf-attack');void w.offsetWidth;w.classList.add('bf-attack');setTimeout(()=>w.classList.remove('bf-attack'),340);try{window.RAHL1K_SFX&&window.RAHL1K_SFX.knife&&window.RAHL1K_SFX.knife()}catch{}if(typeof knifeAttack==='function')knifeAttack()};
 function mount(){const page=document.getElementById('inventoryPage');if(!page||document.getElementById('bfInventoryCard'))return;const cards=[...page.querySelectorAll('.inventoryWeaponCard')];const host=document.getElementById('inventoryWeapons')||(cards.length?cards[0].parentElement:page);const c=document.createElement('div');c.id='bfInventoryCard';c.innerHTML='<div class="bfInvType">НОЖ-БАБОЧКА</div><div class="bfChecks"><div class="bfCheck ct">✓</div><div class="bfCheck t">✓</div></div><div class="bfInvIcon"><div class="bfInvBlade"></div><div class="bfInvHandle a"></div><div class="bfInvHandle b"></div></div><div class="bfActions"><button class="bfBtn ctBtn"></button><button class="bfBtn tBtn"></button></div><div class="bfInvName">BUTTERFLY LEGACY</div>';host.appendChild(c);function render(){const st=get();c.querySelector('.bfCheck.ct').classList.toggle('on',st.ct);c.querySelector('.bfCheck.t').classList.toggle('on',st.t);const cb=c.querySelector('.ctBtn'),tb=c.querySelector('.tBtn');cb.textContent=st.ct?'Снять с CT':'Применить за CT';tb.textContent=st.t?'Снять с T':'Применить за T';cb.classList.toggle('onCT',st.ct);tb.classList.toggle('onT',st.t)}c.addEventListener('pointerup',e=>{if(!e.target.closest('button'))c.classList.toggle('sel')});c.querySelector('.ctBtn').addEventListener('pointerup',e=>{e.stopPropagation();const st=get();st.ct=!st.ct;put(st);render()});c.querySelector('.tBtn').addEventListener('pointerup',e=>{e.stopPropagation();const st=get();st.t=!st.t;put(st);render()});render()}
 mount();setTimeout(mount,250);setTimeout(mount,800);window.RAHL1K_BUTTERFLY={select:selectBF,allowed};
+})();
+</script>
+
+
+<!-- RAHL1K FRIEND INVITE DIRECT FIX V2 -->
+<style>
+.lobbyFriendItem .inviteLobbyButton{display:none!important}
+.lobbyFriendItem.selected .inviteLobbyButton{display:block!important}
+</style>
+<script>
+(function(){
+ const list=document.getElementById('lobbyFriendsList');
+ if(!list)return;
+ function selectFriend(e){
+   const row=e.target.closest('.lobbyFriendItem');
+   if(!row||!list.contains(row)||e.target.closest('.inviteLobbyButton'))return;
+   e.preventDefault();
+   list.querySelectorAll('.lobbyFriendItem').forEach(x=>x.classList.remove('selected'));
+   row.classList.add('selected');
+ }
+ list.addEventListener('pointerdown',selectFriend,{passive:false});
+ list.addEventListener('click',selectFriend,{passive:false});
+ list.addEventListener('touchend',selectFriend,{passive:false});
 })();
 </script>
 
