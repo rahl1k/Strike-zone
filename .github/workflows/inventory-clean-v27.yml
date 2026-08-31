@@ -1,0 +1,23 @@
+name: Inventory Clean V27
+on:
+  push:
+    paths:
+      - 'tools/inventory_clean_v27.py'
+      - '.github/workflows/inventory-clean-v27.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/inventory_clean_v27.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Replace conflicting inventory handlers with clean V27"
+          git push
