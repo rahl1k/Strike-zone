@@ -17120,428 +17120,73 @@ mount();setTimeout(mount,250);setTimeout(mount,800);window.RAHL1K_BUTTERFLY={sel
 </script>
 
 
-<!-- RAHL1K KARAMBIT V13 -->
-<style>
-#karambit{display:none;position:absolute;right:8vw;bottom:5vh;width:250px;height:235px;z-index:27;pointer-events:none;transform-origin:73% 78%;filter:drop-shadow(0 10px 8px #0008)}
-#karambitHandle{position:absolute;right:18px;bottom:24px;width:92px;height:34px;border-radius:17px 8px 8px 17px;background:linear-gradient(180deg,#24282b,#0d0f11 52%,#292d30);border:2px solid #050607;transform:rotate(-34deg);box-shadow:inset 0 0 0 2px #ffffff12,inset 0 -7px 10px #0008}
-#karambitHandle:before{content:"";position:absolute;left:18px;top:7px;width:45px;height:17px;border-radius:9px;background:repeating-linear-gradient(90deg,#090a0b 0 7px,#31363a 7px 10px)}
-#karambitRing{position:absolute;right:3px;bottom:7px;width:43px;height:43px;border:9px solid #15191c;border-radius:50%;background:transparent;box-shadow:inset 0 0 0 2px #555b60,0 2px 4px #000;transform:rotate(-34deg)}
-#karambitBlade{position:absolute;right:72px;bottom:58px;width:145px;height:120px;transform:rotate(-22deg);transform-origin:90% 80%}
-#karambitBlade:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#b7c1c7 0 16%,#4e5960 38%,#1a2025 61%,#78858d 82%,#d5dde1);clip-path:path('M 139 100 C 104 112 65 108 36 87 C 12 70 2 43 10 14 C 32 45 58 56 87 50 C 111 45 128 29 143 6 C 150 43 149 75 139 100 Z');border-radius:12px;box-shadow:inset 0 0 10px #fff4}
-#karambitBlade:after{content:"";position:absolute;left:34px;top:42px;width:91px;height:4px;border-radius:3px;background:#e7edf0aa;transform:rotate(-6deg)}
-#karambitEdge{position:absolute;right:91px;bottom:81px;width:118px;height:79px;border-bottom:4px solid #e8eff2;border-radius:0 0 65% 55%;transform:rotate(-25deg)}
-#weapon.karambit-equipped #knife{display:none!important}
-#weapon.karambit-equipped #karambit{display:block!important}
-@keyframes karambitDrawSO2{
-0%{transform:translate(120px,170px) rotate(92deg) scale(.76);opacity:0}
-18%{transform:translate(35px,42px) rotate(34deg) scale(.95);opacity:1}
-34%{transform:translate(-2px,-28px) rotate(-86deg) scale(1.04)}
-52%{transform:translate(8px,-48px) rotate(-232deg) scale(1.06)}
-70%{transform:translate(2px,-20px) rotate(-367deg) scale(1.03)}
-84%{transform:translate(-3px,7px) rotate(-405deg) scale(1.01)}
-100%{transform:translate(0,0) rotate(-394deg) scale(1);opacity:1}
-}
-#weapon.karambit-equipped.equip-knife #karambit{animation:karambitDrawSO2 .92s cubic-bezier(.2,.72,.18,1) both}
-@keyframes karambitInspectSO2{
-0%{transform:translate(0,0) rotate(-394deg) scale(1)}
-12%{transform:translate(-45px,-22px) rotate(-420deg) scale(1.08)}
-28%{transform:translate(-92px,-76px) rotate(-505deg) scale(1.18)}
-45%{transform:translate(-104px,-93px) rotate(-625deg) scale(1.21)}
-61%{transform:translate(-68px,-67px) rotate(-770deg) scale(1.18)}
-76%{transform:translate(-32px,-34px) rotate(-875deg) scale(1.11)}
-90%{transform:translate(-8px,-8px) rotate(-784deg) scale(1.03)}
-100%{transform:translate(0,0) rotate(-754deg) scale(1)}
-}
-#weapon.karambit-inspect #karambit{animation:karambitInspectSO2 1.9s cubic-bezier(.22,.62,.22,1) both!important}
-@keyframes karambitAttackSO2{
-0%{transform:translate(0,0) rotate(-394deg) scale(1)}
-25%{transform:translate(-15px,8px) rotate(-430deg) scale(.98)}
-52%{transform:translate(-118px,-72px) rotate(-315deg) scale(1.2)}
-70%{transform:translate(-82px,-45px) rotate(-335deg) scale(1.12)}
-100%{transform:translate(0,0) rotate(-394deg) scale(1)}
-}
-#weapon.karambit-equipped.knife-attacking #karambit{animation:karambitAttackSO2 .34s cubic-bezier(.18,.8,.25,1) both!important}
-#rahlViewHands.karambitMode #rahlRightArm{right:16vw;bottom:-6vh;transform:rotate(-19deg)}
-#rahlViewHands.karambitMode #rahlLeftArm{opacity:.22;right:35vw;bottom:-11vh;transform:rotate(32deg)}
-#karambitInventoryCard{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:145px;min-height:105px;padding:10px;border:2px solid #ffffff33;border-radius:12px;background:#1d2831;color:white;font-weight:900;cursor:pointer;touch-action:manipulation}
-#karambitInventoryCard.equipped{border-color:#65ff8a;box-shadow:0 0 14px #65ff8a55;background:#253b32}
-#karambitInventoryCard .kIcon{font-size:34px;transform:rotate(-28deg)}
-#karambitInventoryCard small{font-size:9px;color:#ffffff99}
-</style>
-<script>
-(function(){
- const KEY='rahlKnifeSkin';
- let selected=localStorage.getItem(KEY)||'butterfly';
- function ensureModel(){
-  var w=document.getElementById('weapon'); if(!w||document.getElementById('karambit'))return;
-  var k=document.createElement('div'); k.id='karambit';
-  k.innerHTML='<div id="karambitBlade"></div><div id="karambitEdge"></div><div id="karambitHandle"></div><div id="karambitRing"></div>';
-  w.appendChild(k);
- }
- function sync(){
-  ensureModel();
-  var w=document.getElementById('weapon');if(!w)return;
-  var active=(selected==='karambit' && typeof currentWeapon!=='undefined' && currentWeapon==='knife');
-  w.classList.toggle('karambit-equipped',active);
-  var old=document.getElementById('knife'); if(old&&active)old.style.setProperty('display','none','important');
-  var k=document.getElementById('karambit'); if(k)k.style.display=active?'block':'none';
-  var h=document.getElementById('rahlViewHands'); if(h)h.classList.toggle('karambitMode',active);
-  var card=document.getElementById('karambitInventoryCard'); if(card)card.classList.toggle('equipped',selected==='karambit');
- }
- function equip(){
-  selected='karambit';localStorage.setItem(KEY,selected);sync();
-  try{if(typeof currentWeapon!=='undefined'&&currentWeapon==='knife'&&typeof playEquipAnimation==='function')playEquipAnimation('knife');}catch(e){}
- }
- function mountCard(){
-  if(document.getElementById('karambitInventoryCard'))return;
-  var host=document.getElementById('inventoryGrid')||document.getElementById('inventoryItems')||document.getElementById('inventoryList')||document.querySelector('#inventoryPage .inventoryGrid,#inventoryPage .items,#inventoryPage');
-  if(!host)return;
-  var c=document.createElement('button');c.id='karambitInventoryCard';c.type='button';
-  c.innerHTML='<span class="kIcon">◖</span><span>KARAMBIT</span><small>Нож • экипировать</small>';
-  c.addEventListener('click',equip);c.addEventListener('touchend',function(e){e.preventDefault();equip();},{passive:false});
-  host.appendChild(c);sync();
- }
- function hook(){
-  ensureModel();mountCard();
-  if(typeof showWeapon==='function'&&!showWeapon.__karambit){
-   var oldShow=showWeapon;showWeapon=function(type){oldShow(type);setTimeout(sync,0)};showWeapon.__karambit=true;
-  }
-  if(typeof inspectWeapon==='function'&&!inspectWeapon.__karambit){
-   var oldInspect=inspectWeapon;inspectWeapon=function(){
-    if(selected==='karambit'&&typeof currentWeapon!=='undefined'&&currentWeapon==='knife'){
-      if(!gameStarted||respawning||matchEnded||matchMenuOpen||player.hp<=0||inspectingWeapon||knifeAttackAnimating)return;
-      inspectingWeapon=true;var w=document.getElementById('weapon');w.classList.remove('karambit-inspect');void w.offsetWidth;w.classList.add('karambit-inspect');
-      inspectTimer=setTimeout(function(){w.classList.remove('karambit-inspect');inspectingWeapon=false;inspectTimer=null;},1980);return;
-    }
-    return oldInspect.apply(this,arguments);
-   };inspectWeapon.__karambit=true;
-  }
-  sync();
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hook);else hook();
- setInterval(function(){mountCard();sync()},350);
- window.rahlEquipKarambit=equip;
-})();
-</script>
 
-
-<!-- RAHL1K OWNER KARAMBIT INVENTORY V14 -->
+<!-- RAHL1K SPECIAL KNIVES V19 -->
 <style>
-/* Inventory can scroll when there are more weapons than fit on screen */
-#inventoryContent{overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-y!important;max-height:72vh!important;padding-bottom:18px!important}
-#inventoryWeapons{display:flex!important;flex-wrap:nowrap!important;justify-content:flex-start!important;gap:12px!important;overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-x!important;padding:6px 8px 15px!important;scrollbar-width:thin!important}
-#inventoryWeapons>.inventoryWeaponCard,#inventoryWeapons>#karambitInventoryCard{flex:0 0 180px!important;min-width:180px!important;min-height:132px!important}
-#karambitInventoryCard{position:relative!important;width:180px!important;height:132px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;padding:10px!important;border:2px solid #ffffff33!important;border-radius:14px!important;background:linear-gradient(145deg,#263744,#121b22)!important;color:#fff!important;box-shadow:0 8px 20px #0007,inset 0 0 20px #ffffff08!important}
-#karambitInventoryCard.equipped{border-color:#65ff8a!important;box-shadow:0 8px 20px #0007,0 0 18px #65ff8a55!important}
-#karambitInventoryCard .kType{position:absolute;left:10px;top:9px;color:#ffffff77;font-size:9px;font-weight:900;letter-spacing:1px}
-#karambitInventoryCard .kName{position:absolute;left:6px;right:6px;bottom:9px;text-align:center;font-size:13px;font-weight:900;color:#fff}
-#karambitInventoryCard .kIcon{position:relative;width:92px;height:72px;font-size:0!important;transform:rotate(-18deg)!important}
-#karambitInventoryCard .kIcon:before{content:"";position:absolute;left:6px;top:2px;width:62px;height:52px;border:7px solid #24292d;border-top-color:transparent;border-left-color:#606b72;border-radius:70% 30% 70% 25%;transform:rotate(-12deg);box-shadow:inset -2px -2px 0 #e8eef2,0 3px 5px #0007}
-#karambitInventoryCard .kIcon:after{content:"";position:absolute;right:0;bottom:4px;width:45px;height:16px;border-radius:10px;background:linear-gradient(#2d3235,#0d1012);border:2px solid #050607;box-shadow:14px 1px 0 -4px #111}
-body:not(.rahl-karambit-owner) #karambit{display:none!important}
-body:not(.rahl-karambit-owner) #karambitInventoryCard{display:none!important}
-body:not(.rahl-karambit-owner) #rahlViewHands.karambitMode #rahlRightArm,
-body:not(.rahl-karambit-owner) #rahlViewHands.karambitMode #rahlLeftArm{opacity:0!important}
-@media(max-height:430px){#inventoryContent{max-height:68vh!important}#inventoryWeapons>.inventoryWeaponCard,#inventoryWeapons>#karambitInventoryCard{flex-basis:165px!important;min-width:165px!important}}
+#inventoryWeapons{display:flex!important;flex-wrap:nowrap!important;gap:14px!important;overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-x!important;padding:8px 12px 16px!important;scroll-snap-type:x proximity}
+#inventoryWeapons>.inventoryWeaponCard,#inventoryWeapons>#bfInventoryCard,#inventoryWeapons>#karambitInventoryCard{flex:0 0 190px!important;width:190px!important;min-width:190px!important;max-width:190px!important;height:145px!important;min-height:145px!important;max-height:145px!important;box-sizing:border-box!important;scroll-snap-align:start}
+#bfInventoryCard,#karambitInventoryCard{position:relative;border:2px solid #ffffff28;border-radius:14px;background:linear-gradient(155deg,#263745,#131c23 64%,#0d141a);overflow:hidden;color:#fff;cursor:pointer;touch-action:manipulation;box-shadow:0 7px 18px #0007,inset 0 0 20px #ffffff08}
+#bfInventoryCard.selected,#karambitInventoryCard.selected{border-color:#5e9fd4;box-shadow:0 8px 22px #0009,0 0 0 1px #70baff66}
+.specialType{position:absolute;left:11px;top:9px;font-size:9px;letter-spacing:1px;color:#ffffff79;font-weight:900}
+.specialName{position:absolute;left:8px;right:8px;bottom:10px;text-align:center;font-size:14px;font-weight:900;color:white;text-shadow:0 2px 4px #000}
+.specialChecks{position:absolute;right:8px;top:7px;display:flex;gap:5px;z-index:8}
+.specialCheck{width:27px;height:27px;border-radius:6px;border:2px solid #ffffff2a;background:#0b1116cc;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#ffffff44}
+.specialCheck.ct.on{background:#176da5;border-color:#79ceff;color:#fff}.specialCheck.t.on{background:#a75b18;border-color:#ffb665;color:#fff}
+.specialKnifeArt{position:absolute;left:50%;top:53%;transform:translate(-50%,-50%);width:128px;height:80px}
+/* Butterfly card art */
+.bfCardBlade{position:absolute;left:48px;top:0;width:28px;height:52px;background:linear-gradient(90deg,#7a4b00,#ffc728 35%,#fff2a0 52%,#a96700);clip-path:polygon(52% 0,100% 18%,82% 100%,16% 100%,0 20%)}
+.bfCardHandle{position:absolute;top:46px;width:18px;height:37px;border:2px solid #6d4300;border-radius:5px;background:linear-gradient(90deg,#6b4000,#ffc638,#805000)}.bfCardHandle.a{left:37px;transform:rotate(8deg)}.bfCardHandle.b{left:68px;transform:rotate(-8deg)}
+/* Karambit card styled like a modern tactical inventory card */
+.kCardBlade{position:absolute;left:17px;top:4px;width:91px;height:64px;border:7px solid #d7dde2;border-left-color:transparent;border-top-color:#aeb8c0;border-radius:54% 66% 58% 45%;transform:rotate(-18deg);box-shadow:inset -4px -4px 0 #59636b}
+.kCardBlade:after{content:"";position:absolute;left:20px;top:20px;width:57px;height:24px;background:#162028;border-radius:50%;transform:rotate(9deg)}
+.kCardHandle{position:absolute;right:3px;bottom:8px;width:59px;height:18px;border-radius:10px;background:linear-gradient(#2e3438,#0c0f11);border:2px solid #080a0b;transform:rotate(-28deg)}
+.kCardRing{position:absolute;right:-4px;bottom:-4px;width:28px;height:28px;border:7px solid #171b1e;border-radius:50%}
+/* New in-game Karambit model */
+#karambitV19{display:none;position:absolute;right:5vw;bottom:1vh;width:250px;height:235px;z-index:35;pointer-events:none;transform-origin:78% 82%;filter:drop-shadow(0 11px 8px #0009)}
+#k19Blade{position:absolute;left:8px;top:8px;width:154px;height:132px;transform:rotate(-20deg)}
+#k19Blade:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#dce4e8 0 12%,#77848d 26%,#232b31 55%,#929da4 78%,#eef3f5);clip-path:polygon(5% 15%,18% 38%,38% 55%,61% 56%,79% 43%,93% 20%,96% 52%,85% 77%,62% 92%,35% 89%,14% 68%,2% 42%);box-shadow:inset 0 0 12px #fff4}
+#k19Blade:after{content:"";position:absolute;left:34px;top:68px;width:87px;height:4px;border-radius:5px;background:#f2f6f8aa;transform:rotate(-10deg)}
+#k19Handle{position:absolute;right:20px;bottom:27px;width:100px;height:34px;border-radius:18px 8px 8px 18px;background:linear-gradient(#32383d,#0e1113 53%,#2b3034);border:2px solid #060708;transform:rotate(-34deg);box-shadow:inset 0 0 0 2px #ffffff12}
+#k19Handle:before{content:"";position:absolute;left:17px;top:7px;width:48px;height:17px;border-radius:9px;background:repeating-linear-gradient(90deg,#090b0c 0 7px,#3a4146 7px 10px)}
+#k19Ring{position:absolute;right:2px;bottom:8px;width:45px;height:45px;border:9px solid #171b1e;border-radius:50%;transform:rotate(-34deg);box-shadow:inset 0 0 0 2px #596166,0 3px 4px #000}
+#weapon.k19-active #knife,#weapon.k19-active #butterflyLegacy{display:none!important}
+#weapon.k19-active #karambitV19{display:block!important}
+@keyframes k19Draw{0%{transform:translate(115px,155px) rotate(115deg) scale(.74);opacity:0}20%{transform:translate(28px,28px) rotate(34deg) scale(.94);opacity:1}38%{transform:translate(-9px,-35px) rotate(-120deg) scale(1.04)}58%{transform:translate(4px,-45px) rotate(-285deg) scale(1.07)}76%{transform:translate(-3px,-13px) rotate(-430deg) scale(1.03)}100%{transform:translate(0,0) rotate(-394deg) scale(1);opacity:1}}
+#weapon.k19-draw #karambitV19{animation:k19Draw 1.0s cubic-bezier(.2,.72,.18,1) both}
+@keyframes k19Inspect{0%{transform:translate(0,0) rotate(-394deg) scale(1)}16%{transform:translate(-34px,-34px) rotate(-450deg) scale(1.08)}34%{transform:translate(-91px,-80px) rotate(-575deg) scale(1.17)}52%{transform:translate(-100px,-88px) rotate(-735deg) scale(1.21)}70%{transform:translate(-55px,-55px) rotate(-900deg) scale(1.16)}86%{transform:translate(-13px,-19px) rotate(-820deg) scale(1.07)}100%{transform:translate(0,0) rotate(-754deg) scale(1)}}
+#weapon.k19-inspect #karambitV19{animation:k19Inspect 2.05s cubic-bezier(.2,.68,.2,1) both!important}
+@keyframes k19Attack{0%{transform:translate(0,0) rotate(-394deg)}40%{transform:translate(-115px,-68px) rotate(-298deg) scale(1.18)}68%{transform:translate(-72px,-38px) rotate(-335deg) scale(1.1)}100%{transform:translate(0,0) rotate(-394deg)}}
+#weapon.k19-active.knife-attacking #karambitV19{animation:k19Attack .34s cubic-bezier(.2,.8,.2,1) both!important}
 </style>
 <script>
 (function(){
  'use strict';
- const OWNER_KEY='rahl1k_karambit_owner_v14';
- const KNIFE_KEY='rahlKnifeSkin';
- function norm(v){return String(v||'').trim().toLowerCase();}
- function ownerByProfile(){
-   var saved=norm(localStorage.getItem('rahl1kNickname'));
-   var input=document.getElementById('nicknameInput');
-   var menu=document.getElementById('menuName');
-   var live=norm(input&&input.value)||norm(menu&&menu.textContent);
-   return saved==='rahl1k'||live==='rahl1k';
- }
- function isOwner(){
-   if(localStorage.getItem(OWNER_KEY)==='1')return true;
-   if(ownerByProfile()){
-     localStorage.setItem(OWNER_KEY,'1');
-     return true;
-   }
-   return false;
- }
- function makeSentinel(){
-   var c=document.getElementById('karambitInventoryCard');
-   if(!c){c=document.createElement('button');c.id='karambitInventoryCard';c.type='button';document.body.appendChild(c);}
-   c.style.setProperty('display','none','important');
-   c.setAttribute('aria-hidden','true');
-   return c;
- }
- function styleOwnerCard(){
-   var host=document.getElementById('inventoryWeapons');
-   if(!host)return;
-   var c=document.getElementById('karambitInventoryCard');
-   if(!c){
-     c=document.createElement('button');c.id='karambitInventoryCard';c.type='button';
-     c.addEventListener('click',function(){localStorage.setItem(KNIFE_KEY,'karambit');});
-     c.addEventListener('touchend',function(e){e.preventDefault();localStorage.setItem(KNIFE_KEY,'karambit');},{passive:false});
-   }
-   if(c.parentNode!==host)host.appendChild(c);
-   c.removeAttribute('aria-hidden');
-   c.style.removeProperty('display');
-   c.innerHTML='<span class="kType">НОЖ</span><span class="kIcon"></span><span class="kName">KARAMBIT</span>';
-   c.classList.toggle('equipped',localStorage.getItem(KNIFE_KEY)==='karambit');
- }
- function enforce(){
-   var owner=isOwner();
-   document.body.classList.toggle('rahl-karambit-owner',owner);
-   if(owner){
-     styleOwnerCard();
-   }else{
-     if(localStorage.getItem(KNIFE_KEY)==='karambit')localStorage.setItem(KNIFE_KEY,'butterfly');
-     makeSentinel();
-     var w=document.getElementById('weapon');
-     if(w){w.classList.remove('karambit-equipped','karambit-inspect');}
-     var k=document.getElementById('karambit');if(k)k.style.setProperty('display','none','important');
-     var h=document.getElementById('rahlViewHands');if(h)h.classList.remove('karambitMode');
-   }
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enforce);else enforce();
- setInterval(enforce,180);
-})();
-</script>
-
-
-<!-- RAHL1K INVENTORY CARDS V15 -->
-<style>
-/* One horizontal row: every weapon card is the same size and can be swiped left/right. */
-#inventoryContent{overflow:visible!important}
-#inventoryWeapons{
- display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:stretch!important;
- gap:12px!important;width:min(1080px,calc(100vw - 270px))!important;max-width:calc(100vw - 270px)!important;
- overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;
- touch-action:pan-x!important;overscroll-behavior-x:contain!important;scroll-snap-type:x proximity!important;
- padding:8px 12px 16px!important;margin:0 auto!important;justify-content:flex-start!important;
- scrollbar-width:thin!important;
-}
-#inventoryWeapons::-webkit-scrollbar{height:7px}#inventoryWeapons::-webkit-scrollbar-thumb{background:#ffffff42;border-radius:10px}
-#inventoryWeapons .inventoryWeaponCard,
-#inventoryWeapons #bfInventoryCard,
-#inventoryWeapons #karambitInventoryCard{
- box-sizing:border-box!important;flex:0 0 190px!important;width:190px!important;min-width:190px!important;
- height:145px!important;min-height:145px!important;max-height:145px!important;margin:0!important;
- scroll-snap-align:start!important;overflow:hidden!important;border-radius:16px!important;
-}
-#inventoryWeapons #bfInventoryCard{display:block!important;position:relative!important}
-#inventoryWeapons #karambitInventoryCard{display:flex!important;padding:10px!important;position:relative!important}
-#inventoryWeapons #karambitInventoryCard .kIcon{font-size:42px!important;line-height:48px!important}
-#inventoryWeapons #karambitInventoryCard span:not(.kIcon){font-size:13px!important}
-#inventoryWeapons #karambitInventoryCard small{font-size:9px!important}
-@media(max-height:430px){
- #inventoryWeapons{width:calc(100vw - 245px)!important;max-width:calc(100vw - 245px)!important}
- #inventoryWeapons .inventoryWeaponCard,#inventoryWeapons #bfInventoryCard,#inventoryWeapons #karambitInventoryCard{
-  flex-basis:170px!important;width:170px!important;min-width:170px!important;height:125px!important;min-height:125px!important;max-height:125px!important
- }
-}
-</style>
-<script>
-(function(){
- 'use strict';
- const OWNER_NICK='rahl1k';
- const KSTATE='rahl1k_karambit_side_v15';
- let karambitPanelActive=false;
- function norm(v){return String(v||'').trim().toLowerCase();}
- function isOwner(){
-  try{
-   const live=(typeof myNickname!=='undefined'?myNickname:'');
-   const saved=localStorage.getItem('rahl1kNickname')||'';
-   return norm(live)===OWNER_NICK||norm(saved)===OWNER_NICK;
-  }catch(e){return false;}
- }
- function getState(){try{return Object.assign({ct:false,t:false},JSON.parse(localStorage.getItem(KSTATE)||'{}'))}catch(e){return{ct:false,t:false}}}
- function putState(v){try{localStorage.setItem(KSTATE,JSON.stringify(v))}catch(e){}}
- function placeCards(){
-  const row=document.getElementById('inventoryWeapons');if(!row)return;
-  const bf=document.getElementById('bfInventoryCard');if(bf&&bf.parentElement!==row)row.appendChild(bf);
-  const k=document.getElementById('karambitInventoryCard');
-  if(k){
-   if(k.parentElement!==row)row.appendChild(k);
-   k.style.display=isOwner()?'flex':'none';
-   k.setAttribute('aria-hidden',isOwner()?'false':'true');
-  }
- }
- function panel(){return document.getElementById('inventoryActionPanel')}
- function sideName(){try{return String(typeof myTeam!=='undefined'?myTeam:'ct').toLowerCase()==='t'?'t':'ct'}catch(e){return'ct'}}
- function refreshKPanel(){
-  if(!karambitPanelActive)return;
-  const p=panel();if(!p)return;
-  const st=getState();
-  p.classList.add('active');
-  const name=document.getElementById('inventorySelectedName');if(name)name.textContent='KARAMBIT';
-  const ct=document.getElementById('inventoryCTButton'), t=document.getElementById('inventoryTButton');
-  if(ct){ct.textContent=st.ct?'СНЯТЬ С CT':'ПРИМЕНИТЬ ЗА CT';ct.classList.toggle('remove',st.ct)}
-  if(t){t.textContent=st.t?'СНЯТЬ С T':'ПРИМЕНИТЬ ЗА T';t.classList.toggle('remove',st.t)}
-  const status=document.getElementById('inventoryStatus');
-  if(status)status.textContent='Применено: '+(st.ct?'✓ CT':'— CT')+' / '+(st.t?'✓ T':'— T');
- }
- function chooseKarambit(e){
-  const card=e.target&&e.target.closest?e.target.closest('#karambitInventoryCard'):null;
-  if(!card||!isOwner())return;
-  e.preventDefault();e.stopPropagation();
-  karambitPanelActive=true;
-  document.querySelectorAll('.inventoryWeaponCard,#bfInventoryCard,#karambitInventoryCard').forEach(x=>x.classList.remove('selected','sel'));
-  card.classList.add('selected');
-  refreshKPanel();
- }
- function applySide(which,e){
-  if(!karambitPanelActive||!isOwner())return;
-  e.preventDefault();e.stopImmediatePropagation();
-  const st=getState();st[which]=!st[which];putState(st);
-  if(st[which])localStorage.setItem('rahlKnifeSkin','karambit');
-  if(!st.ct&&!st.t&&localStorage.getItem('rahlKnifeSkin')==='karambit')localStorage.setItem('rahlKnifeSkin','butterfly');
-  refreshKPanel();
-  try{if(typeof currentWeapon!=='undefined'&&currentWeapon==='knife'&&typeof showWeapon==='function'){showWeapon('knife');if(typeof playEquipAnimation==='function')playEquipAnimation('knife')}}catch(err){}
- }
- function leaveKPanel(e){
-  const c=e.target&&e.target.closest?e.target.closest('.inventoryWeaponCard,#bfInventoryCard'):null;
-  if(c)karambitPanelActive=false;
- }
- document.addEventListener('pointerup',chooseKarambit,true);
- document.addEventListener('touchend',chooseKarambit,{capture:true,passive:false});
- document.addEventListener('click',chooseKarambit,true);
- document.addEventListener('pointerup',leaveKPanel,true);
- document.addEventListener('click',leaveKPanel,true);
- document.addEventListener('click',function(e){if(e.target&&e.target.id==='inventoryCTButton')applySide('ct',e);if(e.target&&e.target.id==='inventoryTButton')applySide('t',e)},true);
- document.addEventListener('touchend',function(e){if(e.target&&e.target.id==='inventoryCTButton')applySide('ct',e);if(e.target&&e.target.id==='inventoryTButton')applySide('t',e)},{capture:true,passive:false});
- // Enforce owner-only and side-specific Karambit appearance after the older addon syncs.
- function enforce(){
-  placeCards();refreshKPanel();
-  const k=document.getElementById('karambit'), w=document.getElementById('weapon'), card=document.getElementById('karambitInventoryCard');
-  const st=getState(), allowed=isOwner()&&!!st[sideName()];
-  const selected=localStorage.getItem('rahlKnifeSkin')==='karambit';
-  const active=allowed&&selected&&(typeof currentWeapon!=='undefined'&&currentWeapon==='knife');
-  if(card)card.classList.toggle('equipped',allowed&&selected);
-  if(!isOwner()&&selected)localStorage.setItem('rahlKnifeSkin','butterfly');
-  if(k)k.style.setProperty('display',active?'block':'none','important');
-  if(w)w.classList.toggle('karambit-equipped',active);
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enforce);else enforce();
- setInterval(enforce,90);
-})();
-</script>
-
-
-<!-- RAHL1K INVENTORY BUTTONS V16 -->
-<style>
-#inventoryWeapons{display:flex!important;flex-wrap:nowrap!important;gap:14px!important;overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-x!important;padding:8px 12px 14px!important}
-#inventoryWeapons>.inventoryWeaponCard,#inventoryWeapons>#karambitInventoryCard,#inventoryWeapons>#bfInventoryCard{flex:0 0 190px!important;width:190px!important;min-width:190px!important;max-width:190px!important;height:145px!important;min-height:145px!important;max-height:145px!important;box-sizing:border-box!important}
-</style>
-<script>
-(function(){
- var KEY='rahl1k_karambit_sides_v16';
- function state(){try{return Object.assign({ct:false,t:false},JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){return{ct:false,t:false}}}
- function save(v){localStorage.setItem(KEY,JSON.stringify(v))}
+ const KEY='rahl1k_knife_loadout_v19';
+ let selectedCard=null;
+ let busy=false;
  function owner(){try{return String(myNickname||'').trim().toLowerCase()==='rahl1k'}catch(e){return false}}
- function normalize(){var host=document.getElementById('inventoryWeapons');if(!host)return;var k=document.getElementById('karambitInventoryCard');var b=document.getElementById('bfInventoryCard');if(k&&k.parentElement!==host)host.appendChild(k);if(b&&b.parentElement!==host)host.appendChild(b);if(k)k.style.display=owner()?'block':'none'}
- function selectK(){if(!owner())return;var k=document.getElementById('karambitInventoryCard'),p=document.getElementById('inventoryActionPanel'),n=document.getElementById('inventorySelectedName'),c=document.getElementById('inventoryCTButton'),t=document.getElementById('inventoryTButton'),st=document.getElementById('inventoryStatus');if(!k||!p||!c||!t)return;document.querySelectorAll('#inventoryWeapons>*').forEach(function(x){x.classList.remove('selected','sel')});k.classList.add('selected');p.classList.add('active');if(n)n.textContent='KARAMBIT';function r(){var v=state();c.textContent=v.ct?'СНЯТЬ С CT':'ПРИМЕНИТЬ ЗА CT';t.textContent=v.t?'СНЯТЬ С T':'ПРИМЕНИТЬ ЗА T';c.classList.toggle('remove',v.ct);t.classList.toggle('remove',v.t);if(st)st.textContent='Применено: '+(v.ct?'✓ CT':'— CT')+' / '+(v.t?'✓ T':'— T')}c.onclick=function(e){e.preventDefault();e.stopPropagation();var v=state();v.ct=!v.ct;save(v);if(v.ct)localStorage.setItem('rahlKnifeSkin','karambit');r()};t.onclick=function(e){e.preventDefault();e.stopPropagation();var v=state();v.t=!v.t;save(v);if(v.t)localStorage.setItem('rahlKnifeSkin','karambit');r()};r()}
- function press(e){var k=e.target&&e.target.closest?e.target.closest('#karambitInventoryCard'):null;if(!k)return;e.preventDefault();e.stopPropagation();selectK()}
- document.addEventListener('pointerup',press,true);document.addEventListener('touchend',press,{capture:true,passive:false});document.addEventListener('click',press,true);
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',normalize);else normalize();setInterval(normalize,300);
-})();
-</script>
-
-
-<!-- RAHL1K INVENTORY SPECIAL FIX V18 -->
-<style>
-#bfInventoryCard .bfActions,#karambitInventoryCard .bfActions,#karambitInventoryCard .kActions,#karambitInventoryCard>button{display:none!important}
-#inventoryActionPanel{position:relative!important;z-index:80!important;margin-top:14px!important}
-#bfInventoryCard,#karambitInventoryCard{pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important}
-</style>
-<script>
-(function(){
- 'use strict';
- const BF_KEY='rahl1k_butterfly_legacy_v1';
- const K_KEY='rahl1k_karambit_teams_v1';
- let selectedSpecial=null;
- let blockClickUntil=0;
- function read(key,defaults){try{return Object.assign({},defaults,JSON.parse(localStorage.getItem(key)||'{}'))}catch(e){return Object.assign({},defaults)}}
- function write(key,v){localStorage.setItem(key,JSON.stringify(v))}
- function sideNow(){try{return String(myTeam||'ct').toLowerCase()==='t'?'t':'ct'}catch(e){return'ct'}}
- function el(id){return document.getElementById(id)}
- function isOwner(){try{return String(myNickname||'').trim().toLowerCase()==='rahl1k'}catch(e){return false}}
- function state(){return selectedSpecial==='butterfly'?read(BF_KEY,{ct:true,t:true}):read(K_KEY,{ct:false,t:false})}
- function key(){return selectedSpecial==='butterfly'?BF_KEY:K_KEY}
- function name(){return selectedSpecial==='butterfly'?'BUTTERFLY LEGACY':'KARAMBIT'}
- function card(){return selectedSpecial==='butterfly'?el('bfInventoryCard'):el('karambitInventoryCard')}
- function render(){
-   if(!selectedSpecial)return;
-   var P=el('inventoryActionPanel'),C=el('inventoryCTButton'),T=el('inventoryTButton'),N=el('inventorySelectedName'),S=el('inventoryStatus');
-   if(!P||!C||!T)return;
-   var st=state();
-   P.classList.add('active');P.style.display='block';
-   if(N)N.textContent=name();
-   C.textContent=st.ct?'СНЯТЬ С CT':'ПРИМЕНИТЬ ЗА CT';
-   T.textContent=st.t?'СНЯТЬ С T':'ПРИМЕНИТЬ ЗА T';
-   C.classList.toggle('remove',!!st.ct);T.classList.toggle('remove',!!st.t);
-   if(S)S.textContent='Применено: '+(st.ct?'✓ CT':'— CT')+' / '+(st.t?'✓ T':'— T');
-   document.querySelectorAll('#inventoryWeapons>*').forEach(function(x){x.classList.remove('selected','sel')});
-   var c=card();if(c){c.classList.add('selected');c.classList.add('sel')}
- }
- function select(kind,e){
-   if(kind==='karambit'&&!isOwner())return;
-   if(e){e.preventDefault();e.stopImmediatePropagation();}
-   selectedSpecial=kind;render();blockClickUntil=Date.now()+500;
- }
- function activateButterfly(side,on){
-   localStorage.setItem('rahlKnifeSkin','butterfly');
-   if(on&&sideNow()===side){
-     try{if(typeof switchWeapon==='function')switchWeapon('butterfly')}catch(e){}
-   }
- }
- function activateKarambit(side,on){
-   if(!on)return;
-   localStorage.setItem('rahlKnifeSkin','karambit');
-   // make the original Karambit addon pick up the selection when possible
-   var k=el('karambitInventoryCard');
-   if(k){
-     try{
-       var ev=new MouseEvent('click',{bubbles:false,cancelable:true,view:window});
-       k.dispatchEvent(ev);
-     }catch(e){}
-   }
- }
- function toggle(side,e){
-   if(!selectedSpecial)return;
-   if(e){e.preventDefault();e.stopImmediatePropagation();}
-   var st=state();st[side]=!st[side];write(key(),st);
-   if(selectedSpecial==='butterfly')activateButterfly(side,st[side]);
-   else activateKarambit(side,st[side]);
-   render();blockClickUntil=Date.now()+500;
- }
- function targetCard(t){
-   if(!t||!t.closest)return null;
-   var b=t.closest('#bfInventoryCard');if(b)return'butterfly';
-   var k=t.closest('#karambitInventoryCard');if(k)return'karambit';
-   return null;
- }
- function onPointer(e){
-   var C=el('inventoryCTButton'),T=el('inventoryTButton');
-   if(selectedSpecial&&C&&(e.target===C||C.contains(e.target))){toggle('ct',e);return}
-   if(selectedSpecial&&T&&(e.target===T||T.contains(e.target))){toggle('t',e);return}
-   var kind=targetCard(e.target);if(kind){select(kind,e);return}
-   var normal=e.target&&e.target.closest?e.target.closest('.inventoryWeaponCard'):null;
-   if(normal){selectedSpecial=null}
- }
- function onClickBlock(e){
-   if(Date.now()>blockClickUntil)return;
-   var kind=targetCard(e.target),C=el('inventoryCTButton'),T=el('inventoryTButton');
-   if(kind||(selectedSpecial&&((C&&(e.target===C||C.contains(e.target)))||(T&&(e.target===T||T.contains(e.target)))))){
-     e.preventDefault();e.stopImmediatePropagation();
-   }
- }
- document.addEventListener('pointerup',onPointer,true);
- document.addEventListener('click',onClickBlock,true);
- // Fallback only for browsers without PointerEvent, prevents double toggles on iOS/webviews.
- if(!window.PointerEvent)document.addEventListener('touchend',onPointer,{capture:true,passive:false});
- setInterval(function(){
-   var k=el('karambitInventoryCard');if(k)k.style.display=isOwner()?'flex':'none';
-   if(selectedSpecial)render();
- },300);
+ function load(){try{return Object.assign({ct:'knife',t:'knife'},JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){return{ct:'knife',t:'knife'}}}
+ function save(v){localStorage.setItem(KEY,JSON.stringify(v))}
+ function side(){try{return String(myTeam||'CT').toLowerCase()==='t'?'t':'ct'}catch(e){return'ct'}}
+ function currentSkin(){return load()[side()]||'knife'}
+ function ensureModel(){var w=document.getElementById('weapon');if(!w)return;var k=document.getElementById('karambitV19');if(!k){k=document.createElement('div');k.id='karambitV19';k.innerHTML='<div id="k19Blade"></div><div id="k19Handle"></div><div id="k19Ring"></div>';w.appendChild(k)}}
+ function mkCard(id,kind){var c=document.createElement('div');c.id=id;c.dataset.v19='1';c.dataset.sharedPanel='1';c.setAttribute('role','button');c.tabIndex=0;var art=kind==='butterfly'?'<div class="specialKnifeArt"><div class="bfCardBlade"></div><div class="bfCardHandle a"></div><div class="bfCardHandle b"></div></div>':'<div class="specialKnifeArt"><div class="kCardBlade"></div><div class="kCardHandle"></div><div class="kCardRing"></div></div>';c.innerHTML='<div class="specialType">НОЖ</div><div class="specialChecks"><div class="specialCheck ct">✓</div><div class="specialCheck t">✓</div></div>'+art+'<div class="specialName">'+(kind==='butterfly'?'BUTTERFLY LEGACY':'KARAMBIT')+'</div>';return c}
+ function mountCards(){var host=document.getElementById('inventoryWeapons');if(!host)return;var oldB=document.getElementById('bfInventoryCard');if(!oldB||oldB.dataset.v19!=='1'){if(oldB)oldB.remove();host.appendChild(mkCard('bfInventoryCard','butterfly'))}var oldK=document.getElementById('karambitInventoryCard');if(!oldK||oldK.dataset.v19!=='1'){if(oldK)oldK.remove();if(owner())host.appendChild(mkCard('karambitInventoryCard','karambit'))}else oldK.style.display=owner()?'block':'none';syncChecks()}
+ function syncChecks(){var st=load();[['bfInventoryCard','butterfly'],['karambitInventoryCard','karambit']].forEach(function(a){var c=document.getElementById(a[0]);if(!c)return;var ct=c.querySelector('.specialCheck.ct'),t=c.querySelector('.specialCheck.t');if(ct)ct.classList.toggle('on',st.ct===a[1]);if(t)t.classList.toggle('on',st.t===a[1])})}
+ function rebuildButtons(){var C=document.getElementById('inventoryCTButton'),T=document.getElementById('inventoryTButton');if(!C||!T)return null;function clone(old,id){var n=old.cloneNode(true);n.id=id;n.dataset.specialHook='1';old.replaceWith(n);return n}C=clone(C,'inventoryCTButton');T=clone(T,'inventoryTButton');return{C:C,T:T}}
+ function renderPanel(){if(!selectedCard)return;var P=document.getElementById('inventoryActionPanel'),N=document.getElementById('inventorySelectedName'),S=document.getElementById('inventoryStatus');if(!P)return;P.classList.add('active');if(N)N.textContent=selectedCard==='butterfly'?'BUTTERFLY LEGACY':'KARAMBIT';var b=rebuildButtons();if(!b)return;var st=load();b.C.textContent=st.ct===selectedCard?'СНЯТЬ С CT':'ПРИМЕНИТЬ ЗА CT';b.T.textContent=st.t===selectedCard?'СНЯТЬ С T':'ПРИМЕНИТЬ ЗА T';function apply(which,e){if(e){e.preventDefault();e.stopImmediatePropagation()}if(busy)return;busy=true;setTimeout(function(){busy=false},220);var v=load();v[which]=(v[which]===selectedCard?'knife':selectedCard);save(v);syncChecks();renderPanel();applyLive()}b.C.addEventListener('pointerup',function(e){apply('ct',e)},true);b.T.addEventListener('pointerup',function(e){apply('t',e)},true);b.C.addEventListener('click',function(e){if(e.pointerType)return;apply('ct',e)},true);b.T.addEventListener('click',function(e){if(e.pointerType)return;apply('t',e)},true);if(S)S.textContent='Применено: '+(st.ct===selectedCard?'✓ CT':'— CT')+' / '+(st.t===selectedCard?'✓ T':'— T');document.querySelectorAll('#inventoryWeapons>*').forEach(function(x){x.classList.remove('selected','sel')});var card=document.getElementById(selectedCard==='butterfly'?'bfInventoryCard':'karambitInventoryCard');if(card)card.classList.add('selected')}
+ function choose(kind,e){if(kind==='karambit'&&!owner())return;if(e){e.preventDefault();e.stopImmediatePropagation()}selectedCard=kind;renderPanel()}
+ document.addEventListener('pointerup',function(e){var b=e.target&&e.target.closest&&e.target.closest('#bfInventoryCard');if(b){choose('butterfly',e);return}var k=e.target&&e.target.closest&&e.target.closest('#karambitInventoryCard');if(k){choose('karambit',e)}},true);
+ document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&e.target.closest('#bfInventoryCard');if(b){choose('butterfly',e);return}var k=e.target&&e.target.closest&&e.target.closest('#karambitInventoryCard');if(k){choose('karambit',e)}},true);
+ function showK(){ensureModel();var w=document.getElementById('weapon');if(!w)return;w.classList.add('k19-active');var k=document.getElementById('karambitV19');if(k)k.style.display='block';var knife=document.getElementById('knife');if(knife)knife.style.setProperty('display','none','important');var bf=document.getElementById('butterflyLegacy');if(bf)bf.style.display='none'}
+ function hideK(){var w=document.getElementById('weapon');if(w)w.classList.remove('k19-active','k19-draw','k19-inspect');var k=document.getElementById('karambitV19');if(k)k.style.display='none'}
+ function drawK(){var w=document.getElementById('weapon');if(!w)return;w.classList.remove('k19-draw');void w.offsetWidth;w.classList.add('k19-draw');setTimeout(function(){w.classList.remove('k19-draw')},1050)}
+ let baseSwitch=null,baseInspect=null;
+ function hookGame(){ensureModel();if(typeof window.switchWeapon==='function'&&!window.switchWeapon.__v19){baseSwitch=window.switchWeapon;window.switchWeapon=function(type){if(type==='knife'){var skin=currentSkin();if(skin==='butterfly'){hideK();return baseSwitch.call(this,'butterfly')}if(skin==='karambit'&&owner()){var r=baseSwitch.call(this,'knife');try{currentWeapon='knife'}catch(e){};try{if(typeof showWeapon==='function')showWeapon('knife')}catch(e){};showK();drawK();return r}hideK();var rr=baseSwitch.call(this,'knife');try{currentWeapon='knife';if(typeof showWeapon==='function')showWeapon('knife');var bf=document.getElementById('butterflyLegacy');if(bf)bf.style.display='none'}catch(e){}return rr}if(type==='butterfly'&&currentSkin()!=='butterfly')return window.switchWeapon('knife');hideK();return baseSwitch.apply(this,arguments)};window.switchWeapon.__v19=true}
+ if(typeof window.inspectWeapon==='function'&&!window.inspectWeapon.__v19){baseInspect=window.inspectWeapon;window.inspectWeapon=function(){if(currentSkin()==='karambit'&&owner()&&typeof currentWeapon!=='undefined'&&currentWeapon==='knife'){var w=document.getElementById('weapon');if(!w)return;try{if(!gameStarted||respawning||matchEnded||matchMenuOpen||player.hp<=0||inspectingWeapon||knifeAttackAnimating)return}catch(e){}try{inspectingWeapon=true}catch(e){}w.classList.remove('k19-inspect');void w.offsetWidth;w.classList.add('k19-inspect');setTimeout(function(){w.classList.remove('k19-inspect');try{inspectingWeapon=false}catch(e){}},2100);return}return baseInspect.apply(this,arguments)};window.inspectWeapon.__v19=true}}
+ function applyLive(){try{if(typeof currentWeapon==='undefined')return;if(currentWeapon==='knife'||currentWeapon==='butterfly')window.switchWeapon('knife')}catch(e){}}
+ function boot(){mountCards();hookGame();syncChecks()}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();setInterval(function(){mountCards();hookGame();syncChecks();if(currentSkin()!=='karambit')hideK()},250);
 })();
 </script>
 
