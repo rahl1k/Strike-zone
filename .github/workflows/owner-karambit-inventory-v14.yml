@@ -1,0 +1,26 @@
+name: Owner Karambit Inventory V14
+on:
+  push:
+    paths:
+      - '.github/workflows/owner-karambit-inventory-v14.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/owner_karambit_inventory_v14.py
+      - run: |
+          grep -q 'RAHL1K OWNER KARAMBIT INVENTORY V14' index.html
+          grep -q 'rahl1k_karambit_owner_v14' index.html
+          grep -q 'inventoryWeapons' index.html
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Make inventory scrollable and Karambit owner-only'
+          git push
