@@ -1,0 +1,23 @@
+name: Viewmodel Hands V12
+on:
+  push:
+    paths:
+      - '.github/workflows/viewmodel-hands-v12.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/viewmodel_hands_v12.py
+      - run: grep -q 'RAHL1K VIEWMODEL HANDS V12' index.html
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Show hands and full right-side weapon viewmodel'
+          git push
