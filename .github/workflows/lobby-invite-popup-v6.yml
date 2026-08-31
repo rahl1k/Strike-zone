@@ -1,0 +1,26 @@
+name: Lobby Invite Popup V6
+on:
+  push:
+    paths:
+      - '.github/workflows/lobby-invite-popup-v6.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/fix_lobby_invite_popup_v6.py
+      - run: |
+          grep -q 'RAHL1K LOBBY INVITE POPUP V6' index.html
+          grep -q 'acceptLobbyInvite' index.html
+          grep -q 'declineLobbyInvite' index.html
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Fix incoming lobby invite popup'
+          git push
