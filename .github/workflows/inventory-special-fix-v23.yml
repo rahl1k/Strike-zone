@@ -1,0 +1,27 @@
+name: Inventory Special Fix V23
+on:
+  push:
+    paths:
+      - '.github/workflows/inventory-special-fix-v23.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/inventory_special_fix_v23.py
+      - run: |
+          grep -q 'RAHL1K INVENTORY SPECIAL FIX V23' index.html
+          ! grep -q 'RAHL1K INVENTORY ROUTER V22' index.html
+          grep -q 'bfInventoryCard' index.html
+          grep -q 'karambitInventoryCard' index.html
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Fix Butterfly selection and restore Karambit card'
+          git push
