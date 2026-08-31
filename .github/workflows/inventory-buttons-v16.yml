@@ -1,0 +1,23 @@
+name: Inventory Buttons V16
+on:
+  push:
+    paths:
+      - '.github/workflows/inventory-buttons-v16.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/inventory_buttons_v16.py
+      - run: grep -q 'RAHL1K INVENTORY BUTTONS V16' index.html
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Make Karambit use same CT and T action buttons'
+          git push
