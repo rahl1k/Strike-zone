@@ -1,0 +1,26 @@
+name: Inventory Karambit V25
+on:
+  push:
+    paths:
+      - '.github/workflows/inventory-karambit-v25.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/inventory_karambit_v25.py
+      - run: |
+          grep -q 'RAHL1K INVENTORY KARAMBIT V25' index.html
+          ! grep -q 'RAHL1K INVENTORY UNIFIED V24' index.html
+          grep -q 'karambitV25' index.html
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Make inventory independent and add Karambit animations'
+          git push
