@@ -1,0 +1,82 @@
+name: Fix Butterfly Inventory
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-butterfly-inventory.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Patch index
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          marker='<!-- RAHL1K BUTTERFLY INVENTORY BRIDGE FIX -->'
+          if marker not in s:
+              addon=r'''
+<!-- RAHL1K BUTTERFLY INVENTORY BRIDGE FIX -->
+<script>
+(function(){
+  function side(){
+    try{return String(myTeam||'CT').toLowerCase()==='t'?'t':'ct'}catch(e){return 'ct'}
+  }
+  function bfState(){
+    try{return Object.assign({ct:true,t:true},JSON.parse(localStorage.getItem('rahl1k_butterfly_legacy_v1')||'{}'))}catch(e){return {ct:true,t:true}}
+  }
+  function bfAllowed(){return !!bfState()[side()]}
+  function m9Allowed(){
+    try{return !!(window.RAHL1K_INVENTORY&&window.RAHL1K_INVENTORY.isAllowed&&window.RAHL1K_INVENTORY.isAllowed('knife'))}catch(e){return false}
+  }
+  let lastKnife='butterfly';
+  function chooseKnife(){
+    const m=m9Allowed(), b=bfAllowed();
+    if(!m&&!b)return null;
+    if(m&&b){lastKnife=lastKnife==='butterfly'?'knife':'butterfly';return lastKnife}
+    lastKnife=b?'butterfly':'knife';return lastKnife;
+  }
+  const previousSwitch=switchWeapon;
+  switchWeapon=function(type){
+    if(type==='knife'){
+      const target=chooseKnife();
+      if(!target){
+        try{showWeaponUnavailableMessage&&showWeaponUnavailableMessage()}catch(e){}
+        return false;
+      }
+      if(target==='butterfly'&&window.RAHL1K_BUTTERFLY&&window.RAHL1K_BUTTERFLY.select){
+        return window.RAHL1K_BUTTERFLY.select();
+      }
+      return previousSwitch.call(this,'knife');
+    }
+    return previousSwitch.apply(this,arguments);
+  };
+  if(window.RAHL1K_INVENTORY){
+    const oldAllowed=window.RAHL1K_INVENTORY.isAllowed;
+    window.RAHL1K_INVENTORY.isAllowed=function(weapon){
+      if(weapon==='butterfly')return bfAllowed();
+      return oldAllowed?oldAllowed(weapon):true;
+    };
+  }
+  window.RAHL1K_BUTTERFLY_BRIDGE={bfAllowed,m9Allowed,chooseKnife};
+})();
+</script>
+'''
+              s=s.replace('</body>',addon+'\n</body>')
+          s=s.replace('<title>RAHL1K FPS v13 BUTTERFLY LEGACY</title>','<title>RAHL1K FPS v13.1 BUTTERFLY FIX</title>')
+          p.write_text(s)
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m 'Fix Butterfly CT/T inventory selection'
+            git push
+          fi
