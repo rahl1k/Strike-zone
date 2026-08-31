@@ -6025,14 +6025,20 @@ data.type===
 incomingLobbyFromID=
 data.fromID;
 
-$("lobbyInviteText")
-.textContent=
-data.fromNickname+
-" приглашает тебя в лобби";
-
-$("lobbyInvitePopup")
-.style.display=
-"flex";
+const invitePopup=$("lobbyInvitePopup");
+const inviteText=$("lobbyInviteText");
+if(inviteText){
+inviteText.textContent=(data.fromNickname||"Игрок")+" приглашает тебя в лобби";
+}
+if(invitePopup){
+if(invitePopup.parentNode!==document.body){document.body.appendChild(invitePopup);}
+invitePopup.classList.remove("hidden");
+invitePopup.style.setProperty("display","flex","important");
+invitePopup.style.setProperty("visibility","visible","important");
+invitePopup.style.setProperty("opacity","1","important");
+invitePopup.style.setProperty("pointer-events","auto","important");
+invitePopup.style.setProperty("z-index","2147483647","important");
+}
 
 }
 
@@ -6888,7 +6894,9 @@ sendOnline({
 type:
 "inviteToLobby",
 id:
-f.id
+f.id,
+nickname:
+f.nickname
 });
 
 },
@@ -17048,75 +17056,98 @@ mount();setTimeout(mount,250);setTimeout(mount,800);window.RAHL1K_BUTTERFLY={sel
 
 
 
-<!-- RAHL1K FRIEND PANEL V5 -->
+
+<!-- RAHL1K FRIEND SYSTEM V7 -->
 <style>
 #lobbyFriendsPanel{display:none!important}
-#rahlLobbyFriendsPanel{
- position:absolute;left:max(100px,env(safe-area-inset-left));top:70px;width:260px;max-height:210px;overflow:auto;
- padding:10px;background:#101820ee;border:1px solid #ffffff44;border-radius:12px;color:white;z-index:1400;
- box-shadow:0 8px 24px #0008;touch-action:manipulation
+#rahlLobbyFriendsBox{
+ position:absolute;left:max(96px,calc(env(safe-area-inset-left) + 96px));top:76px;
+ width:245px;max-height:245px;padding:10px;overflow:auto;
+ background:#0d151ddd;border:1px solid #ffffff38;border-radius:12px;
+ z-index:1800;color:#fff;box-shadow:0 8px 24px #0007;
 }
-#rahlLobbyFriendsPanel .rfTitle{font-size:12px;font-weight:900;margin-bottom:7px;color:#fff}
-#rahlLobbyFriendsList .rfRow{padding:9px;margin-top:6px;background:#263542;border:1px solid #ffffff22;border-radius:9px;font-size:11px;touch-action:manipulation}
-#rahlLobbyFriendsList .rfRow.selected{background:#34516a;border-color:#7ab7ff}
-#rahlLobbyInviteBtn{display:none;width:100%;height:36px;margin-top:8px;border:0;border-radius:8px;background:#3a78d4;color:#fff;font-weight:900;font-size:11px;touch-action:manipulation}
+#rahlLobbyFriendsTitle{font-size:13px;font-weight:900;margin-bottom:8px}
+.rahlFriendRow{padding:9px;margin-top:6px;background:#202d38;border:1px solid #ffffff18;border-radius:9px;touch-action:manipulation}
+.rahlFriendRow.active{border-color:#72a8ff;background:#293b4b}
+.rahlFriendMeta{font-size:10px;color:#ffffff99;margin-top:2px}
+.rahlInviteBtn{display:none;width:100%;height:38px;margin-top:8px;border:0;border-radius:8px;background:#397ddd;color:#fff;font-weight:900;font-size:11px;touch-action:manipulation}
+.rahlFriendRow.active .rahlInviteBtn{display:block!important}
+#lobbyInvitePopup{z-index:2147483647!important}
+#lobbyInvitePopup .popupCard{position:relative;z-index:2147483647!important}
 </style>
 <script>
 (function(){
- var selectedKey='';
- function getKey(row){
-   var t=(row.textContent||'').replace(/\s+/g,' ').trim();
-   var m=t.match(/ID:\s*([^\s]+)/i);
-   return m?('id:'+m[1]):('txt:'+t.replace(/ПРИГЛАСИТЬ.*$/i,'').trim());
+ var STORAGE='rahl1kFriendCacheV7';
+ function readCache(){try{return JSON.parse(localStorage.getItem(STORAGE)||'[]')||[]}catch(e){return[]}}
+ function writeCache(list){try{localStorage.setItem(STORAGE,JSON.stringify(list||[]))}catch(e){}}
+ function mergeFriends(live){
+   var map=new Map();
+   readCache().forEach(function(f){if(f&&f.nickname)map.set(String(f.nickname).toLowerCase(),f)});
+   (live||[]).forEach(function(f){if(f&&f.nickname)map.set(String(f.nickname).toLowerCase(),f)});
+   var out=Array.from(map.values()); writeCache(out); return out;
  }
- function getLabel(row){
-   var t=(row.textContent||'').replace(/\s+/g,' ').trim().replace(/ПРИГЛАСИТЬ.*$/i,'').trim();
-   return t||'Друг';
+ function ensureBox(){
+   var page=document.getElementById('lobbyPage'); if(!page)return null;
+   var box=document.getElementById('rahlLobbyFriendsBox');
+   if(!box){box=document.createElement('div');box.id='rahlLobbyFriendsBox';box.innerHTML='<div id="rahlLobbyFriendsTitle">ДРУЗЬЯ ОНЛАЙН</div><div id="rahlLobbyFriendsList">Загрузка...</div>';page.appendChild(box);}
+   return box;
  }
- function findOriginal(key){
-   var rows=document.querySelectorAll('#lobbyFriendsList .lobbyFriendItem');
-   for(var i=0;i<rows.length;i++) if(getKey(rows[i])===key) return rows[i];
-   return null;
- }
- function mount(){
-   var lobby=document.getElementById('lobbyPage');
-   if(!lobby)return;
-   var panel=document.getElementById('rahlLobbyFriendsPanel');
-   if(!panel){
-     panel=document.createElement('div');panel.id='rahlLobbyFriendsPanel';
-     panel.innerHTML='<div class="rfTitle">ДРУЗЬЯ В ЛОББИ</div><div id="rahlLobbyFriendsList"></div><button id="rahlLobbyInviteBtn">ПРИГЛАСИТЬ В ЛОББИ</button>';
-     lobby.appendChild(panel);
-     panel.addEventListener('click',function(e){
-       var row=e.target.closest&&e.target.closest('.rfRow');
-       if(row){
-         selectedKey=row.dataset.key||'';
-         panel.querySelectorAll('.rfRow').forEach(function(x){x.classList.toggle('selected',x===row)});
-         var b=document.getElementById('rahlLobbyInviteBtn');if(b)b.style.display=selectedKey?'block':'none';
-       }
-       if(e.target&&e.target.id==='rahlLobbyInviteBtn'){
-         var orig=findOriginal(selectedKey);
-         var btn=orig&&orig.querySelector('.inviteLobbyButton');
-         if(btn){ btn.click(); }
-         else { var msg=document.getElementById('lobbyMessage'); if(msg)msg.textContent='Не удалось найти друга. Нажми на него ещё раз.'; }
-       }
-     });
+ function invite(friend){
+   if(!friend)return;
+   if(typeof sendOnline==='function'){
+     sendOnline({type:'inviteToLobby',id:Number(friend.id)||0,nickname:String(friend.nickname||'')});
+     var msg=document.getElementById('lobbyMessage'); if(msg)msg.textContent='Отправляю приглашение...';
    }
  }
- function sync(){
-   mount();
-   var dst=document.getElementById('rahlLobbyFriendsList');if(!dst)return;
-   var rows=[].slice.call(document.querySelectorAll('#lobbyFriendsList .lobbyFriendItem'));
-   var sig=rows.map(getKey).join('|');
-   if(dst.dataset.sig===sig)return;
-   dst.dataset.sig=sig;dst.innerHTML='';
-   if(!rows.length){dst.innerHTML='<div style="font-size:11px;color:#ffffff88">Нет друзей онлайн</div>';selectedKey='';var ib=document.getElementById('rahlLobbyInviteBtn');if(ib)ib.style.display='none';return;}
-   rows.forEach(function(r){
-     var d=document.createElement('div');d.className='rfRow'+(getKey(r)===selectedKey?' selected':'');d.dataset.key=getKey(r);d.textContent=getLabel(r);dst.appendChild(d);
+ function draw(list){
+   ensureBox();
+   var root=document.getElementById('rahlLobbyFriendsList'); if(!root)return;
+   var friends=mergeFriends(list);
+   root.innerHTML='';
+   if(!friends.length){root.innerHTML='<div style="font-size:11px;color:#ffffff77;padding:6px">Нет сохранённых друзей</div>';return;}
+   friends.forEach(function(f){
+     var row=document.createElement('div'); row.className='rahlFriendRow';
+     var name=document.createElement('div'); name.innerHTML='<b>'+String(f.nickname||'Игрок').replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]})+'</b>';
+     var meta=document.createElement('div'); meta.className='rahlFriendMeta'; meta.textContent='ID: '+(f.id||'обновляется');
+     var btn=document.createElement('button'); btn.className='rahlInviteBtn'; btn.textContent='ПРИГЛАСИТЬ В ЛОББИ';
+     row.appendChild(name);row.appendChild(meta);row.appendChild(btn);
+     function select(ev){if(ev){ev.preventDefault();ev.stopPropagation();} root.querySelectorAll('.rahlFriendRow').forEach(function(x){x.classList.remove('active')});row.classList.add('active');}
+     ['pointerup','touchend','click'].forEach(function(t){row.addEventListener(t,function(ev){if(ev.target===btn||btn.contains(ev.target))return;select(ev);},{passive:false})});
+     ['pointerup','touchend','click'].forEach(function(t){btn.addEventListener(t,function(ev){ev.preventDefault();ev.stopPropagation();invite(f);},{passive:false})});
+     root.appendChild(row);
    });
-   var b=document.getElementById('rahlLobbyInviteBtn');if(b)b.style.display=selectedKey?'block':'none';
  }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){mount();sync();});else{mount();sync();}
- setInterval(sync,500);
+ var original=window.renderLobbyFriends;
+ window.renderLobbyFriends=function(friends){
+   try{if(original)original(friends)}catch(e){}
+   draw(friends||[]);
+ };
+ ensureBox(); draw(window.cachedFriends||[]);
+ setInterval(function(){
+   var page=document.getElementById('lobbyPage');
+   if(page&&page.classList.contains('active')&&typeof sendOnline==='function')sendOnline({type:'getFriends'});
+ },2500);
+ // Hard fallback: capture lobbyInvite at WebSocket dispatch level and force popup visible.
+ var oldDispatch=WebSocket.prototype.dispatchEvent;
+ if(!WebSocket.prototype.__rahlInviteV7){
+   WebSocket.prototype.__rahlInviteV7=true;
+   WebSocket.prototype.dispatchEvent=function(ev){
+     try{
+       if(ev&&ev.type==='message'&&typeof ev.data==='string'){
+         var d=JSON.parse(ev.data);
+         if(d&&d.type==='lobbyInvite'){
+           window.incomingLobbyFromID=d.fromID;
+           setTimeout(function(){
+             var p=document.getElementById('lobbyInvitePopup'),t=document.getElementById('lobbyInviteText');
+             if(t)t.textContent=(d.fromNickname||'Игрок')+' приглашает тебя в лобби';
+             if(p){if(p.parentNode!==document.body)document.body.appendChild(p);p.classList.remove('hidden');p.style.setProperty('display','flex','important');p.style.setProperty('visibility','visible','important');p.style.setProperty('opacity','1','important');p.style.setProperty('pointer-events','auto','important');p.style.setProperty('z-index','2147483647','important');}
+           },0);
+         }
+       }
+     }catch(e){}
+     return oldDispatch.call(this,ev);
+   };
+ }
 })();
 </script>
 

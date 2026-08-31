@@ -2808,11 +2808,21 @@ data.id
 );
 
 
-const target =
+let target =
 players.get(
 targetID
 );
 
+/* Reconnect-safe fallback: IDs change after reconnect, saved nickname does not. */
+if (!target && data.nickname) {
+const wanted = String(data.nickname).trim().toLowerCase();
+for (const candidate of players.values()) {
+if (candidate.id !== player.id && String(candidate.nickname || "").trim().toLowerCase() === wanted) {
+target = candidate;
+break;
+}
+}
+}
 
 if (!target) {
 
