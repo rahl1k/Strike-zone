@@ -1,0 +1,26 @@
+name: Friend Invite V4
+on:
+  push:
+    paths:
+      - '.github/workflows/friend-invite-v4.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/fix_friend_invite_v4.py
+      - run: |
+          grep -q 'RAHL1K FRIEND INVITE FIX V4' index.html
+          test "$(grep -o 'RAHL1K FRIEND INVITE FIX V4' index.html | wc -l)" -eq 1
+          ! grep -q 'RAHL1K FRIEND INVITE FIX V3' index.html
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Make lobby friend selection reliable on touch'
+          git push
