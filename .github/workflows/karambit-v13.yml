@@ -1,0 +1,26 @@
+name: Karambit V13
+on:
+  push:
+    paths:
+      - '.github/workflows/karambit-v13.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/add_karambit_v13.py
+      - run: |
+          grep -q 'RAHL1K KARAMBIT V13' index.html
+          grep -q 'karambitInspectSO2' index.html
+          grep -q 'karambitInventoryCard' index.html
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Add Karambit knife with draw inspect and equip support'
+          git push
