@@ -17445,69 +17445,103 @@ body:not(.rahl-karambit-owner) #rahlViewHands.karambitMode #rahlLeftArm{opacity:
 })();
 </script>
 
-<!-- RAHL1K INVENTORY SHARED PANEL V17 -->
+
+<!-- RAHL1K INVENTORY SPECIAL FIX V18 -->
 <style>
-/* Butterfly/Karambit never show action buttons inside their cards. */
-#bfInventoryCard .bfActions,#karambitInventoryCard .bfActions,#karambitInventoryCard .kActions,
-#bfInventoryCard button:not(.inventoryWeaponCard),#karambitInventoryCard button{display:none!important}
-/* keep shared action panel below the horizontal weapon strip */
-#inventoryActionPanel{position:relative!important;z-index:50!important;margin-top:14px!important}
+#bfInventoryCard .bfActions,#karambitInventoryCard .bfActions,#karambitInventoryCard .kActions,#karambitInventoryCard>button{display:none!important}
+#inventoryActionPanel{position:relative!important;z-index:80!important;margin-top:14px!important}
+#bfInventoryCard,#karambitInventoryCard{pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important}
 </style>
 <script>
 (function(){
- const KEY_BF='rahl1k_butterfly_legacy_v1';
- const KEY_K='rahl1k_karambit_teams_v1';
- let special=null;
- function read(key){try{return Object.assign({ct:false,t:false},JSON.parse(localStorage.getItem(key)||'{}'))}catch(e){return{ct:false,t:false}}}
- function write(key,v){localStorage.setItem(key,JSON.stringify(v));}
- function panel(){return document.getElementById('inventoryActionPanel')}
- function title(){return document.getElementById('inventorySelectedName')}
- function ct(){return document.getElementById('inventoryCTButton')}
- function t(){return document.getElementById('inventoryTButton')}
- function status(){return document.getElementById('inventoryStatus')}
- function cardFor(kind){return kind==='butterfly'?document.getElementById('bfInventoryCard'):document.getElementById('karambitInventoryCard')}
- function keyFor(kind){return kind==='butterfly'?KEY_BF:KEY_K}
- function nameFor(kind){return kind==='butterfly'?'BUTTERFLY LEGACY':'KARAMBIT'}
- function current(){return special?read(keyFor(special)):null}
+ 'use strict';
+ const BF_KEY='rahl1k_butterfly_legacy_v1';
+ const K_KEY='rahl1k_karambit_teams_v1';
+ let selectedSpecial=null;
+ let blockClickUntil=0;
+ function read(key,defaults){try{return Object.assign({},defaults,JSON.parse(localStorage.getItem(key)||'{}'))}catch(e){return Object.assign({},defaults)}}
+ function write(key,v){localStorage.setItem(key,JSON.stringify(v))}
+ function sideNow(){try{return String(myTeam||'ct').toLowerCase()==='t'?'t':'ct'}catch(e){return'ct'}}
+ function el(id){return document.getElementById(id)}
+ function isOwner(){try{return String(myNickname||'').trim().toLowerCase()==='rahl1k'}catch(e){return false}}
+ function state(){return selectedSpecial==='butterfly'?read(BF_KEY,{ct:true,t:true}):read(K_KEY,{ct:false,t:false})}
+ function key(){return selectedSpecial==='butterfly'?BF_KEY:K_KEY}
+ function name(){return selectedSpecial==='butterfly'?'BUTTERFLY LEGACY':'KARAMBIT'}
+ function card(){return selectedSpecial==='butterfly'?el('bfInventoryCard'):el('karambitInventoryCard')}
  function render(){
-   if(!special)return;
-   const P=panel(),C=ct(),T=t(),S=status(),N=title(); if(!P||!C||!T||!S||!N)return;
-   const st=current();
-   P.classList.add('active');
-   N.textContent=nameFor(special);
+   if(!selectedSpecial)return;
+   var P=el('inventoryActionPanel'),C=el('inventoryCTButton'),T=el('inventoryTButton'),N=el('inventorySelectedName'),S=el('inventoryStatus');
+   if(!P||!C||!T)return;
+   var st=state();
+   P.classList.add('active');P.style.display='block';
+   if(N)N.textContent=name();
    C.textContent=st.ct?'СНЯТЬ С CT':'ПРИМЕНИТЬ ЗА CT';
    T.textContent=st.t?'СНЯТЬ С T':'ПРИМЕНИТЬ ЗА T';
-   C.classList.toggle('remove',!!st.ct); T.classList.toggle('remove',!!st.t);
-   S.textContent='Применено: '+(st.ct?'✓ CT':'— CT')+' / '+(st.t?'✓ T':'— T');
-   document.querySelectorAll('.inventoryWeaponCard,#bfInventoryCard,#karambitInventoryCard').forEach(function(x){x.classList.remove('selected','sel')});
-   const c=cardFor(special); if(c){c.classList.add('selected');c.classList.add('sel')}
+   C.classList.toggle('remove',!!st.ct);T.classList.toggle('remove',!!st.t);
+   if(S)S.textContent='Применено: '+(st.ct?'✓ CT':'— CT')+' / '+(st.t?'✓ T':'— T');
+   document.querySelectorAll('#inventoryWeapons>*').forEach(function(x){x.classList.remove('selected','sel')});
+   var c=card();if(c){c.classList.add('selected');c.classList.add('sel')}
  }
  function select(kind,e){
-   if(e){e.preventDefault();e.stopPropagation();}
-   special=kind; render();
+   if(kind==='karambit'&&!isOwner())return;
+   if(e){e.preventDefault();e.stopImmediatePropagation();}
+   selectedSpecial=kind;render();blockClickUntil=Date.now()+500;
+ }
+ function activateButterfly(side,on){
+   localStorage.setItem('rahlKnifeSkin','butterfly');
+   if(on&&sideNow()===side){
+     try{if(typeof switchWeapon==='function')switchWeapon('butterfly')}catch(e){}
+   }
+ }
+ function activateKarambit(side,on){
+   if(!on)return;
+   localStorage.setItem('rahlKnifeSkin','karambit');
+   // make the original Karambit addon pick up the selection when possible
+   var k=el('karambitInventoryCard');
+   if(k){
+     try{
+       var ev=new MouseEvent('click',{bubbles:false,cancelable:true,view:window});
+       k.dispatchEvent(ev);
+     }catch(e){}
+   }
  }
  function toggle(side,e){
-   if(!special)return false;
+   if(!selectedSpecial)return;
    if(e){e.preventDefault();e.stopImmediatePropagation();}
-   const st=current(); st[side]=!st[side]; write(keyFor(special),st);
-   if(special==='karambit' && st[side]) localStorage.setItem('rahlKnifeSkin','karambit');
-   if(special==='butterfly' && st[side]) localStorage.setItem('rahlKnifeSkin','butterfly');
-   render();
-   return true;
+   var st=state();st[side]=!st[side];write(key(),st);
+   if(selectedSpecial==='butterfly')activateButterfly(side,st[side]);
+   else activateKarambit(side,st[side]);
+   render();blockClickUntil=Date.now()+500;
  }
- function install(){
-   const bf=document.getElementById('bfInventoryCard');
-   const k=document.getElementById('karambitInventoryCard');
-   if(bf&&!bf.dataset.sharedPanel){bf.dataset.sharedPanel='1';['pointerup','touchend','click'].forEach(function(ev){bf.addEventListener(ev,function(e){select('butterfly',e)},true)})}
-   if(k&&!k.dataset.sharedPanel){k.dataset.sharedPanel='1';['pointerup','touchend','click'].forEach(function(ev){k.addEventListener(ev,function(e){select('karambit',e)},true)})}
-   const C=ct(),T=t();
-   if(C&&!C.dataset.specialHook){C.dataset.specialHook='1';C.addEventListener('pointerup',function(e){toggle('ct',e)},true);C.addEventListener('touchend',function(e){toggle('ct',e)},true);C.addEventListener('click',function(e){toggle('ct',e)},true)}
-   if(T&&!T.dataset.specialHook){T.dataset.specialHook='1';T.addEventListener('pointerup',function(e){toggle('t',e)},true);T.addEventListener('touchend',function(e){toggle('t',e)},true);T.addEventListener('click',function(e){toggle('t',e)},true)}
-   // Clicking a normal card hands control back to the original inventory code.
-   document.querySelectorAll('.inventoryWeaponCard').forEach(function(c){if(!c.dataset.normalClear){c.dataset.normalClear='1';c.addEventListener('pointerup',function(){special=null},true);c.addEventListener('touchend',function(){special=null},true);c.addEventListener('click',function(){special=null},true)}})
+ function targetCard(t){
+   if(!t||!t.closest)return null;
+   var b=t.closest('#bfInventoryCard');if(b)return'butterfly';
+   var k=t.closest('#karambitInventoryCard');if(k)return'karambit';
+   return null;
  }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
- setInterval(function(){install();if(special)render()},250);
+ function onPointer(e){
+   var C=el('inventoryCTButton'),T=el('inventoryTButton');
+   if(selectedSpecial&&C&&(e.target===C||C.contains(e.target))){toggle('ct',e);return}
+   if(selectedSpecial&&T&&(e.target===T||T.contains(e.target))){toggle('t',e);return}
+   var kind=targetCard(e.target);if(kind){select(kind,e);return}
+   var normal=e.target&&e.target.closest?e.target.closest('.inventoryWeaponCard'):null;
+   if(normal){selectedSpecial=null}
+ }
+ function onClickBlock(e){
+   if(Date.now()>blockClickUntil)return;
+   var kind=targetCard(e.target),C=el('inventoryCTButton'),T=el('inventoryTButton');
+   if(kind||(selectedSpecial&&((C&&(e.target===C||C.contains(e.target)))||(T&&(e.target===T||T.contains(e.target)))))){
+     e.preventDefault();e.stopImmediatePropagation();
+   }
+ }
+ document.addEventListener('pointerup',onPointer,true);
+ document.addEventListener('click',onClickBlock,true);
+ // Fallback only for browsers without PointerEvent, prevents double toggles on iOS/webviews.
+ if(!window.PointerEvent)document.addEventListener('touchend',onPointer,{capture:true,passive:false});
+ setInterval(function(){
+   var k=el('karambitInventoryCard');if(k)k.style.display=isOwner()?'flex':'none';
+   if(selectedSpecial)render();
+ },300);
 })();
 </script>
 
