@@ -1,0 +1,26 @@
+name: Rebuild Friend System V7
+on:
+  push:
+    paths:
+      - '.github/workflows/rebuild-friend-system-v7.yml'
+permissions:
+  contents: write
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/rebuild_friend_system_v7.py
+      - run: |
+          grep -q 'RAHL1K FRIEND SYSTEM V7' index.html
+          grep -q 'Reconnect-safe fallback' server.js
+          test "$(grep -o 'RAHL1K FRIEND SYSTEM V7' index.html | wc -l)" -eq 1
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html server.js
+          git commit -m 'Rebuild lobby friend invites and replace HTML friend layer'
+          git push
