@@ -10,52 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-      - name: Patch friend invite click
-        shell: python
+      - name: Patch index.html
         run: |
+          python3 - <<'PY'
           from pathlib import Path
           p=Path('index.html')
-          s=p.read_text()
-          marker='<!-- RAHL1K FRIEND INVITE CLICK FIX -->'
+          s=p.read_text(encoding='utf-8')
+          marker='<!-- RAHL1K FRIEND INVITE DIRECT FIX V2 -->'
           if marker not in s:
-            addon=r'''
-<!-- RAHL1K FRIEND INVITE CLICK FIX -->
-<script>
-(function(){
-  function bindInviteRows(){
-    const panel=document.getElementById('lobbyFriendsPanel');
-    if(!panel)return;
-    panel.addEventListener('click',function(e){
-      const row=e.target.closest('.lobbyFriendItem');
-      if(!row || !panel.contains(row))return;
-      if(e.target.closest('.inviteLobbyButton'))return;
-      panel.querySelectorAll('.lobbyFriendItem.selected').forEach(function(x){if(x!==row)x.classList.remove('selected')});
-      row.classList.toggle('selected');
-    });
-    panel.addEventListener('touchend',function(e){
-      const row=e.target.closest('.lobbyFriendItem');
-      if(!row || !panel.contains(row) || e.target.closest('.inviteLobbyButton'))return;
-      if(e.cancelable)e.preventDefault();
-      panel.querySelectorAll('.lobbyFriendItem.selected').forEach(function(x){if(x!==row)x.classList.remove('selected')});
-      row.classList.toggle('selected');
-    },{passive:false});
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindInviteRows);
-  else bindInviteRows();
-})();
-</script>
-'''
-            s=s.replace('</body>',addon+'\n</body>')
-          p.write_text(s)
-      - name: Commit
+              addon='''\n<!-- RAHL1K FRIEND INVITE DIRECT FIX V2 -->\n<style>\n.lobbyFriendItem .inviteLobbyButton{display:none!important}\n.lobbyFriendItem.selected .inviteLobbyButton{display:block!important}\n</style>\n<script>\n(function(){\n const list=document.getElementById('lobbyFriendsList');\n if(!list)return;\n function selectFriend(e){\n   const row=e.target.closest('.lobbyFriendItem');\n   if(!row||!list.contains(row)||e.target.closest('.inviteLobbyButton'))return;\n   e.preventDefault();\n   list.querySelectorAll('.lobbyFriendItem').forEach(x=>x.classList.remove('selected'));\n   row.classList.add('selected');\n }\n list.addEventListener('pointerdown',selectFriend,{passive:false});\n list.addEventListener('click',selectFriend,{passive:false});\n list.addEventListener('touchend',selectFriend,{passive:false});\n})();\n</script>\n'''
+              s=s.replace('</body>',addon+'\n</body>')
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit fix
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           if ! git diff --cached --quiet; then
-            git commit -m 'Fix lobby friend invite button selection'
+            git commit -m "Fix friend invite button interaction"
             git push
           fi
