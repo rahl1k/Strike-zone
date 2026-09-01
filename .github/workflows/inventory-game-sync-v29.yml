@@ -1,0 +1,23 @@
+name: Inventory Game Sync V29
+on:
+  push:
+    paths:
+      - 'tools/inventory_game_sync_v29.py'
+      - '.github/workflows/inventory-game-sync-v29.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/inventory_game_sync_v29.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Sync inventory checks and Karambit gameplay V29"
+          git push
