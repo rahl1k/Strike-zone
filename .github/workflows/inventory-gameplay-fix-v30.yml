@@ -1,0 +1,26 @@
+name: Inventory Gameplay Fix V30
+on:
+  push:
+    paths:
+      - 'tools/inventory_gameplay_fix_v30.py'
+      - '.github/workflows/inventory-gameplay-fix-v30.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/inventory_gameplay_fix_v30.py
+      - run: |
+          grep -q 'RAHL1K INVENTORY GAMEPLAY FIX V30' index.html
+          ! grep -q 'RAHL1K INVENTORY GAME SYNC V29' index.html
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Fix inventory checks and Karambit weapon switching V30"
+          git push
