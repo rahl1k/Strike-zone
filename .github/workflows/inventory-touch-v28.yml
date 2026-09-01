@@ -1,0 +1,26 @@
+name: Inventory Touch V28
+on:
+  push:
+    paths:
+      - 'tools/inventory_touch_v28.py'
+      - '.github/workflows/inventory-touch-v28.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/inventory_touch_v28.py
+      - run: |
+          grep -q 'RAHL1K INVENTORY TOUCH V28' index.html
+          ! grep -q 'RAHL1K INVENTORY CLEAN V27' index.html
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Fix mobile inventory apply buttons V28"
+          git push
